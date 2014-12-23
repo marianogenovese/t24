@@ -1,0 +1,48 @@
+﻿//-----------------------------------------------------------------------
+// <copyright file="Errors.cs" company="Integra.Vision.Language">
+//     Copyright (c) Integra.Vision.Language. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+namespace Integra.Vision.Language.Errors
+{    
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Irony.Interpreter;
+
+    /// <summary>
+    /// Errors class
+    /// </summary>
+    internal sealed class Errors
+    {
+        /// <summary>
+        /// Initializes a new instance of the Errors class
+        /// </summary>
+        /// <param name="thread">thread of the analysis</param>
+        public Errors(ScriptThread thread)
+        {
+            this.Thread = thread;
+        }
+
+        /// <summary>
+        /// Gets or sets the thread
+        /// </summary>
+        public ScriptThread Thread { get; set; }
+
+        /// <summary>
+        /// Add the error to the error list
+        /// </summary>
+        /// <param name="error">Error node</param>
+        public void AlmacenarError(ErrorNode error)
+        {
+            if (this.Thread != null)
+            {
+                Binding b = this.Thread.Bind("errorList", BindingRequestFlags.Read);
+                List<ErrorNode> errorList = (List<ErrorNode>)b.GetValueRef(this.Thread);
+                errorList.Add(error);
+            }
+        }
+    }
+}
