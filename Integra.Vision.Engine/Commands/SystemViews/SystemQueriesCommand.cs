@@ -10,6 +10,7 @@ namespace Integra.Vision.Engine.Commands.SystemViews
     using Integra.Vision.Engine.Database.Contexts;
     using Integra.Vision.Engine.Database.Models.SystemViews;
     using Integra.Vision.Engine.Database.Repositories;
+    using Integra.Vision.Language;
 
     /// <summary>
     /// Base class for system queries
@@ -36,8 +37,8 @@ namespace Integra.Vision.Engine.Commands.SystemViews
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public SystemQueriesCommand(string commandText, ISecurityContext securityContext)
-            : base(CommandTypeEnum.SystemQuery, commandText, securityContext)
+        public SystemQueriesCommand(PlanNode node)
+            : base(node)
         {
         }
 

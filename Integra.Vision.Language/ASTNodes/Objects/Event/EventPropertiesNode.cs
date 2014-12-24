@@ -63,7 +63,7 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Event
             PlanNode auxEvent = (PlanNode)this.ev.Evaluate(thread);
             this.EndEvaluate(thread);
 
-            this.result.NodeType = (uint)PlanNodeTypeEnum.Property;
+            this.result.NodeType = PlanNodeTypeEnum.Property;
             this.result.NodeText = auxEvent.NodeText + "." + this.property;
             this.result.Children = new List<PlanNode>();
             this.result.Children.Add(auxEvent);
@@ -88,7 +88,7 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Event
             else if (this.property.ToLower() == SR.MessageProperty)
             {
                 this.result.Properties.Add(SR.DataTypeProperty, typeof(Integra.Messaging.Message).ToString());
-                this.result.NodeType = (uint)PlanNodeTypeEnum.ObjectMessage;
+                this.result.NodeType = PlanNodeTypeEnum.ObjectMessage;
             }
             else
             {

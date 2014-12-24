@@ -7,6 +7,7 @@ namespace Integra.Vision.Engine.Commands.Create.CreateStream
 {
     using System;
     using Integra.Vision.Engine.Database.Repositories;
+    using Integra.Vision.Language;
 
     /// <summary>
     /// Base class for create streams
@@ -28,7 +29,7 @@ namespace Integra.Vision.Engine.Commands.Create.CreateStream
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public CreateStreamCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.CreateStream, commandText, securityContext)
+        public CreateStreamCommand(PlanNode node) : base(node)
         {
         }
 

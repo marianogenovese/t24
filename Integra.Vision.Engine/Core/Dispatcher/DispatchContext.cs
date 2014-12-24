@@ -9,7 +9,9 @@ namespace Integra.Vision.Engine.Core
     using System.Collections.Generic;
     using System.Security.Principal;
     using System.Threading.Tasks;
-    
+    using Integra.Vision.Language;
+    using Integra.Vision.Engine.Commands;
+
     /// <summary>
     /// Provides access to the dispatch context of a operation execution.
     /// </summary>
@@ -19,7 +21,7 @@ namespace Integra.Vision.Engine.Core
         /// The context information of the operation.
         /// </summary>
         private readonly OperationContext innerContext;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DispatchContext"/> class.
         /// </summary>
@@ -28,7 +30,7 @@ namespace Integra.Vision.Engine.Core
         {
             this.innerContext = context;
         }
-        
+
         /// <inheritdoc />
         public CommandActionFactory ActionPipelineFactory
         {
@@ -87,6 +89,20 @@ namespace Integra.Vision.Engine.Core
         }
 
         /// <inheritdoc />
+        public CommandBase[] Commands
+        {
+            get;
+            set;
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<PlanNode> Nodes
+        {
+            get;
+            set;
+        }
+
+        /// <inheritdoc />
         public override TaskCompletionSource<bool> CompletionSignal
         {
             get
@@ -99,6 +115,13 @@ namespace Integra.Vision.Engine.Core
         public CommandAction CreateActionPipeline()
         {
             return this.ActionPipelineFactory.Create();
+        }
+
+
+        public CommandBase Command
+        {
+            get;
+            set;
         }
     }
 }

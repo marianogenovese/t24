@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Engine.Core
 {
+    using Integra.Vision.Language;
     using System;
     using System.Collections.Generic;
     
@@ -26,6 +27,17 @@ namespace Integra.Vision.Engine.Core
              * Aqui se debe tomar el script que esta en context.OperationContext.Request.Script
              * parsearlo y en la clase DispatchContext agregar un elemento al diccionario de Data.
              */
+
+            try
+            {
+                IntegraParser parser = new IntegraParser(context.Request.Script);
+                context.Nodes = parser.Parse();
+            }
+            catch (System.Exception e)
+            {
+                throw new InterpretationException(e.ToString());
+            }
+
             return context;
         }
     }

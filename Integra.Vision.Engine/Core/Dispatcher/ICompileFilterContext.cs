@@ -5,11 +5,16 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Engine
 {
+    using Integra.Vision.Engine.Commands;
+
     /// <summary>
     /// This interface implements a context used for compiling process.
     /// </summary>
     internal interface ICompileFilterContext
     {
-        // Aqui se debe agregar una propiedad solo de lectura de un arreglo de comandos.
+        /// <summary>
+        /// Gets or sets the commands of the context.
+        /// </summary>
+        CommandBase[] Commands { get; set; }
     }
 }

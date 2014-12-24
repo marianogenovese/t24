@@ -73,7 +73,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[1].Token.Location.Line;
-            this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.CreateSource;
+            this.result.NodeType = PlanNodeTypeEnum.CreateSource;
         }
 
         /// <summary>

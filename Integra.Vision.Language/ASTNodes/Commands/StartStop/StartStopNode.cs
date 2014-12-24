@@ -92,38 +92,38 @@ namespace Integra.Vision.Language.ASTNodes.Commands.StartStop
             {
                 if (SR.ReservedWordAdapter == o)
                 {
-                    this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.StartAdapter;
+                    this.result.NodeType = PlanNodeTypeEnum.StartAdapter;
                 }
                 else if (SR.ReservedWordSource == o)
                 {
-                    this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.StartSource;
+                    this.result.NodeType = PlanNodeTypeEnum.StartSource;
                 }
                 else if (SR.ReservedWordStream == o)
                 {
-                    this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.StartStream;
+                    this.result.NodeType = PlanNodeTypeEnum.StartStream;
                 }
                 else if (SR.ReservedWordTrigger == o)
                 {
-                    this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.StartTrigger;
+                    this.result.NodeType = PlanNodeTypeEnum.StartTrigger;
                 }
             }
             else if (SR.ReservedWordStop == c)
             {
                 if (SR.ReservedWordAdapter == o)
                 {
-                    this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.StopAdapter;
+                    this.result.NodeType = PlanNodeTypeEnum.StopAdapter;
                 }
                 else if (SR.ReservedWordSource == o)
                 {
-                    this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.StopSource;
+                    this.result.NodeType = PlanNodeTypeEnum.StopSource;
                 }
                 else if (SR.ReservedWordStream == o)
                 {
-                    this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.StopStream;
+                    this.result.NodeType = PlanNodeTypeEnum.StopStream;
                 }
                 else if (SR.ReservedWordTrigger == o)
                 {
-                    this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.StopTrigger;
+                    this.result.NodeType = PlanNodeTypeEnum.StopTrigger;
                 }
             }
         }

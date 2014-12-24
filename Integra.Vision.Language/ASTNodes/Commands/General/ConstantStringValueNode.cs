@@ -33,7 +33,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.General
             this.result.Column = treeNode.Token.Location.Column;
             this.result.Line = treeNode.Token.Location.Line;
             this.result.NodeText = treeNode.Token.Text;
-            this.result.NodeType = (uint)PlanNodeTypeEnum.Constant;
+            this.result.NodeType = PlanNodeTypeEnum.Constant;
             this.result.Properties.Add(SR.ValueProperty, treeNode.Token.Value);
             this.result.Properties.Add(SR.DataTypeProperty, typeof(string).ToString());
         }

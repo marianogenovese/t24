@@ -77,7 +77,7 @@ namespace Integra.Vision.Language.ASTNodes.Operations
                 switch (operacion)
                 {
                     case "-":
-                        this.result.NodeType = (uint)PlanNodeTypeEnum.Subtract;
+                        this.result.NodeType = PlanNodeTypeEnum.Subtract;
                         break;
                     default:
                         ErrorNode error = new ErrorNode();
@@ -139,7 +139,7 @@ namespace Integra.Vision.Language.ASTNodes.Operations
                     casteo.Column = leftNode.Column;
                     casteo.Line = leftNode.Line;
                     casteo.NodeText = leftNode.NodeText;
-                    casteo.NodeType = (uint)PlanNodeTypeEnum.Cast;
+                    casteo.NodeType = PlanNodeTypeEnum.Cast;
                     casteo.Properties.Add("DataType", selectedType.ToString());
                     casteo.Children = new List<PlanNode>();
                     casteo.Children.Add(leftNode);
@@ -153,7 +153,7 @@ namespace Integra.Vision.Language.ASTNodes.Operations
                     casteo.Column = rightNode.Column;
                     casteo.Line = rightNode.Line;
                     casteo.NodeText = rightNode.NodeText;
-                    casteo.NodeType = (uint)PlanNodeTypeEnum.Cast;
+                    casteo.NodeType = PlanNodeTypeEnum.Cast;
                     casteo.Properties.Add("DataType", selectedType.ToString());
                     casteo.Children = new List<PlanNode>();
                     casteo.Children.Add(rightNode);

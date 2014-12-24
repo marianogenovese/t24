@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Engine.Commands.Permission.Deny
 {
+    using Integra.Vision.Language;
+
     /// <summary>
     /// Base class for deny permissions
     /// </summary>
@@ -25,7 +27,7 @@ namespace Integra.Vision.Engine.Commands.Permission.Deny
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public DenyPermissionCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.Deny, commandText, securityContext)
+        public DenyPermissionCommand(PlanNode node) : base(node)
         {
         }
 

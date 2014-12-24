@@ -6,6 +6,7 @@
 namespace Integra.Vision.Engine.Commands.Drop.DropRole
 {
     using System;
+    using Integra.Vision.Language;
 
     /// <summary>
     /// Base class for drop roles
@@ -27,7 +28,7 @@ namespace Integra.Vision.Engine.Commands.Drop.DropRole
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public DropRoleCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.DropRole, commandText, securityContext)
+        public DropRoleCommand(PlanNode node) : base(node)
         {
         }
 

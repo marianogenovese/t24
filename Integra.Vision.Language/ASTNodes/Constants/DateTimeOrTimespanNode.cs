@@ -35,7 +35,7 @@ namespace Integra.Vision.Language.ASTNodes.Constants
             this.result.Column = treeNode.Token.Location.Column;
             this.result.Line = treeNode.Token.Location.Line;
             this.result.NodeText = treeNode.Token.Text;
-            this.result.NodeType = (uint)PlanNodeTypeEnum.Constant;
+            this.result.NodeType = PlanNodeTypeEnum.Constant;
 
             DateTime d;
             TimeSpan t;

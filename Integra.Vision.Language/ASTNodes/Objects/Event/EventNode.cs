@@ -48,7 +48,7 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Event
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[0].Token.Location.Line;
             this.result.NodeText = this.symbol + this.rightNode;
-            this.result.NodeType = (uint)PlanNodeTypeEnum.Event;
+            this.result.NodeType = PlanNodeTypeEnum.Event;
             this.result.Properties.Add(SR.DataTypeProperty, typeof(EventObject).ToString());
         }
 

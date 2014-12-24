@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Engine.Core
 {
+    using Integra.Vision.Engine.Commands;
+
     /// <summary>
     /// Provides a base class implementation for handling command specific execution logic.
     /// </summary>
@@ -13,14 +15,14 @@ namespace Integra.Vision.Engine.Core
         /// <inheritdoc />
         protected override void OnExecute(CommandExecutingContext context)
         {
-            context.Result = this.OnExecuteCommand();
+            context.Result = this.OnExecuteCommand(context.Command);
         }
 
         /// <summary>
         /// Allow to implement custom logic for command action execution.
         /// </summary>
         /// <returns>A result of the action execution.</returns>
-        protected virtual CommandActionResult OnExecuteCommand(/*Agregar parametro de comando*/)
+        protected virtual CommandActionResult OnExecuteCommand(CommandBase command)
         {
             return null;
         }

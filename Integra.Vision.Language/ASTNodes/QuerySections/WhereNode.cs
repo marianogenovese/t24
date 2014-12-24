@@ -44,7 +44,7 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[0].Token.Location.Line;
-            this.result.NodeType = (uint)PlanNodeTypeEnum.Where;
+            this.result.NodeType = PlanNodeTypeEnum.Where;
         }
 
         /// <summary>

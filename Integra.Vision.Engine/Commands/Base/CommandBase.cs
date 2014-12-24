@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Engine.Commands
 {
+    using Integra.Vision.Language;
     using System;
     
     /// <summary>
@@ -13,6 +14,11 @@ namespace Integra.Vision.Engine.Commands
     /// </summary>
     internal abstract class CommandBase
     {
+        /// <summary>
+        /// Execution plan node
+        /// </summary>
+        private readonly PlanNode node;
+
         /// <summary>
         /// type
         /// Indicate what type of command is
@@ -23,9 +29,9 @@ namespace Integra.Vision.Engine.Commands
         /// Initializes a new instance of the <see cref="CommandBase"/> class
         /// </summary>
         /// <param name="type">Doc goes here</param>
-        public CommandBase(CommandTypeEnum type)
+        public CommandBase(PlanNode node)
         {
-            this.type = type;
+            this.node = node;
         }
 
         /// <summary>
@@ -36,6 +42,7 @@ namespace Integra.Vision.Engine.Commands
         {
             get
             {
+                // aqui hacer un switch
                 return this.type;
             }
         }

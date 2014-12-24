@@ -83,13 +83,13 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
             this.status.Column = ChildrenNodes[10].Token.Location.Column;
             this.status.Line = ChildrenNodes[10].Token.Location.Line;
             this.status.NodeText = ChildrenNodes[10].Token.Text;
-            this.status.NodeType = (uint)PlanNodeTypeEnum.Status;
+            this.status.NodeType = PlanNodeTypeEnum.Status;
             this.status.Properties.Add(SR.StatusProperty, ChildrenNodes[10].Token.Value);
 
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[0].Token.Location.Line;
-            this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.CreateUser;
+            this.result.NodeType = PlanNodeTypeEnum.CreateUser;
         }
 
         /// <summary>

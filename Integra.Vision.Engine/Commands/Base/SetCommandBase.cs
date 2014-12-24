@@ -5,10 +5,12 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Engine.Commands
 {
+    using Integra.Vision.Language;
+
     /// <summary>
     /// Base class for set trace command
     /// </summary>
-    internal abstract class SetCommandBase : PersistenceContextCommandBase
+    internal abstract class SetCommandBase : PublicCommandBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SetCommandBase"/> class
@@ -16,7 +18,7 @@ namespace Integra.Vision.Engine.Commands
         /// <param name="commandType">Indicate what type of command is</param>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public SetCommandBase(CommandTypeEnum commandType, string commandText, ISecurityContext securityContext) : base(commandType, commandText, securityContext)
+        public SetCommandBase(PlanNode node) : base(node)
         {
         }
     }

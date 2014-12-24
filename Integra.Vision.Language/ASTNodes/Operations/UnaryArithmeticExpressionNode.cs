@@ -72,7 +72,7 @@ namespace Integra.Vision.Language.ASTNodes.Operations
             // se especifica los hijos y el tipo de nodo result si la operacion es de negacion aritmetica
             if (this.operationNode == "-")
             {
-                this.result.NodeType = (uint)PlanNodeTypeEnum.Negate;
+                this.result.NodeType = PlanNodeTypeEnum.Negate;
                 this.result.Children = new List<PlanNode>();
                 this.result.Children.Add(r);
             }

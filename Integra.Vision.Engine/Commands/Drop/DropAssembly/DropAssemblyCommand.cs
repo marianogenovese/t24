@@ -6,6 +6,7 @@
 namespace Integra.Vision.Engine.Commands.Drop.DropAssembly
 {
     using System;
+    using Integra.Vision.Language;
 
     /// <summary>
     /// Base class for drop assemblies
@@ -27,7 +28,7 @@ namespace Integra.Vision.Engine.Commands.Drop.DropAssembly
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public DropAssemblyCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.DropAssembly, commandText, securityContext)
+        public DropAssemblyCommand(PlanNode node) : base(node)
         {
         }
 

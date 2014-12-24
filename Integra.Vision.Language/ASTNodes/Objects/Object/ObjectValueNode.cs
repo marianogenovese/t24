@@ -59,7 +59,7 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Object
             this.result.Line = field.Line;
             this.result.NodeText = field.NodeText;
             this.result.Properties.Add(SR.DataTypeProperty, typeof(object).ToString());
-            this.result.NodeType = (uint)PlanNodeTypeEnum.ObjectValue;
+            this.result.NodeType = PlanNodeTypeEnum.ObjectValue;
             this.result.Children = new List<PlanNode>();
             this.result.Children.Add(field);
 

@@ -9,12 +9,18 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterAdapter
     using Integra.Vision.Engine.Commands.Create.CreateAdapter;
     using Integra.Vision.Engine.Commands.Drop.DropAdapter;
     using Integra.Vision.Engine.Database.Repositories;
+    using Integra.Vision.Language;
 
     /// <summary>
     /// Base class for modify adapters
     /// </summary>
     internal sealed class AlterAdapterCommand : AlterObjectCommandBase<CreateAdapterCommand, DropAdapterCommand>
     {
+        /// <summary>
+        /// Execution plan node
+        /// </summary>
+        private readonly PlanNode node;
+        
         /// <summary>
         /// Argument enumerator implementation for this command
         /// </summary>
@@ -30,7 +36,7 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterAdapter
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public AlterAdapterCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.AlterAdapter, commandText, securityContext)
+        public AlterAdapterCommand(PlanNode node) : base(node)
         {
         }
 
@@ -153,7 +159,7 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterAdapter
             /// <param name="arguments">alter command arguments</param>
             /// /// <param name="dependencies">alter command dependencies</param>
             public CreateObject(IReadOnlyNamedElementCollection<CommandArgument> arguments, IReadOnlyNamedElementCollection<CommandDependency> dependencies)
-                : base(string.Empty, null)
+                : base(null)
             {
                 this.arguments = arguments;
                 this.dependencies = dependencies;
@@ -211,7 +217,7 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterAdapter
             /// <param name="arguments">alter command arguments</param>
             /// /// <param name="dependencies">alter command dependencies</param>
             public DropObject(IReadOnlyNamedElementCollection<CommandArgument> arguments, IReadOnlyNamedElementCollection<CommandDependency> dependencies)
-                : base(string.Empty, null)
+                : base(null)
             {
                 this.arguments = arguments;
                 this.dependencies = dependencies;

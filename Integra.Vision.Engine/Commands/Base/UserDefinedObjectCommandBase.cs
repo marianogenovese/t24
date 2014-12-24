@@ -5,10 +5,12 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Engine.Commands
 {
+    using Integra.Vision.Language;
+
     /// <summary>
     /// Base class for user defined object commands
     /// </summary>
-    internal abstract class UserDefinedObjectCommandBase : PersistenceContextCommandBase
+    internal abstract class UserDefinedObjectCommandBase : PublicCommandBase
     {
         /// <summary>
         /// Name of user defined object
@@ -21,7 +23,7 @@ namespace Integra.Vision.Engine.Commands
         /// <param name="commandType">Indicate what type of command is</param>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public UserDefinedObjectCommandBase(CommandTypeEnum commandType, string commandText, ISecurityContext securityContext) : base(commandType, commandText, securityContext)
+        public UserDefinedObjectCommandBase(PlanNode node) : base(node)
         {
         }
 

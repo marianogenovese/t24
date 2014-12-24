@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Engine.Commands.Permission.Revoke
 {
+    using Integra.Vision.Language;
+
     /// <summary>
     /// Base class for revoke permissions
     /// </summary>
@@ -25,7 +27,7 @@ namespace Integra.Vision.Engine.Commands.Permission.Revoke
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public RevokePermissionCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.Revoke, commandText, securityContext)
+        public RevokePermissionCommand(PlanNode node) : base(node)
         {
         }
 

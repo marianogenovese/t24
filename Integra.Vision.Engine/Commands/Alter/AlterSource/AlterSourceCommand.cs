@@ -9,6 +9,7 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterSource
     using Integra.Vision.Engine.Commands.Create.CreateSource;
     using Integra.Vision.Engine.Commands.Drop.DropSource;
     using Integra.Vision.Engine.Database.Repositories;
+    using Integra.Vision.Language;
 
     /// <summary>
     /// Base class for alter sources
@@ -30,7 +31,7 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterSource
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public AlterSourceCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.AlterSource, commandText, securityContext)
+        public AlterSourceCommand(PlanNode node) : base(node)
         {
         }
 
@@ -93,7 +94,7 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterSource
             /// <param name="arguments">alter command arguments</param>
             /// /// <param name="dependencies">alter command dependencies</param>
             public CreateObject(IReadOnlyNamedElementCollection<CommandArgument> arguments, IReadOnlyNamedElementCollection<CommandDependency> dependencies)
-                : base(string.Empty, null)
+                : base(new PlanNode())
             {
                 this.arguments = arguments;
                 this.dependencies = dependencies;
@@ -151,7 +152,7 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterSource
             /// <param name="arguments">alter command arguments</param>
             /// /// <param name="dependencies">alter command dependencies</param>
             public DropObject(IReadOnlyNamedElementCollection<CommandArgument> arguments, IReadOnlyNamedElementCollection<CommandDependency> dependencies)
-                : base(string.Empty, null)
+                : base(new PlanNode())
             {
                 this.arguments = arguments;
                 this.dependencies = dependencies;

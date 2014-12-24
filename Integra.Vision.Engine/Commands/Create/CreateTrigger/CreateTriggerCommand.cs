@@ -6,6 +6,7 @@
 namespace Integra.Vision.Engine.Commands.Create.CreateTrigger
 {
     using System;
+    using Integra.Vision.Language;
 
     /// <summary>
     /// Base class for create triggers
@@ -27,7 +28,7 @@ namespace Integra.Vision.Engine.Commands.Create.CreateTrigger
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public CreateTriggerCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.CreateTrigger, commandText, securityContext)
+        public CreateTriggerCommand(PlanNode node) : base(node)
         {
         }
 

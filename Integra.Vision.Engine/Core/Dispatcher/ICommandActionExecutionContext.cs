@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Engine.Core
 {
+    using Integra.Vision.Engine.Commands;
+
     /// <summary>
     /// This interface implements a context used for execute command action.
     /// </summary>
@@ -31,6 +33,9 @@ namespace Integra.Vision.Engine.Core
         /// <returns>A new instance of command action pipeline.</returns>
         CommandAction CreateActionPipeline();
 
-        // Aqui poner una propiedad que permita obtener el comando actual a ejecutarse
+        /// <summary>
+        /// Gets the context command.
+        /// </summary>
+        CommandBase Command { get; set; }
     }
 }

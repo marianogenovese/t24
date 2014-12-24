@@ -76,7 +76,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.General
                 this.sendExpressions = AddChild(NodeUseType.Parameter, SR.SendRole, ChildrenNodes[3]) as AstNodeBase;
                 this.endIfWord = (string)ChildrenNodes[4].Token.Value;
                 this.result.NodeText = this.ifWord + " " + this.arrobaWord + " " + this.hasEventsWord;
-                this.result.NodeType = (uint)PlanNodeTypeEnum.IfHasEvents;
+                this.result.NodeType = PlanNodeTypeEnum.IfHasEvents;
             }
             else if (childrenCount == 6)
             {
@@ -86,7 +86,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.General
                 this.sendExpressions = AddChild(NodeUseType.Parameter, SR.SendRole, ChildrenNodes[4]) as AstNodeBase;
                 this.endIfWord = (string)ChildrenNodes[5].Token.Value;
                 this.result.NodeText = this.ifWord + " " + this.notWord + " " + this.arrobaWord + " " + this.hasEventsWord;
-                this.result.NodeType = (uint)PlanNodeTypeEnum.IfNotHasEvents;
+                this.result.NodeType = PlanNodeTypeEnum.IfNotHasEvents;
             }
         }
 

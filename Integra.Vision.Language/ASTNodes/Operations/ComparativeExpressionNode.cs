@@ -88,28 +88,28 @@ namespace Integra.Vision.Language.ASTNodes.Operations
                 switch (operacion)
                 {
                     case "==":
-                        this.result.NodeType = (uint)PlanNodeTypeEnum.Equal;
+                        this.result.NodeType = PlanNodeTypeEnum.Equal;
                         break;
                     case "!=":
-                        this.result.NodeType = (uint)PlanNodeTypeEnum.NotEqual;
+                        this.result.NodeType = PlanNodeTypeEnum.NotEqual;
                         break;
                     case "<=":
-                        this.result.NodeType = (uint)PlanNodeTypeEnum.LessThanOrEqual;
+                        this.result.NodeType = PlanNodeTypeEnum.LessThanOrEqual;
                         break;
                     case "<":
-                        this.result.NodeType = (uint)PlanNodeTypeEnum.LessThan;
+                        this.result.NodeType = PlanNodeTypeEnum.LessThan;
                         break;
                     case ">=":
-                        this.result.NodeType = (uint)PlanNodeTypeEnum.GreaterThanOrEqual;
+                        this.result.NodeType = PlanNodeTypeEnum.GreaterThanOrEqual;
                         break;
                     case ">":
-                        this.result.NodeType = (uint)PlanNodeTypeEnum.GreaterThan;
+                        this.result.NodeType = PlanNodeTypeEnum.GreaterThan;
                         break;
                     case "like":
-                        this.result.NodeType = (uint)PlanNodeTypeEnum.Like;
+                        this.result.NodeType = PlanNodeTypeEnum.Like;
                         break;
                     case "not":
-                        this.result.NodeType = (uint)PlanNodeTypeEnum.Not;
+                        this.result.NodeType = PlanNodeTypeEnum.Not;
                         break;
                     default:
                         ErrorNode error = new ErrorNode();
@@ -171,7 +171,7 @@ namespace Integra.Vision.Language.ASTNodes.Operations
                     casteo.Column = leftNode.Column;
                     casteo.Line = leftNode.Line;
                     casteo.NodeText = leftNode.NodeText;
-                    casteo.NodeType = (uint)PlanNodeTypeEnum.Cast;
+                    casteo.NodeType = PlanNodeTypeEnum.Cast;
                     casteo.Properties.Add("DataType", selectedType.ToString());
                     casteo.Children = new List<PlanNode>();
                     casteo.Children.Add(leftNode);
@@ -184,7 +184,7 @@ namespace Integra.Vision.Language.ASTNodes.Operations
                     casteo.Column = rightNode.Column;
                     casteo.Line = rightNode.Line;
                     casteo.NodeText = rightNode.NodeText;
-                    casteo.NodeType = (uint)PlanNodeTypeEnum.Cast;
+                    casteo.NodeType = PlanNodeTypeEnum.Cast;
                     casteo.Properties.Add("DataType", selectedType.ToString());
                     casteo.Children = new List<PlanNode>();
                     casteo.Children.Add(rightNode);
@@ -228,7 +228,7 @@ namespace Integra.Vision.Language.ASTNodes.Operations
                     casteo.Column = rightNode.Column;
                     casteo.Line = rightNode.Line;
                     casteo.NodeText = rightNode.NodeText;
-                    casteo.NodeType = (uint)PlanNodeTypeEnum.Cast;
+                    casteo.NodeType = PlanNodeTypeEnum.Cast;
                     casteo.Properties.Add("DataType", typeof(bool).ToString());
                     casteo.Children = new List<PlanNode>();
                     casteo.Children.Add(rightNode);

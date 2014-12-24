@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Engine.Commands.Trace
 {
+    using Integra.Vision.Language;
+
     /// <summary>
     /// Base class for trace objects
     /// </summary>
@@ -25,7 +27,7 @@ namespace Integra.Vision.Engine.Commands.Trace
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public SetTraceCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.SetTraceAdapter, commandText, securityContext)
+        public SetTraceCommand(PlanNode node) : base(node)
         {
         }
 

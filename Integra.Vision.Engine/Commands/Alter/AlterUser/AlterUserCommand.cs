@@ -8,6 +8,7 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterUser
     using System;
     using Integra.Vision.Engine.Commands.Create.CreateUser;
     using Integra.Vision.Engine.Commands.Drop.DropUser;
+    using Integra.Vision.Language;
 
     /// <summary>
     /// Base class for alter users
@@ -29,7 +30,8 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterUser
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public AlterUserCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.AlterUser, commandText, securityContext)
+        public AlterUserCommand(PlanNode node)
+            : base(node)
         {
         }
 
@@ -92,7 +94,7 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterUser
             /// <param name="arguments">alter command arguments</param>
             /// /// <param name="dependencies">alter command dependencies</param>
             public CreateObject(IReadOnlyNamedElementCollection<CommandArgument> arguments, IReadOnlyNamedElementCollection<CommandDependency> dependencies)
-                : base(string.Empty, null)
+                : base(null)
             {
                 this.arguments = arguments;
                 this.dependencies = dependencies;
@@ -150,7 +152,7 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterUser
             /// <param name="arguments">alter command arguments</param>
             /// /// <param name="dependencies">alter command dependencies</param>
             public DropObject(IReadOnlyNamedElementCollection<CommandArgument> arguments, IReadOnlyNamedElementCollection<CommandDependency> dependencies)
-                : base(string.Empty, null)
+                : base(new PlanNode())
             {
                 this.arguments = arguments;
                 this.dependencies = dependencies;

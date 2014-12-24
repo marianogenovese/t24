@@ -28,7 +28,7 @@ namespace Integra.Vision.Engine.Core
             foreach (ICommandActionExecutionContext context in contexts)
             {
                 DispatchContext dispatchContext = context as DispatchContext;
-                CommandExecutingContext actionContext = new CommandExecutingContext(dispatchContext);
+                CommandExecutingContext actionContext = new CommandExecutingContext(dispatchContext, context.Command);
                 try
                 {
                     context.ActionPipeline.Execute(actionContext);

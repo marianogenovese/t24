@@ -21,7 +21,7 @@ namespace Integra.Vision.Language
         /// <summary>
         /// Gets or sets the plan node type
         /// </summary>
-        public uint NodeType { get; set; }
+        public PlanNodeTypeEnum NodeType { get; set; }
 
         /// <summary>
         /// Gets or sets the line of the evaluated sentence

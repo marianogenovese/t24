@@ -7,6 +7,7 @@ namespace Integra.Vision.Engine.Commands.Create.CreateSource
 {
     using System;
     using Integra.Vision.Engine.Database.Repositories;
+    using Integra.Vision.Language;
 
     /// <summary>
     /// Base class for create sources
@@ -28,7 +29,7 @@ namespace Integra.Vision.Engine.Commands.Create.CreateSource
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public CreateSourceCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.CreateSource, commandText, securityContext)
+        public CreateSourceCommand(PlanNode node) : base(node)
         {
         }
 

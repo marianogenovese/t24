@@ -13,21 +13,28 @@ namespace Integra.Vision.Engine.Core
     /// </summary>
     internal sealed class CommandListenerServiceCredentials : ServiceCredentials
     {
+        /// <summary>
+        /// The authenticator of the user.
+        /// </summary>
+        private IUserAuthenticator userAuthenticator;
+
         /// <inheritdoc />
-        public CommandListenerServiceCredentials() : base()
+        public CommandListenerServiceCredentials(IUserAuthenticator userAuthenticator)
+            : base()
         {
+            this.userAuthenticator = userAuthenticator;
         }
 
         /// <inheritdoc />
         public override SecurityTokenManager CreateSecurityTokenManager()
         {
-            return new CommandListenerSecurityTokenManager(this);
+            return new CommandListenerSecurityTokenManager(this, this.userAuthenticator);
         }
 
         /// <inheritdoc />
         protected override ServiceCredentials CloneCore()
         {
-            return new CommandListenerServiceCredentials();
+            return new CommandListenerServiceCredentials(this.userAuthenticator);
         }
     }
 }

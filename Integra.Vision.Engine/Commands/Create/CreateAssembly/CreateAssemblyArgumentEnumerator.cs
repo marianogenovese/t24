@@ -3,13 +3,29 @@
 //     Copyright (c) Integra.Vision.Engine. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.Create
+namespace Integra.Vision.Engine.Commands
 {
+    using Integra.Vision.Language;
+
     /// <summary>
     /// Contains argument enumerator logic for Create Assembly command
     /// </summary>
     internal sealed class CreateAssemblyArgumentEnumerator : IArgumentEnumerator
     {
+        /// <summary>
+        /// Execution plan node that have the command arguments
+        /// </summary>
+        private readonly PlanNode node;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CreateAssemblyArgumentEnumerator"/> class
+        /// </summary>
+        /// <param name="node">Execution plan node that have the command arguments</param>
+        public CreateAssemblyArgumentEnumerator(PlanNode node)
+        {
+            this.node = node;
+        }
+
         /// <summary>
         /// Argument enumeration implementation
         /// </summary>
@@ -17,24 +33,18 @@ namespace Integra.Vision.Engine.Commands.Create
         /// <returns>Collection of command arguments</returns>
         public CommandArgument[] Enumerate(CommandBase command)
         {
-            if (command is InterpretedCommandBase)
+            System.Collections.Generic.List<CommandArgument> arguments = new System.Collections.Generic.List<CommandArgument>();
+
+            try
             {
-                System.Collections.Generic.List<CommandArgument> arguments = new System.Collections.Generic.List<CommandArgument>();
-                InterpretedCommandBase interpretedCommand = command as InterpretedCommandBase;
-
-                try
-                {
-                    arguments.Add(new CommandArgument("Name", interpretedCommand.Plan.Root.Children[0].Properties["Value"].ToString()));
-                    arguments.Add(new CommandArgument("LocalPath", interpretedCommand.Plan.Root.Children[1].Properties["Value"].ToString()));
-                    return arguments.ToArray();
-                }
-                catch (System.Exception e)
-                {
-                    throw new ArgumentEnumerationException(Resources.SR.EnumerationException, e);
-                }
+                arguments.Add(new CommandArgument("Name", this.node.Children[0].Properties["Value"].ToString()));
+                arguments.Add(new CommandArgument("LocalPath", this.node.Children[1].Properties["Value"].ToString()));
+                return arguments.ToArray();
             }
-
-            return new CommandArgument[] { };
+            catch (System.Exception e)
+            {
+                throw new ArgumentEnumerationException(Resources.SR.EnumerationException, e);
+            }
         }
     }
 }

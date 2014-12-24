@@ -100,15 +100,15 @@ namespace Integra.Vision.Language.ASTNodes.Permissions
             string p = this.permissionType.ToLower();
             if (p == SR.ReservedWordGrant)
             {
-                this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.Grant;
+                this.result.NodeType = PlanNodeTypeEnum.Grant;
             }
             else if (p == SR.ReservedWordRevoke)
             {
-                this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.Revoke;
+                this.result.NodeType = PlanNodeTypeEnum.Revoke;
             }
             else if (p == SR.ReservedWordDeny)
             {
-                this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.Deny;
+                this.result.NodeType = PlanNodeTypeEnum.Deny;
             }
         }
     }

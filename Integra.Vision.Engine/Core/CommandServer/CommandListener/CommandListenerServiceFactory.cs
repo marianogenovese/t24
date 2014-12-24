@@ -17,17 +17,22 @@ namespace Integra.Vision.Engine.Core
         /// <summary>
         /// Listener address.
         /// </summary>
-        private Uri address;
+        private readonly Uri address;
 
         /// <summary>
         /// Listener address.
         /// </summary>
-        private CommandListenerBinding.MessageEncoding encodingType;
+        private readonly CommandListenerBinding.MessageEncoding encodingType;
 
         /// <summary>
         /// The queue used for enqueue requests.
         /// </summary>
-        private IOperationSchedulerModule queue;
+        private readonly IOperationSchedulerModule queue;
+
+        /// <summary>
+        /// The authenticator of the user.
+        /// </summary>
+        private readonly IUserAuthenticator userAuthenticator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandListenerServiceFactory"/> class.
@@ -35,17 +40,19 @@ namespace Integra.Vision.Engine.Core
         /// <param name="address">The listener address.</param>
         /// <param name="encodingType">The type of encoding used.</param>
         /// <param name="queue">The queue used for enqueue requests.</param>
-        public CommandListenerServiceFactory(Uri address, CommandListenerBinding.MessageEncoding encodingType, IOperationSchedulerModule queue)
+        /// <param name="userAuthenticator">The authenticator of the user.</param>
+        public CommandListenerServiceFactory(Uri address, CommandListenerBinding.MessageEncoding encodingType, IOperationSchedulerModule queue, IUserAuthenticator userAuthenticator)
         {
             this.address = address;
             this.encodingType = encodingType;
             this.queue = queue;
+            this.userAuthenticator = userAuthenticator;
         }
 
         /// <inheritdoc />
         public override ServiceHostBase CreateServiceHost(string constructorString, System.Uri[] baseAddresses)
         {
-            return new CommandListenerServiceHost(this.address, this.encodingType, this.queue);
+            return new CommandListenerServiceHost(this.address, this.encodingType, this.queue, this.userAuthenticator);
         }
     }
 }

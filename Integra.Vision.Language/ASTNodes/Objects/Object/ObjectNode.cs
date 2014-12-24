@@ -84,7 +84,7 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Object
                 auxMessage.Properties.Add(SR.DataTypeProperty, typeof(Integra.Messaging.Message).ToString());
                 auxMessage.Line = ChildrenNodes[2].Token.Location.Line;
                 auxMessage.NodeText = eventObject.NodeText + ".Message";
-                auxMessage.NodeType = (uint)PlanNodeTypeEnum.ObjectMessage;
+                auxMessage.NodeType = PlanNodeTypeEnum.ObjectMessage;
                 auxMessage.Children = new List<PlanNode>();
                 auxMessage.Children.Add(eventObject);
 
@@ -93,7 +93,7 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Object
                 auxPart.Properties.Add(SR.DataTypeProperty, typeof(Integra.Messaging.MessagePart).ToString());
                 auxPart.Line = idPartOrFieldObject.Line;
                 auxPart.NodeText = auxMessage.NodeText + "." + idPartOrFieldObject.NodeText;
-                auxPart.NodeType = (uint)PlanNodeTypeEnum.ObjectPart;
+                auxPart.NodeType = PlanNodeTypeEnum.ObjectPart;
                 auxPart.Children = new List<PlanNode>();
                 auxPart.Children.Add(auxMessage);
                 auxPart.Children.Add(idPartOrFieldObject);
@@ -103,7 +103,7 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Object
                 auxField.Properties.Add(SR.DataTypeProperty, typeof(Integra.Messaging.MessageField).ToString());
                 auxField.Line = idFieldObject.Line;
                 auxField.NodeText = auxPart.NodeText + "." + idFieldObject.NodeText;
-                auxField.NodeType = (uint)PlanNodeTypeEnum.ObjectField;
+                auxField.NodeType = PlanNodeTypeEnum.ObjectField;
 
                 auxField.Children = new List<PlanNode>();
                 auxField.Children.Add(auxPart);
@@ -123,7 +123,7 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Object
                 auxField.Properties.Add(SR.DataTypeProperty, typeof(Integra.Messaging.MessageField).ToString());
                 auxField.Line = idFieldObject.Line;
                 auxField.NodeText = idPartOrFieldObject.NodeText + "." + idFieldObject.NodeText;
-                auxField.NodeType = (uint)PlanNodeTypeEnum.ObjectField;
+                auxField.NodeType = PlanNodeTypeEnum.ObjectField;
                 auxField.Children = new List<PlanNode>();
                 auxField.Children.Add(idPartOrFieldObject);
                 auxField.Children.Add(idFieldObject);

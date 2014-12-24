@@ -6,6 +6,7 @@
 namespace Integra.Vision.Engine.Commands.Drop.DropAdapter
 {
     using System;
+    using Integra.Vision.Language;
 
     /// <summary>
     /// Base class for drop adapters
@@ -27,7 +28,8 @@ namespace Integra.Vision.Engine.Commands.Drop.DropAdapter
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public DropAdapterCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.DropAdapter, commandText, securityContext)
+        public DropAdapterCommand(PlanNode node)
+            : base(node)
         {
         }
 

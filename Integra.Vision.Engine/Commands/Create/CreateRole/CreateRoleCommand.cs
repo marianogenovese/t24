@@ -6,6 +6,7 @@
 namespace Integra.Vision.Engine.Commands.Create.CreateRole
 {
     using System;
+    using Integra.Vision.Language;
 
     /// <summary>
     /// Base class for create roles
@@ -27,7 +28,8 @@ namespace Integra.Vision.Engine.Commands.Create.CreateRole
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public CreateRoleCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.CreateRole, commandText, securityContext)
+        public CreateRoleCommand(PlanNode node)
+            : base(node)
         {
         }
 

@@ -3,9 +3,10 @@
 //     Copyright (c) Integra.Vision.Engine. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.Create
+namespace Integra.Vision.Engine.Commands
 {
     using System;
+    using Integra.Vision.Language;
     
     /// <summary>
     /// Base class for create assemblies
@@ -13,22 +14,28 @@ namespace Integra.Vision.Engine.Commands.Create
     internal sealed class CreateAssemblyCommand : CreateObjectCommandBase
     {
         /// <summary>
+        /// Execution plan node
+        /// </summary>
+        private readonly PlanNode node;
+
+        /// <summary>
         /// Argument enumerator implementation for this command
         /// </summary>
-        private IArgumentEnumerator argumentEnumerator = new CreateAssemblyArgumentEnumerator();
+        private IArgumentEnumerator argumentEnumerator;
 
         /// <summary>
         /// Dependency enumerator implementation for this command
         /// </summary>
-        private IDependencyEnumerator dependencyEnumerator = new CreateAssemblyDependencyEnumerator();
+        private IDependencyEnumerator dependencyEnumerator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateAssemblyCommand"/> class
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public CreateAssemblyCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.CreateAssembly, commandText, securityContext)
+        public CreateAssemblyCommand(PlanNode node) : base(node)
         {
+            this.node = node;
         }
 
         /// <summary>
@@ -38,6 +45,11 @@ namespace Integra.Vision.Engine.Commands.Create
         {
             get
             {
+                if(this.argumentEnumerator == null)
+                {
+                    this.argumentEnumerator = new CreateAssemblyArgumentEnumerator(this.node);
+                }
+
                 return this.argumentEnumerator;
             }
         }
@@ -49,26 +61,13 @@ namespace Integra.Vision.Engine.Commands.Create
         {
             get
             {
+                if(this.dependencyEnumerator == null)
+                {
+                    this.dependencyEnumerator = new CreateAssemblyDependencyEnumerator(this.node);
+                }
+
                 return this.dependencyEnumerator;
             }
-        }
-
-        /// <summary>
-        /// Contains create assembly logic
-        /// </summary>
-        protected override void OnExecute()
-        {
-            base.OnExecute();
-
-            // implementar persistencia
-            Integra.Vision.Engine.Database.Contexts.ViewsContext vc = new Integra.Vision.Engine.Database.Contexts.ViewsContext("EngineDatabase");
-            Database.Repositories.Repository<Database.Models.Assembly> repo = new Database.Repositories.Repository<Database.Models.Assembly>(vc);
-            Database.Models.Assembly assembly = new Database.Models.Assembly() { CreationDate = DateTime.Now, IsSystemObject = false, Type = ObjectTypeEnum.Assembly.ToString(), State = (int)UserDefinedObjectStateEnum.Stopped, Name = this.Arguments["Name"].Value.ToString(), LocalPath = this.Arguments["LocalPath"].Value.ToString() };
-            repo.Create(assembly);
-            repo.Commit();
-
-            repo.Dispose();
-            vc.Dispose();
         }
     }
 }

@@ -18,11 +18,25 @@ namespace Integra.Vision.Engine.Core
     /// </summary>
     internal sealed class CommandListenerSecurityTokenAuthenticator : UserNameSecurityTokenAuthenticator
     {
+        /// <summary>
+        /// The authenticator of users.
+        /// </summary>
+        private readonly IUserAuthenticator userAuthenticator;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommandListenerSecurityTokenAuthenticator"/> class.
+        /// </summary>
+        /// <param name="userAuthenticator">The authenticator of the user.</param>
+        public CommandListenerSecurityTokenAuthenticator(IUserAuthenticator userAuthenticator)
+        {
+            this.userAuthenticator = userAuthenticator;
+        }
+
         /// <inheritdoc />
         protected override ReadOnlyCollection<IAuthorizationPolicy> ValidateUserNamePasswordCore(string userName, string password)
         {
             Claim claim = null;
-            if (true)
+            if (this.userAuthenticator.Validate(userName, password))
             {
                 claim = Claim.CreateNameClaim(userName);
             }

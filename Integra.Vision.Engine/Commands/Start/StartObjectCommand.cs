@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Engine.Commands.Start
 {
+    using Integra.Vision.Language;
+
     /// <summary>
     /// Base class for start objects
     /// </summary>
@@ -25,7 +27,8 @@ namespace Integra.Vision.Engine.Commands.Start
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public StartObjectCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.StartAdapter, commandText, securityContext)
+        public StartObjectCommand(PlanNode node)
+            : base(node)
         {
         }
 

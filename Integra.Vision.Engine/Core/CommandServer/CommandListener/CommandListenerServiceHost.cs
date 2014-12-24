@@ -17,17 +17,22 @@ namespace Integra.Vision.Engine.Core
         /// <summary>
         /// Listener address.
         /// </summary>
-        private Uri address;
+        private readonly Uri address;
         
         /// <summary>
         /// Listener address.
         /// </summary>
-        private Integra.Vision.Engine.Core.CommandListenerBinding.MessageEncoding encodingType;
+        private readonly Integra.Vision.Engine.Core.CommandListenerBinding.MessageEncoding encodingType;
 
         /// <summary>
         /// The queue used for enqueue requests.
         /// </summary>
-        private IOperationSchedulerModule queue;
+        private readonly IOperationSchedulerModule queue;
+
+        /// <summary>
+        /// The authenticator of the user.
+        /// </summary>
+        private readonly IUserAuthenticator userAuthenticator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandListenerServiceHost"/> class.
@@ -35,11 +40,13 @@ namespace Integra.Vision.Engine.Core
         /// <param name="address">The listener address.</param>
         /// <param name="encodingType">The type of encoding used.</param>
         /// <param name="queue">The queue used for enqueue requests.</param>
-        public CommandListenerServiceHost(Uri address, Integra.Vision.Engine.Core.CommandListenerBinding.MessageEncoding encodingType, IOperationSchedulerModule queue) : base(typeof(CommandRequestHandler), new Uri[] { address })
+        /// <param name="userAuthenticator">The authenticator of the user.</param>
+        public CommandListenerServiceHost(Uri address, Integra.Vision.Engine.Core.CommandListenerBinding.MessageEncoding encodingType, IOperationSchedulerModule queue, IUserAuthenticator userAuthenticator) : base(typeof(CommandRequestHandler), new Uri[] { address })
         {
             this.address = address;
             this.encodingType = encodingType;
             this.queue = queue;
+            this.userAuthenticator = userAuthenticator;
         }
 
         /// <summary>
@@ -88,7 +95,7 @@ namespace Integra.Vision.Engine.Core
         private void ConfigureCredentialsBehavior()
         {
             Description.Behaviors.Remove<ServiceCredentials>();
-            CommandListenerServiceCredentials serviceCredentials = new CommandListenerServiceCredentials();
+            CommandListenerServiceCredentials serviceCredentials = new CommandListenerServiceCredentials(this.userAuthenticator);
             serviceCredentials.ServiceCertificate.Certificate = CommandListenerCertificate.Current;
             Description.Behaviors.Add(serviceCredentials);
             Credentials.UseIdentityConfiguration = false;

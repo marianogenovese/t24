@@ -6,6 +6,7 @@
 namespace Integra.Vision.Engine.Commands.Drop.DropSource
 {
     using System;
+    using Integra.Vision.Language;
 
     /// <summary>
     /// Base class for drop sources
@@ -27,7 +28,7 @@ namespace Integra.Vision.Engine.Commands.Drop.DropSource
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public DropSourceCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.DropSource, commandText, securityContext)
+        public DropSourceCommand(PlanNode node) : base(node)
         {
         }
 

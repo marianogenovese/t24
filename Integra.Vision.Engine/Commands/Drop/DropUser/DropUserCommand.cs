@@ -6,6 +6,7 @@
 namespace Integra.Vision.Engine.Commands.Drop.DropUser
 {
     using System;
+    using Integra.Vision.Language;
 
     /// <summary>
     /// Base class for drop users
@@ -27,7 +28,7 @@ namespace Integra.Vision.Engine.Commands.Drop.DropUser
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public DropUserCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.DropUser, commandText, securityContext)
+        public DropUserCommand(PlanNode node) : base(node)
         {
         }
 

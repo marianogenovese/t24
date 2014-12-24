@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Engine.Commands.Permission.Grant
 {
+    using Integra.Vision.Language;
+
     /// <summary>
     /// Base class for grant permissions
     /// </summary>
@@ -25,7 +27,7 @@ namespace Integra.Vision.Engine.Commands.Permission.Grant
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public GrantPermissionCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.Grant, commandText, securityContext)
+        public GrantPermissionCommand(PlanNode node) : base(node)
         {
         }
 

@@ -8,6 +8,7 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterTrigger
     using System;
     using Integra.Vision.Engine.Commands.Create.CreateTrigger;
     using Integra.Vision.Engine.Commands.Drop.DropTrigger;
+    using Integra.Vision.Language;
 
     /// <summary>
     /// Base class for alter triggers
@@ -29,7 +30,8 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterTrigger
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public AlterTriggerCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.AlterTrigger, commandText, securityContext)
+        public AlterTriggerCommand(PlanNode node)
+            : base(node)
         {
         }
 
@@ -92,7 +94,7 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterTrigger
             /// <param name="arguments">alter command arguments</param>
             /// /// <param name="dependencies">alter command dependencies</param>
             public CreateObject(IReadOnlyNamedElementCollection<CommandArgument> arguments, IReadOnlyNamedElementCollection<CommandDependency> dependencies)
-                : base(string.Empty, null)
+                : base(null)
             {
                 this.arguments = arguments;
                 this.dependencies = dependencies;
@@ -150,7 +152,7 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterTrigger
             /// <param name="arguments">alter command arguments</param>
             /// /// <param name="dependencies">alter command dependencies</param>
             public DropObject(IReadOnlyNamedElementCollection<CommandArgument> arguments, IReadOnlyNamedElementCollection<CommandDependency> dependencies)
-                : base(string.Empty, null)
+                : base(new PlanNode())
             {
                 this.arguments = arguments;
                 this.dependencies = dependencies;

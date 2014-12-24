@@ -7,12 +7,13 @@ namespace Integra.Vision.Engine.Commands
 {
     using System;
     using Integra.Vision.Engine.Resources;
+    using Integra.Vision.Language;
     
     /// <summary>
     /// ArgumentEnumeratorCommandBase
     /// Encapsulate argument enumeration logic
     /// </summary>
-    internal abstract class ArgumentEnumeratorCommandBase : SecureContextCommandBase
+    internal abstract class ArgumentEnumeratorCommandBase : CommandBase
     {
         /// <summary>
         /// Contains a collection of arguments 
@@ -25,7 +26,7 @@ namespace Integra.Vision.Engine.Commands
         /// <param name="commandType">Indicate what type of command is</param>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public ArgumentEnumeratorCommandBase(CommandTypeEnum commandType, string commandText, ISecurityContext securityContext) : base(commandType, commandText, securityContext)
+        public ArgumentEnumeratorCommandBase(PlanNode node) : base(node)
         {
         }
 
@@ -62,7 +63,7 @@ namespace Integra.Vision.Engine.Commands
             
             if (this.ArgumentEnumerator == null)
             {
-                throw new ArgumentEnumerationException(SR.EnumeratorNotImplemented);
+                throw new ArgumentEnumerationException(Integra.Vision.Engine.SR.EnumeratorNotImplemented);
             }
 
             try
@@ -72,7 +73,7 @@ namespace Integra.Vision.Engine.Commands
             }
             catch (Exception e)
             {
-                throw new ArgumentEnumerationException(SR.EnumerationException, e);
+                throw new ArgumentEnumerationException(Integra.Vision.Engine.SR.EnumerationException, e);
             }
         }
     }

@@ -8,6 +8,7 @@ namespace Integra.Vision.Engine.Commands.Create.CreateUser
     using System;
     using System.Security.Cryptography;
     using System.Text;
+    using Integra.Vision.Language;
 
     /// <summary>
     /// Base class for create users
@@ -29,7 +30,8 @@ namespace Integra.Vision.Engine.Commands.Create.CreateUser
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public CreateUserCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.CreateUser, commandText, securityContext)
+        public CreateUserCommand(PlanNode node)
+            : base(node)
         {
         }
 

@@ -29,12 +29,13 @@ namespace Integra.Vision.Engine.Core
         /// Initializes a new instance of the <see cref="CommandServerModule"/> class.
         /// </summary>
         /// <param name="queue">Where the incoming requests are scheduled.</param>
-        public CommandServerModule(IOperationSchedulerModule queue)
+        /// <param name="userAuthenticator">The authenticator of the user.</param>
+        public CommandServerModule(IOperationSchedulerModule queue, IUserAuthenticator userAuthenticator)
         {
             Contract.Requires(queue != null);
             this.queue = queue;
-            CommandListenerServiceFactory factory = new CommandListenerServiceFactory(new Uri(EngineConfiguration.Current.DefaultEndpoint.Address), CommandListenerBinding.MessageEncoding.Text, queue);
-            this.commandListener = factory.CreateServiceHost(string.Empty, null);
+            CommandListenerServiceFactory factory = new CommandListenerServiceFactory(new Uri(EngineConfiguration.Current.DefaultEndpoint.Address), CommandListenerBinding.MessageEncoding.Text, queue, userAuthenticator);
+            this.commandListener = factory.CreateServiceHost(null);
         }
 
         /// <summary>

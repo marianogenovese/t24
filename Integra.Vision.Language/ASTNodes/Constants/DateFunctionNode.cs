@@ -64,7 +64,7 @@ namespace Integra.Vision.Language.ASTNodes.Constants
             this.result.Children.Add(auxDate);
             this.result.NodeText = this.function + "(" + auxDate.NodeText + ")";
             this.result.Properties.Add("DataType", typeof(int));
-            this.result.NodeType = (uint)PlanNodeTypeEnum.Property;
+            this.result.NodeType = PlanNodeTypeEnum.Property;
 
             switch (this.function)
             {

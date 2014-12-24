@@ -39,11 +39,13 @@ namespace Integra.Vision.Engine.Core
             /*
              * Aqui se deben tomar los comandos y buscar la fabrica correspondiente. Revisar en el app.config.
              */
+            ICommandActionExecutionContext actionContext = context as ICommandActionExecutionContext;
 
-            DispatchContext dispatchContext = context as DispatchContext;
-            dispatchContext.ActionPipelineFactory = builderCache.GetOrAdd(CommandTypeEnum.CreateAssembly, _ => actionPipelineFactoryBuilder.Build(CommandTypeEnum.CreateAssembly));
-            yield return dispatchContext;
-            yield return dispatchContext;
+            foreach (CommandBase command in context.Commands)
+            {
+                actionContext.ActionPipelineFactory = builderCache.GetOrAdd(command.Type, _ => actionPipelineFactoryBuilder.Build(command.Type));
+                yield return actionContext;
+            }
             
             /*
             // Se usa un dictionario concurrente pues este metodo puede ser llamado concurrentemente y ademas el diccionario es estatico.

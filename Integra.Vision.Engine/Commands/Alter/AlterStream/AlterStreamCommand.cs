@@ -9,12 +9,18 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterStream
     using Integra.Vision.Engine.Commands.Create.CreateStream;
     using Integra.Vision.Engine.Commands.Drop.DropStream;
     using Integra.Vision.Engine.Database.Repositories;
+    using Integra.Vision.Language;
 
     /// <summary>
     /// Base class for alter streams
     /// </summary>
     internal sealed class AlterStreamCommand : AlterObjectCommandBase<CreateStreamCommand, DropStreamCommand>
     {
+        /// <summary>
+        /// Execution plan node
+        /// </summary>
+        private readonly PlanNode node;
+
         /// <summary>
         /// Argument enumerator implementation for this command
         /// </summary>
@@ -30,7 +36,8 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterStream
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public AlterStreamCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.AlterStream, commandText, securityContext)
+        public AlterStreamCommand(PlanNode node)
+            : base(node)
         {
         }
 
@@ -93,7 +100,7 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterStream
             /// <param name="arguments">alter command arguments</param>
             /// /// <param name="dependencies">alter command dependencies</param>
             public CreateObject(IReadOnlyNamedElementCollection<CommandArgument> arguments, IReadOnlyNamedElementCollection<CommandDependency> dependencies)
-                : base(string.Empty, null)
+                : base(null)
             {
                 this.arguments = arguments;
                 this.dependencies = dependencies;
@@ -151,7 +158,7 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterStream
             /// <param name="arguments">alter command arguments</param>
             /// /// <param name="dependencies">alter command dependencies</param>
             public DropObject(IReadOnlyNamedElementCollection<CommandArgument> arguments, IReadOnlyNamedElementCollection<CommandDependency> dependencies)
-                : base(string.Empty, null)
+                : base(new PlanNode())
             {
                 this.arguments = arguments;
                 this.dependencies = dependencies;

@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Engine.Commands.Stop
 {
+    using Integra.Vision.Language;
+
     /// <summary>
     /// Base class for stop objects
     /// </summary>
@@ -25,7 +27,7 @@ namespace Integra.Vision.Engine.Commands.Stop
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public StopObjectCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.StopAdapter, commandText, securityContext)
+        public StopObjectCommand(PlanNode node) : base(node)
         {
         }
 

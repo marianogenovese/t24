@@ -65,6 +65,9 @@ namespace Integra.Vision.Engine.Core
             }
 
             dependencyResolver.RegisterInstance<IBufferManager>(new InternalBufferManager(EngineConfiguration.Current.BufferManagement.MaxBufferPoolSize, EngineConfiguration.Current.BufferManagement.MaxBufferSize));
+
+            // Registramos el autenticador de usuarios.
+            dependencyResolver.RegisterInstance<IUserAuthenticator>(new DbUserAuthenticator());
         }
     }
 }

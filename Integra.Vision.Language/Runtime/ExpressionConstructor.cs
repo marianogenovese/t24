@@ -66,40 +66,40 @@ namespace Integra.Vision.Language.Runtime
         /// <returns>expression tree of actual plan</returns>
         public Expression CreateExpressionNode(PlanNode actualNode, Expression leftNode, Expression rightNode)
         {
-            uint nodeType = actualNode.NodeType;
+            PlanNodeTypeEnum nodeType = actualNode.NodeType;
 
             switch (nodeType)
             {
-                case 10:
+                case PlanNodeTypeEnum.Constant:
                     return this.GenerateConstant(actualNode);
-                case 21:
+                case PlanNodeTypeEnum.Cast:
                     return this.GenerateCast(actualNode, leftNode);
-                case 31:
+                case PlanNodeTypeEnum.Equal:
                     return this.GenerarEqual(actualNode, leftNode, rightNode);
-                case 32:
+                case PlanNodeTypeEnum.NotEqual:
                     return this.GenerarNotEqual(actualNode, leftNode, rightNode);
-                case 33:
+                case PlanNodeTypeEnum.LessThan:
                     return this.GenerarLessThan(actualNode, leftNode, rightNode);
-                case 34:
+                case PlanNodeTypeEnum.LessThanOrEqual:
                     return this.GenerarLessThanOrEqual(actualNode, leftNode, rightNode);
-                case 35:
+                case PlanNodeTypeEnum.GreaterThan:
                     return this.GenerarGreaterThan(actualNode, leftNode, rightNode);
-                case 36:
+                case PlanNodeTypeEnum.GreaterThanOrEqual:
                     return this.GenerarGreaterThanOrEqual(actualNode, leftNode, rightNode);
-                case 37:
+                case PlanNodeTypeEnum.Not:
                     return this.GenerarNot(actualNode, leftNode);
-                case 38:
+                case PlanNodeTypeEnum.Like:
                     return this.GenerarLike(actualNode, leftNode, rightNode);
-                case 50:
+                case PlanNodeTypeEnum.Or:
                     return this.GenerateOr(actualNode, leftNode, rightNode);
-                case 51:
+                case PlanNodeTypeEnum.And:
                     return this.GenerateAnd(actualNode, leftNode, rightNode);
-                case 60:
+                case PlanNodeTypeEnum.Event:
                     return this.GenerateEvent(actualNode);
-                case 71:
+                case PlanNodeTypeEnum.ObjectPart:
                     return this.GenerateObjectPart(actualNode, leftNode, rightNode);
-                case 72:
-                    if (actualNode.Children.First<PlanNode>().NodeType.Equals((uint)PlanNodeTypeEnum.ObjectPart))
+                case PlanNodeTypeEnum.ObjectField:
+                    if (actualNode.Children.First<PlanNode>().NodeType.Equals(PlanNodeTypeEnum.ObjectPart))
                     {
                         return this.GenerateObjectFieldFromPart(actualNode, leftNode, rightNode);
                     }
@@ -108,17 +108,17 @@ namespace Integra.Vision.Language.Runtime
                         return this.GenerateObjectFieldFromField(actualNode, leftNode, rightNode);
                     }
 
-                case 73:
+                case PlanNodeTypeEnum.ObjectValue:
                     return this.GenerateValueOfObject(actualNode, leftNode);
-                case 74:
+                case PlanNodeTypeEnum.ObjectMessage:
                     return this.GenerateObjectMessage(actualNode, (ParameterExpression)leftNode);
-                case 90:
+                case PlanNodeTypeEnum.Negate:
                     return this.GenerateNegate(actualNode, leftNode);
-                case 91:
+                case PlanNodeTypeEnum.Subtract:
                     return this.GenerateSubtract(actualNode, leftNode, rightNode);
-                case 100:
+                case PlanNodeTypeEnum.Property:
                     return this.GenerateProperty(actualNode, leftNode);
-                case 111:
+                case PlanNodeTypeEnum.From:
                     return this.GenerateFrom(actualNode, leftNode);
                 default:
                     return Expression.Constant(null);

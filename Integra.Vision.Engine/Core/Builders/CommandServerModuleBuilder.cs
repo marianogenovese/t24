@@ -32,7 +32,7 @@ namespace Integra.Vision.Engine.Core
         /// <returns>The server created.</returns>
         public IModule Build()
         {
-            this.dependencyResolver.RegisterInstance<ICommandServerModule>(new CommandServerModule(this.dependencyResolver.Resolve<IOperationSchedulerModule>()));
+            this.dependencyResolver.RegisterInstance<ICommandServerModule>(new CommandServerModule(this.dependencyResolver.Resolve<IOperationSchedulerModule>(), this.dependencyResolver.Resolve<IUserAuthenticator>()));
             return this.dependencyResolver.Resolve<ICommandServerModule>();
         }
     }

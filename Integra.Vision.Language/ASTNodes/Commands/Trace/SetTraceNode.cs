@@ -70,7 +70,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Trace
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[0].Token.Location.Line;
-            this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.SetTraceAdapter;
+            this.result.NodeType = PlanNodeTypeEnum.SetTraceAdapter;
         }
 
         /// <summary>
@@ -106,27 +106,27 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Trace
 
             if (SR.ReservedWordAdapter == o)
             {
-                this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.SetTraceAdapter;
+                this.result.NodeType = PlanNodeTypeEnum.SetTraceAdapter;
             }
             else if (SR.ReservedWordSource == o)
             {
-                this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.SetTraceSource;
+                this.result.NodeType = PlanNodeTypeEnum.SetTraceSource;
             }
             else if (SR.ReservedWordStream == o)
             {
-                this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.SetTraceStream;
+                this.result.NodeType = PlanNodeTypeEnum.SetTraceStream;
             }
             else if (SR.ReservedWordTrigger == o)
             {
-                this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.SetTraceTrigger;
+                this.result.NodeType = PlanNodeTypeEnum.SetTraceTrigger;
             }
             else if (SR.ReservedWordEngine == o)
             {
-                this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.SetTraceEngine;
+                this.result.NodeType = PlanNodeTypeEnum.SetTraceEngine;
             }
             else
             {
-                this.result.NodeType = (uint)Integra.Vision.Engine.Commands.ObjectTypeEnum.SpecificObject;
+                this.result.NodeType = PlanNodeTypeEnum.SpecificObject;
             }
         }
     }

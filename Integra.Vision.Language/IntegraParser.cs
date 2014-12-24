@@ -34,9 +34,9 @@ namespace Integra.Vision.Language
         /// Implements the logic to parse commands
         /// </summary>
         /// <returns>Execution plan</returns>
-        public Plan Parse()
+        public List<PlanNode> Parse()
         {
-            Plan plan = new Plan();
+            List<PlanNode> nodes = null;
 
             try
             {
@@ -54,10 +54,7 @@ namespace Integra.Vision.Language
                 else
                 {
                     Irony.Interpreter.ScriptApp app = new Irony.Interpreter.ScriptApp(new Integra.Vision.Language.Grammars.EQLLanguageRuntime());
-                    
-                    List<PlanNode> planNodeList = new List<PlanNode>();
-                    planNodeList = (List<PlanNode>)app.Evaluate(parseTree);
-                    plan.Root = planNodeList.First<PlanNode>();
+                    nodes = (List<PlanNode>)app.Evaluate(parseTree);
                 }
             }
             catch (System.Exception e)
@@ -65,7 +62,7 @@ namespace Integra.Vision.Language
                 throw new Exception(Resources.SR.InterpretationException, e);
             }
 
-            return plan;
+            return nodes;
         }
     }
 }

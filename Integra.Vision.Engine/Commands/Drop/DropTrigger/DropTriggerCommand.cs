@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Engine.Commands.Drop.DropTrigger
 {
+    using Integra.Vision.Language;
     using System;
 
     /// <summary>
@@ -27,7 +28,7 @@ namespace Integra.Vision.Engine.Commands.Drop.DropTrigger
         /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public DropTriggerCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.DropTrigger, commandText, securityContext)
+        public DropTriggerCommand(PlanNode node) : base(node)
         {
         }
 

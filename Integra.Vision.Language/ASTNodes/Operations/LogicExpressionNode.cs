@@ -88,13 +88,13 @@ namespace Integra.Vision.Language.ASTNodes.Operations
                 switch (operacion)
                 {
                     case "and":
-                        this.result.NodeType = (uint)PlanNodeTypeEnum.And;
+                        this.result.NodeType = PlanNodeTypeEnum.And;
                         break;
                     case "or":
-                        this.result.NodeType = (uint)PlanNodeTypeEnum.Or;
+                        this.result.NodeType = PlanNodeTypeEnum.Or;
                         break;
                     case "not":
-                        this.result.NodeType = (uint)PlanNodeTypeEnum.Not;
+                        this.result.NodeType = PlanNodeTypeEnum.Not;
                         break;
                     default:
                         ErrorNode error = new ErrorNode();
@@ -156,7 +156,7 @@ namespace Integra.Vision.Language.ASTNodes.Operations
                     casteo.Column = leftNode.Column;
                     casteo.Line = leftNode.Line;
                     casteo.NodeText = leftNode.NodeText;
-                    casteo.NodeType = (uint)PlanNodeTypeEnum.Cast;
+                    casteo.NodeType = PlanNodeTypeEnum.Cast;
                     casteo.Properties.Add("DataType", typeof(bool).ToString());
                     casteo.Children = new List<PlanNode>();
                     casteo.Children.Add(leftNode);
@@ -169,7 +169,7 @@ namespace Integra.Vision.Language.ASTNodes.Operations
                     casteo.Column = rightNode.Column;
                     casteo.Line = rightNode.Line;
                     casteo.NodeText = rightNode.NodeText;
-                    casteo.NodeType = (uint)PlanNodeTypeEnum.Cast;
+                    casteo.NodeType = PlanNodeTypeEnum.Cast;
                     casteo.Properties.Add("DataType", typeof(bool).ToString());
                     casteo.Children = new List<PlanNode>();
                     casteo.Children.Add(rightNode);
@@ -213,7 +213,7 @@ namespace Integra.Vision.Language.ASTNodes.Operations
                     casteo.Column = rightNode.Column;
                     casteo.Line = rightNode.Line;
                     casteo.NodeText = rightNode.NodeText;
-                    casteo.NodeType = (uint)PlanNodeTypeEnum.Cast;
+                    casteo.NodeType = PlanNodeTypeEnum.Cast;
                     casteo.Properties.Add("DataType", typeof(bool).ToString());
                     casteo.Children = new List<PlanNode>();
                     casteo.Children.Add(rightNode);

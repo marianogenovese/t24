@@ -7,6 +7,8 @@ namespace Integra.Vision.Engine.Core
 {
     using System;
     using System.Collections.Generic;
+    using Integra.Vision.Language;
+    using Integra.Vision.Engine.Commands;
     
     /// <summary>
     /// Implements the logic of compiling in which receive a node and return a command as result of the compiling.
@@ -21,13 +23,36 @@ namespace Integra.Vision.Engine.Core
         /// <inheritdoc />
         public override ICompileFilterContext Execute(IParseFilterContext context)
         {
-            DispatchContext dispatchContext = context as DispatchContext;
+            ICompileFilterContext compileContext = context as ICompileFilterContext;
 
             /*
              * Aqui se debe tomar los nodos y convertirlos a comandos
              * en la clase DispatchContext agregar un elemento al diccionario de Data con los comandos.
              */
-            return context as ICompileFilterContext;
+
+            List<CommandBase> commands = new List<CommandBase>();
+
+            foreach(PlanNode node in context.Nodes)
+            {
+                PlanNodeTypeEnum nodeType = node.NodeType;
+                CommandBase command = null;
+                switch(nodeType)
+                {
+                    case PlanNodeTypeEnum.CreateAssembly:
+                        command = new CreateAssemblyCommand(node);
+                        break;
+                    case PlanNodeTypeEnum.CreateAdapter:
+                        break;
+                }
+
+                if (command != null)
+                {
+                    commands.Add(command);
+                }
+            }
+
+            compileContext.Commands = commands.ToArray();
+            return compileContext;
         }
     }
 }

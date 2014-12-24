@@ -6,11 +6,12 @@
 namespace Integra.Vision.Engine.Commands
 {
     using System;
+    using Integra.Vision.Language;
 
     /// <summary>
     /// Base class for grant, deny and revoke permissions
     /// </summary>
-    internal abstract class PermissionCommandBase : PersistenceContextCommandBase
+    internal abstract class PermissionCommandBase : PublicCommandBase
     {
         /// <summary>
         /// Type of the assignable object
@@ -38,7 +39,7 @@ namespace Integra.Vision.Engine.Commands
         /// <param name="commandType">Indicate what type of command is</param>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public PermissionCommandBase(CommandTypeEnum commandType, string commandText, ISecurityContext securityContext) : base(commandType, commandText, securityContext)
+        public PermissionCommandBase(PlanNode node) : base(node)
         {
         }
 

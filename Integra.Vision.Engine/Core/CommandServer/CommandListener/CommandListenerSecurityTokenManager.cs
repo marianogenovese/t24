@@ -21,12 +21,19 @@ namespace Integra.Vision.Engine.Core
         private ServiceCredentials credentials;
 
         /// <summary>
+        /// The authenticator of the user.
+        /// </summary>
+        private IUserAuthenticator userAuthenticator;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CommandListenerSecurityTokenManager"/> class.
         /// </summary>
         /// <param name="credentials">The service credentials.</param>
-        public CommandListenerSecurityTokenManager(ServiceCredentials credentials) : base(credentials)
+        /// <param name="userAuthenticator">The authenticator of the user.</param>
+        public CommandListenerSecurityTokenManager(ServiceCredentials credentials, IUserAuthenticator userAuthenticator) : base(credentials)
         {
             this.credentials = credentials;
+            this.userAuthenticator = userAuthenticator;
         }
 
         /// <inheritdoc />
@@ -35,7 +42,7 @@ namespace Integra.Vision.Engine.Core
             if (tokenRequirement.TokenType == SecurityTokenTypes.UserName)
             {
                 outOfBandTokenResolver = null;
-                return new CommandListenerSecurityTokenAuthenticator();
+                return new CommandListenerSecurityTokenAuthenticator(this.userAuthenticator);
             }
             else
             {

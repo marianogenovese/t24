@@ -120,7 +120,6 @@
     <Compile Include="Commands\Base\DropObjectCommandBase.cs" />
     <Compile Include="Commands\Base\IdentifiableUserDefinedObjectCommandBase.cs" />
     <Compile Include="Commands\Base\PermissionCommandBase.cs" />
-    <Compile Include="Commands\Base\PersistenceContextCommandBase.cs" />
     <Compile Include="Commands\Base\PublicCommandBase.cs" />
     <Compile Include="Commands\Base\DependencyAuthorizationCommandBase.cs" />
     <Compile Include="Commands\Base\DependencyValidationCommandBase.cs" />
@@ -132,14 +131,9 @@
     <Compile Include="Commands\Base\CommandArgumentCollection.cs" />
     <Compile Include="Commands\Base\CommandBase.cs" />
     <Compile Include="Commands\Base\CommandDependency.cs" />
-    <Compile Include="Commands\Base\ExclusiveLockCommandBase.cs" />
     <Compile Include="Commands\Base\IDependencyEnumerator.cs" />
     <Compile Include="Commands\Base\IArgumentEnumerator.cs" />
-    <Compile Include="Commands\Base\IExecutionContext.cs" />
-    <Compile Include="Commands\Base\InterpretedCommandBase.cs" />
-    <Compile Include="Commands\Base\ISecurityContext.cs" />
     <Compile Include="Commands\Base\ReferenceableObjectCommandBase.cs" />
-    <Compile Include="Commands\Base\SecureContextCommandBase.cs" />
     <Compile Include="Commands\Base\SetCommandBase.cs" />
     <Compile Include="Commands\Base\StartStopObjectCommandBase.cs" />
     <Compile Include="Commands\Base\UserDefinedObjectCommandBase.cs" />
@@ -191,6 +185,8 @@
     <Compile Include="Core\Actions\Results\InternalDataColumnCollection.cs" />
     <Compile Include="Core\Actions\Results\NotAuthorizedCommandResult.cs" />
     <Compile Include="Core\Actions\Results\QueryCommandResult.cs" />
+    <Compile Include="Core\Security\DbUserAuthenticator.cs" />
+    <Compile Include="Core\Security\IUserAuthenticator.cs" />
     <Compile Include="Core\Builders\OperationDispatcherModuleBuilder.cs" />
     <Compile Include="Core\Builders\OperationSchedulerModuleBuilder.cs" />
     <Compile Include="Core\Builders\CommandServerModuleBuilder.cs" />

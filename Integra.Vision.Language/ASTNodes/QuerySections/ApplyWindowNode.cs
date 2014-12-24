@@ -50,7 +50,7 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[1].Token.Location.Line;
-            this.result.NodeType = (uint)PlanNodeTypeEnum.ApplyWindow;
+            this.result.NodeType = PlanNodeTypeEnum.ApplyWindow;
         }
 
         /// <summary>

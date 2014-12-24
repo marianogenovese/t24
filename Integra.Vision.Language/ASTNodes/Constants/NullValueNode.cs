@@ -33,7 +33,7 @@ namespace Integra.Vision.Language.ASTNodes.Constants
             this.result.Column = treeNode.Token.Location.Column;
             this.result.Line = treeNode.Token.Location.Line;
             this.result.NodeText = "null";
-            this.result.NodeType = (uint)PlanNodeTypeEnum.Constant;
+            this.result.NodeType = PlanNodeTypeEnum.Constant;
             this.result.Properties.Add("Value", null);
         }
 

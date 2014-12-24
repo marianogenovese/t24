@@ -86,31 +86,31 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Drop
 
             if (objectType == SR.AssemblyObject)
             {
-                this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.DropAssembly;
+                this.result.NodeType = PlanNodeTypeEnum.DropAssembly;
             }
             else if (objectType == SR.AdapterObject)
             {
-                this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.DropAdapter;
+                this.result.NodeType = PlanNodeTypeEnum.DropAdapter;
             }
             else if (objectType == SR.SourceObject)
             {
-                this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.DropSource;
+                this.result.NodeType = PlanNodeTypeEnum.DropSource;
             }
             else if (objectType == SR.StreamObject)
             {
-                this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.DropStream;
+                this.result.NodeType = PlanNodeTypeEnum.DropStream;
             }
             else if (objectType == SR.TriggerObject)
             {
-                this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.DropTrigger;
+                this.result.NodeType = PlanNodeTypeEnum.DropTrigger;
             }
             else if (objectType == SR.RoleObject)
             {
-                this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.DropRole;
+                this.result.NodeType = PlanNodeTypeEnum.DropRole;
             }
             else if (objectType == SR.UserObject)
             {
-                this.result.NodeType = (uint)Integra.Vision.Engine.Commands.CommandTypeEnum.DropUser;
+                this.result.NodeType = PlanNodeTypeEnum.DropUser;
             }
         }
     }

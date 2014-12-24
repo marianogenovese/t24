@@ -7,7 +7,8 @@ namespace Integra.Vision.Engine.Commands.Create.CreateAdapter
 {
     using System;
     using Integra.Vision.Engine.Database.Repositories;
-
+    using Integra.Vision.Language;
+ 
     /// <summary>
     /// Base class for create adapters
     /// </summary>
@@ -26,16 +27,9 @@ namespace Integra.Vision.Engine.Commands.Create.CreateAdapter
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateAdapterCommand"/> class
         /// </summary>
-        public CreateAdapterCommand() : base(CommandTypeEnum.CreateAdapter, string.Empty, null) 
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CreateAdapterCommand"/> class
-        /// </summary>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public CreateAdapterCommand(string commandText, ISecurityContext securityContext) : base(CommandTypeEnum.CreateAdapter, commandText, securityContext)
+        public CreateAdapterCommand(PlanNode node) : base(node)
         {
         }
 

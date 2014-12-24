@@ -9,12 +9,18 @@ namespace Integra.Vision.Engine.Core
     using System.Collections.Generic;
     using System.Security.Principal;
     using System.Threading.Tasks;
+    using Integra.Vision.Engine.Commands;
     
     /// <summary>
     /// Represents a action execution context.
     /// </summary>
     internal class CommandExecutingContext : OperationContext
     {
+        /// <summary>
+        /// Current command to execute.
+        /// </summary>
+        private readonly CommandBase command;
+
         /// <summary>
         /// The context information of the operation.
         /// </summary>
@@ -24,9 +30,11 @@ namespace Integra.Vision.Engine.Core
         /// Initializes a new instance of the <see cref="CommandExecutingContext"/> class.
         /// </summary>
         /// <param name="innerContext">The operation context related to the execution of the command</param>
-        public CommandExecutingContext(OperationContext innerContext)
+        /// <param name="command">Current command to execute</param>
+        public CommandExecutingContext(OperationContext innerContext, CommandBase command)
         {
             this.innerContext = innerContext;
+            this.command = command;
         }
 
         /// <summary>
@@ -70,8 +78,17 @@ namespace Integra.Vision.Engine.Core
             }
         }
 
-        // Aqui debe haber una propiedad que tenga el comando actual a ejecutarse.
-        
+        /// <summary>
+        /// Gets the current command.
+        /// </summary>
+        public CommandBase Command
+        {
+            get
+            {
+                return this.command;
+            }
+        }
+
         /// <inheritdoc />
         public override TaskCompletionSource<bool> CompletionSignal
         {

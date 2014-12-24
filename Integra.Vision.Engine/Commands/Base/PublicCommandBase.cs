@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Engine.Commands
 {
+    using Integra.Vision.Language;
+
     /// <summary>
     /// DependencyValidationCommandBase
     /// Encapsulate argument validation logic
@@ -17,7 +19,7 @@ namespace Integra.Vision.Engine.Commands
         /// <param name="commandType">Indicate what type of command is</param>
         /// <param name="commandText">Text that must be interpreted as part of this command</param>
         /// <param name="securityContext">Context for security validation</param>
-        public PublicCommandBase(CommandTypeEnum commandType, string commandText, ISecurityContext securityContext) : base(commandType, commandText, securityContext)
+        public PublicCommandBase(PlanNode node) : base(node)
         {
         }
     }

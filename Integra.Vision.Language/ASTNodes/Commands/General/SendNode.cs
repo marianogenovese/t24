@@ -58,7 +58,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.General
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[0].Token.Location.Line;
-            this.result.NodeType = (uint)PlanNodeTypeEnum.Send;
+            this.result.NodeType = PlanNodeTypeEnum.Send;
         }
 
         /// <summary>
