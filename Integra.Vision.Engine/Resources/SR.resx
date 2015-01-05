@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CertificateData" xml:space="preserve">
+    <value>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</value>
+  </data>
+  <data name="CommandServerDataContractNS" xml:space="preserve">
+    <value>http://Integra.Vision.Engine/</value>
+  </data>
+  <data name="CommandServerServiceContractNameSpace" xml:space="preserve">
+    <value>http://Integra.Vision.Engine/</value>
+  </data>
+  <data name="CommandServerServiceName" xml:space="preserve">
+    <value>CommandServer</value>
+  </data>
+  <data name="DataSetRowValueValidationError" xml:space="preserve">
+    <value>Row value is not valid.</value>
+  </data>
+  <data name="DataSetUnhandledException" xml:space="preserve">
+    <value>Unhandled error on row validation.</value>
+  </data>
+  <data name="EngineConfigurationNotFound" xml:space="preserve">
+    <value>Engine configuration section not found.</value>
+  </data>
+  <data name="EngineConfigurationSection" xml:space="preserve">
+    <value>integra.vision.engine/engine</value>
+  </data>
+  <data name="EnumerationException" xml:space="preserve">
+    <value>Enumeration exception ocurred. The inner exception may contain more information.</value>
+  </data>
+  <data name="EnumeratorNotImplemented" xml:space="preserve">
+    <value>Enumerator is not implement for command</value>
+  </data>
+  <data name="ExecuteReplyAction" xml:space="preserve">
+    <value>ExecuteReply</value>
+  </data>
+  <data name="InterpretationException" xml:space="preserve">
+    <value>An exception has ocurred on command interpretation. The inner exception may contain more information.</value>
+  </data>
+  <data name="InvalidActionFilterFactoryType" xml:space="preserve">
+    <value>The type '{0}' is a invalid type for use as factory for action filters.</value>
+  </data>
+  <data name="InvalidCommandElementCollection" xml:space="preserve">
+    <value>Invalid access to command element collection</value>
+  </data>
+  <data name="InvalidDispatchFilterFactoryType" xml:space="preserve">
+    <value>The type '{0}' is a invalid type for use as factory for dispatch filters.</value>
+  </data>
+  <data name="InvalidPlanAccess" xml:space="preserve">
+    <value>Invalid access to command plan</value>
+  </data>
+  <data name="SyntaxError" xml:space="preserve">
+    <value>Invalid input. Syntax error: {0}. Line {1}, column {2}</value>
+  </data>
+  <data name="RequestTypeHeaderName" xml:space="preserve">
+    <value>RequestType</value>
+  </data>
+</root>
