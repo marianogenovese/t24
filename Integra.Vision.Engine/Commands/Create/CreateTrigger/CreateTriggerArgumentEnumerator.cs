@@ -3,16 +3,31 @@
 //     Copyright (c) Integra.Vision.Engine.Database. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.Create.CreateTrigger
+namespace Integra.Vision.Engine.Commands
 {
     using System;
     using System.Collections.Generic;
+    using Integra.Vision.Language;
     
     /// <summary>
     /// Contains argument enumerator logic for Create Trigger command
     /// </summary>
     internal sealed class CreateTriggerArgumentEnumerator : IArgumentEnumerator
     {
+        /// <summary>
+        /// Execution plan node that have the command arguments
+        /// </summary>
+        private readonly PlanNode node;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CreateTriggerArgumentEnumerator"/> class
+        /// </summary>
+        /// <param name="node">Execution plan node that have the command arguments</param>
+        public CreateTriggerArgumentEnumerator(PlanNode node)
+        {
+            this.node = node;
+        }
+
         /// <summary>
         /// Argument enumeration implementation
         /// </summary>
@@ -22,33 +37,34 @@ namespace Integra.Vision.Engine.Commands.Create.CreateTrigger
         {
             List<CommandArgument> arguments = new List<CommandArgument>();
 
-            List<Tuple<string, List<string>>> ifList = new List<Tuple<string, List<string>>>();
+            List<Tuple<string, string[]>> ifList = new List<Tuple<string, string[]>>();
             List<string> sendList = new List<string>();
 
             try
             {
-                /*
-                arguments.Add(new CommandArgument("Name", interpretedCommand.Plan.Root.Children[0].Properties["Value"].ToString()));
-                arguments.Add(new CommandArgument("StreamName", interpretedCommand.Plan.Root.Children[1].Properties["Value"].ToString()));
+                arguments.Add(new CommandArgument("Name", this.node.Children[0].Properties["Value"].ToString()));
+                arguments.Add(new CommandArgument("StreamName", this.node.Children[1].Properties["Value"].ToString()));
 
-                int childrenCount = interpretedCommand.Plan.Root.Children.Count;
+                int childrenCount = this.node.Children.Count;
                 if (childrenCount == 3)
                 {
-                    foreach (Integra.Vision.Language.PlanNode plan in interpretedCommand.Plan.Root.Children[2].Children)
+                    arguments.Add(new CommandArgument("IsSimpleTrigger", true));
+                    foreach (Integra.Vision.Language.PlanNode plan in this.node.Children[2].Children)
                     {
                         sendList.Add(plan.Children[1].Properties["Value"].ToString());
                     }
 
-                    arguments.Add(new CommandArgument("SendList", sendList));
+                    arguments.Add(new CommandArgument("SendList", sendList.ToArray()));
                 }
                 else if (childrenCount == 4)
                 {
-                    arguments.Add(new CommandArgument("ApplyWindow", interpretedCommand.Plan.Root.Children[2].Children[0].Properties["Value"]));
+                    arguments.Add(new CommandArgument("IsSimpleTrigger", false));
+                    arguments.Add(new CommandArgument("ApplyWindow", this.node.Children[2].Children[0].Properties["Value"]));
 
-                    foreach (Integra.Vision.Language.PlanNode ifPlan in interpretedCommand.Plan.Root.Children[3].Children)
+                    foreach (Integra.Vision.Language.PlanNode ifPlan in this.node.Children[3].Children)
                     {
                         sendList = new System.Collections.Generic.List<string>();
-                        if (ifPlan.NodeType == (uint)Integra.Vision.Language.PlanNodeTypeEnum.Send)
+                        if (ifPlan.NodeType == PlanNodeTypeEnum.Send)
                         {
                             sendList.Add(ifPlan.Children[1].Properties["Value"].ToString());
                         }
@@ -60,12 +76,12 @@ namespace Integra.Vision.Engine.Commands.Create.CreateTrigger
                             }
                         }
 
-                        ifList.Add(new System.Tuple<string, System.Collections.Generic.List<string>>(ifPlan.NodeType.ToString(), sendList));
+                        ifList.Add(new System.Tuple<string, string[]>(ifPlan.NodeType.ToString(), sendList.ToArray()));
                     }
 
-                    arguments.Add(new CommandArgument("IfList", ifList));
+                    arguments.Add(new CommandArgument("IfList", ifList.ToArray()));
                 }
-                */
+
                 return arguments.ToArray();
             }
             catch (Exception e)

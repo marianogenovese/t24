@@ -3,7 +3,7 @@
 //     Copyright (c) Integra.Vision.Engine. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.Alter.AlterAdapter
+namespace Integra.Vision.Engine.Commands
 {
     /// <summary>
     /// Contains dependency enumerator logic for alter adapter command

@@ -3,16 +3,31 @@
 //     Copyright (c) Integra.Vision.Engine.Database. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.Create.CreateSource
+namespace Integra.Vision.Engine.Commands
 {
     using System;
     using System.Collections.Generic;
+    using Integra.Vision.Language;
     
     /// <summary>
     /// Contains argument enumerator logic for Create Source command
     /// </summary>
     internal sealed class CreateSourceArgumentEnumerator : IArgumentEnumerator
     {
+        /// <summary>
+        /// Execution plan node that have the command arguments
+        /// </summary>
+        private readonly PlanNode node;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CreateSourceArgumentEnumerator"/> class
+        /// </summary>
+        /// <param name="node">Execution plan node that have the command arguments</param>
+        public CreateSourceArgumentEnumerator(PlanNode node)
+        {
+            this.node = node;
+        }
+
         /// <summary>
         /// Argument enumeration implementation
         /// </summary>
@@ -24,11 +39,10 @@ namespace Integra.Vision.Engine.Commands.Create.CreateSource
             
             try
             {
-                /*
-                arguments.Add(new CommandArgument("Name", interpretedCommand.Plan.Root.Children[0].Properties["Value"].ToString()));
-                arguments.Add(new CommandArgument("From", interpretedCommand.Plan.Root.Children[1].Children[0].Properties["Value"].ToString()));
-                arguments.Add(new CommandArgument("Where", interpretedCommand.Plan.Root.Children[2].Children[0].NodeText));
-                */
+                arguments.Add(new CommandArgument("Name", this.node.Children[0].Properties["Value"].ToString()));
+                arguments.Add(new CommandArgument("From", this.node.Children[1].Children[0].Properties["Value"].ToString()));
+                arguments.Add(new CommandArgument("Where", this.node.Children[2].Children[0].NodeText));
+
                 return arguments.ToArray();
             }
             catch (Exception e)

@@ -3,16 +3,31 @@
 //     Copyright (c) Integra.Vision.Engine. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.SystemViews
+namespace Integra.Vision.Engine.Commands
 {
     using System;
     using System.Collections.Generic;
+    using Integra.Vision.Language;
     
     /// <summary>
     /// Contains argument enumerator logic for the system views
     /// </summary>
     internal sealed class SystemQueriesArgumentEnumerator : IArgumentEnumerator
     {
+        /// <summary>
+        /// Execution plan node that have the command arguments
+        /// </summary>
+        private readonly PlanNode node;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SystemQueriesArgumentEnumerator"/> class
+        /// </summary>
+        /// <param name="node">Execution plan node that have the command arguments</param>
+        public SystemQueriesArgumentEnumerator(PlanNode node)
+        {
+            this.node = node;
+        }
+
         /// <summary>
         /// Argument enumeration implementation
         /// </summary>
@@ -24,11 +39,10 @@ namespace Integra.Vision.Engine.Commands.SystemViews
 
             try
             {
-                /*
-                arguments.Add(new CommandArgument("from", interpretedCommand.Plan.Root.Properties["from"].ToString()));
-                arguments.Add(new CommandArgument("where", interpretedCommand.Plan.Root.Properties["where"].ToString()));
-                arguments.Add(new CommandArgument("select", interpretedCommand.Plan.Root.Properties["select"].ToString()));
-                */
+                arguments.Add(new CommandArgument("From", this.node.Properties["from"].ToString()));
+                arguments.Add(new CommandArgument("Where", this.node.Properties["where"].ToString()));
+                arguments.Add(new CommandArgument("Select", this.node.Properties["select"].ToString()));
+        
                 return arguments.ToArray();
             }
             catch (Exception e)

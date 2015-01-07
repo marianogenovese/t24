@@ -10,7 +10,7 @@ namespace Integra.Vision.Engine.Commands
     /// <summary>
     /// Base class for user defined object commands
     /// </summary>
-    internal abstract class UserDefinedObjectCommandBase : PublicCommandBase
+    internal abstract class UserDefinedObjectCommandBase : CommandBase
     {
         /// <summary>
         /// Name of user defined object

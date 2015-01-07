@@ -18,54 +18,54 @@ namespace Integra.Vision.Engine.Commands
         /// Adapter
         /// Doc goes here
         /// </summary>
-        Adapter = 1,
+        Adapter = 1 << 0 << 500,
 
         /// <summary>
         /// Source
         /// Doc goes here
         /// </summary>
-        Source = 2,
+        Source = 1 << 1 << 500,
 
         /// <summary>
         /// Stream
         /// Doc goes here
         /// </summary>
-        Stream = 4,
+        Stream = 1 << 2 << 500,
 
         /// <summary>
         /// Trigger
         /// Doc goes here
         /// </summary>
-        Trigger = 8,
+        Trigger = 1 << 3 << 500,
 
         /// <summary>
         /// Assembly
         /// Doc goes here
         /// </summary>
-        Assembly = 16,
+        Assembly = 1 << 4 << 500,
 
         /// <summary>
         /// Role
         /// Doc goes here
         /// </summary>
-        Role = 32,
+        Role = 1 << 5 << 500,
 
         /// <summary>
         /// User
         /// Doc goes here
         /// </summary>
-        User = 64,
+        User = 1 << 6 << 500,
 
         /// <summary>
         /// Engine
         /// Doc goes here
         /// </summary>
-        Engine = 128,
+        Engine = 1 << 7 << 500,
 
         /// <summary>
         /// SpecificObject
         /// Doc goes here
         /// </summary>
-        SpecificObject = 256
+        SpecificObject = 1 << 8 << 500
     }
 }

@@ -3,11 +3,9 @@
 //     Copyright (c) Integra.Vision.Engine. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.Alter.AlterSource
+namespace Integra.Vision.Engine.Commands
 {
     using System;
-    using Integra.Vision.Engine.Commands.Create.CreateSource;
-    using Integra.Vision.Engine.Commands.Drop.DropSource;
     using Integra.Vision.Engine.Database.Repositories;
     using Integra.Vision.Language;
 

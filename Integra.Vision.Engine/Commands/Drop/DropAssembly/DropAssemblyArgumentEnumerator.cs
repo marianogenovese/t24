@@ -3,16 +3,31 @@
 //     Copyright (c) Integra.Vision.Engine.Database. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.Drop.DropAssembly
+namespace Integra.Vision.Engine.Commands
 {
     using System;
     using System.Collections.Generic;
+    using Integra.Vision.Language;
     
     /// <summary>
     /// Contains argument enumerator logic for Drop Assembly command
     /// </summary>
     internal sealed class DropAssemblyArgumentEnumerator : IArgumentEnumerator
     {
+        /// <summary>
+        /// Execution plan node that have the command arguments
+        /// </summary>
+        private readonly PlanNode node;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DropAssemblyArgumentEnumerator"/> class
+        /// </summary>
+        /// <param name="node">Execution plan node that have the command arguments</param>
+        public DropAssemblyArgumentEnumerator(PlanNode node)
+        {
+            this.node = node;
+        }
+
         /// <summary>
         /// Argument enumeration implementation
         /// </summary>
@@ -24,9 +39,7 @@ namespace Integra.Vision.Engine.Commands.Drop.DropAssembly
             
             try
             {
-                /*
-                arguments.Add(new CommandArgument("Name", interpretedCommand.Plan.Root.Children[0].Properties["Value"].ToString()));
-                */
+                arguments.Add(new CommandArgument("Name", this.node.Children[0].Properties["Value"].ToString()));
                 return arguments.ToArray();
             }
             catch (Exception e)

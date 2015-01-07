@@ -3,7 +3,7 @@
 //     Copyright (c) Integra.Vision.Engine.Database. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.Alter.AlterSource
+namespace Integra.Vision.Engine.Commands
 {
     using System;
 

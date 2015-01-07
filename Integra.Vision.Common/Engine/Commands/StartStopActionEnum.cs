@@ -18,12 +18,12 @@ namespace Integra.Vision.Engine.Commands
         /// Start
         /// Doc goes here
         /// </summary>
-        Start = 0x0 << 200,
+        Start = 1 << 1 << 200,
 
         /// <summary>
         /// Stop
         /// Doc goes here
         /// </summary>
-        Stop = 1 << 0 << 200
+        Stop = 1 << 2 << 200
     }
 }

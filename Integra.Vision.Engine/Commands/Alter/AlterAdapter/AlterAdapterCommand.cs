@@ -3,11 +3,9 @@
 //     Copyright (c) Integra.Vision.Engine. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.Alter.AlterAdapter
+namespace Integra.Vision.Engine.Commands
 {
     using System;
-    using Integra.Vision.Engine.Commands.Create.CreateAdapter;
-    using Integra.Vision.Engine.Commands.Drop.DropAdapter;
     using Integra.Vision.Engine.Database.Repositories;
     using Integra.Vision.Language;
 
@@ -193,14 +191,6 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterAdapter
                 {
                     return this.dependencies;
                 }
-            }
-
-            /// <summary>
-            /// Save command arguments
-            /// </summary>
-            protected override void OnExecute()
-            {
-                this.SaveArguments();
             }
         }
 

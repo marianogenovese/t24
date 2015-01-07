@@ -3,11 +3,9 @@
 //     Copyright (c) Integra.Vision.Engine. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.Alter.AlterStream
+namespace Integra.Vision.Engine.Commands
 {
     using System;
-    using Integra.Vision.Engine.Commands.Create.CreateStream;
-    using Integra.Vision.Engine.Commands.Drop.DropStream;
     using Integra.Vision.Engine.Database.Repositories;
     using Integra.Vision.Language;
 

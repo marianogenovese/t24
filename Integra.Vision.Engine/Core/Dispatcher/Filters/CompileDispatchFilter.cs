@@ -37,10 +37,111 @@ namespace Integra.Vision.Engine.Core
                 CommandBase command = null;
                 switch (nodeType)
                 {
+                    // CREATE
                     case PlanNodeTypeEnum.CreateAssembly:
                         command = new CreateAssemblyCommand(node);
                         break;
                     case PlanNodeTypeEnum.CreateAdapter:
+                        command = new CreateAdapterCommand(node);
+                        break;
+                    case PlanNodeTypeEnum.CreateSource:
+                        command = new CreateSourceCommand(node);
+                        break;
+                    case PlanNodeTypeEnum.CreateStream:
+                        command = new CreateStreamCommand(node);
+                        break;
+                    case PlanNodeTypeEnum.CreateTrigger:
+                        command = new CreateTriggerCommand(node);
+                        break;
+                    case PlanNodeTypeEnum.CreateUser:
+                        command = new CreateUserCommand(node);
+                        break;
+                    case PlanNodeTypeEnum.CreateRole:
+                        command = new CreateRoleCommand(node);
+                        break;
+
+                    // DROP
+                    case PlanNodeTypeEnum.DropAssembly:
+                        command = new DropAssemblyCommand(node);
+                        break;
+                    case PlanNodeTypeEnum.DropAdapter:
+                        command = new DropAdapterCommand(node);
+                        break;
+                    case PlanNodeTypeEnum.DropSource:
+                        command = new DropSourceCommand(node);
+                        break;
+                    case PlanNodeTypeEnum.DropStream:
+                        command = new DropStreamCommand(node);
+                        break;
+                    case PlanNodeTypeEnum.DropTrigger:
+                        command = new DropTriggerCommand(node);
+                        break;
+                    case PlanNodeTypeEnum.DropUser:
+                        command = new DropUserCommand(node);
+                        break;
+                    case PlanNodeTypeEnum.DropRole:
+                        command = new DropRoleCommand(node);
+                        break;
+
+                    // ALTER
+                    case PlanNodeTypeEnum.AlterAdapter:
+                        break;
+                    case PlanNodeTypeEnum.AlterSource:
+                        break;
+                    case PlanNodeTypeEnum.AlterStream:
+                        break;
+                    case PlanNodeTypeEnum.AlterTrigger:
+                        break;
+                    case PlanNodeTypeEnum.AlterUser:
+                        break;
+
+                    // PERMISSION
+                    case PlanNodeTypeEnum.Grant:
+                        command = new GrantPermissionCommand(node);
+                        break;
+                    case PlanNodeTypeEnum.Deny:
+                        command = new DenyPermissionCommand(node);
+                        break;
+                    case PlanNodeTypeEnum.Revoke:
+                        command = new RevokePermissionCommand(node);
+                        break;
+
+                    // START
+                    case PlanNodeTypeEnum.StartAdapter:
+                        break;
+                    case PlanNodeTypeEnum.StartSource:
+                        break;
+                    case PlanNodeTypeEnum.StartStream:
+                        break;
+                    case PlanNodeTypeEnum.StartTrigger:
+                        break;
+
+                    // STOP
+                    case PlanNodeTypeEnum.StopAdapter:
+                        break;
+                    case PlanNodeTypeEnum.StopSource:
+                        break;
+                    case PlanNodeTypeEnum.StopStream:
+                        break;
+                    case PlanNodeTypeEnum.StopTrigger:
+                        break;
+
+                    // TRACE
+                    case PlanNodeTypeEnum.SetTraceAdapter:
+                        break;
+                    case PlanNodeTypeEnum.SetTraceEngine:
+                        break;
+                    case PlanNodeTypeEnum.SpecificObject:
+                        break;
+                    case PlanNodeTypeEnum.SetTraceSource:
+                        break;
+                    case PlanNodeTypeEnum.SetTraceStream:
+                        break;
+                    case PlanNodeTypeEnum.SetTraceTrigger:
+                        break;
+
+                    // QUERY
+                    case PlanNodeTypeEnum.SystemQuery:
                         break;
                 }
 

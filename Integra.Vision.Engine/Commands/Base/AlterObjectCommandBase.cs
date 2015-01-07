@@ -14,7 +14,7 @@ namespace Integra.Vision.Engine.Commands
     /// </summary>
     /// <typeparam name="TCreate">Create command class</typeparam>
     /// <typeparam name="TDrop">Drop command class</typeparam>
-    internal abstract class AlterObjectCommandBase<TCreate, TDrop> : ReferenceableObjectCommandBase
+    internal abstract class AlterObjectCommandBase<TCreate, TDrop> : UserDefinedObjectCommandBase
         where TCreate : CreateObjectCommandBase
         where TDrop : DropObjectCommandBase
     {

@@ -18,6 +18,6 @@ namespace Integra.Vision.Engine.Commands
         /// Trace
         /// Doc goes here
         /// </summary>
-        Trace = 0x0 << 300
+        Trace = 1 << 0 << 300
     }
 }

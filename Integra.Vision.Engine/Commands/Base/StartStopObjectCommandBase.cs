@@ -10,7 +10,7 @@ namespace Integra.Vision.Engine.Commands
     /// <summary>
     /// Base class for start or stop objects
     /// </summary>
-    internal abstract class StartStopObjectCommandBase : IdentifiableUserDefinedObjectCommandBase
+    internal abstract class StartStopObjectCommandBase : UserDefinedObjectCommandBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="StartStopObjectCommandBase"/> class

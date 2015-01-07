@@ -3,18 +3,21 @@
 //     Copyright (c) Integra.Vision.Engine. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.Alter.AlterUser
+namespace Integra.Vision.Engine.Commands
 {
     using System;
-    using Integra.Vision.Engine.Commands.Create.CreateUser;
-    using Integra.Vision.Engine.Commands.Drop.DropUser;
     using Integra.Vision.Language;
 
     /// <summary>
     /// Base class for alter users
     /// </summary>
-    internal sealed class AlterUserCommand : IdentifiableUserDefinedObjectCommandBase
+    internal sealed class AlterUserCommand : AlterObjectCommandBase<CreateUserCommand, DropUserCommand>
     {
+        /// <summary>
+        /// Execution plan node
+        /// </summary>
+        private readonly PlanNode node;
+
         /// <summary>
         /// Argument enumerator implementation for this command
         /// </summary>
@@ -31,6 +34,7 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterUser
         /// <param name="node">Execution plan node that have the command arguments</param>
         public AlterUserCommand(PlanNode node) : base(node)
         {
+            this.node = node;
         }
 
         /// <inheritdoc />
@@ -127,14 +131,6 @@ namespace Integra.Vision.Engine.Commands.Alter.AlterUser
                 {
                     return this.dependencies;
                 }
-            }
-
-            /// <summary>
-            /// Save command arguments
-            /// </summary>
-            protected override void OnExecute()
-            {
-                this.SaveArguments();
             }
         }
 

@@ -3,16 +3,31 @@
 //     Copyright (c) Integra.Vision.Engine. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.Start
+namespace Integra.Vision.Engine.Commands
 {
     using System;
     using System.Collections.Generic;
-    
+    using Integra.Vision.Language;
+
     /// <summary>
     /// Contains dependency enumerator logic for start object command
     /// </summary>
     internal sealed class StartObjectDependencyEnumerator : IDependencyEnumerator
     {
+        /// <summary>
+        /// Execution plan node that have the command arguments
+        /// </summary>
+        private readonly PlanNode node;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StartObjectDependencyEnumerator"/> class
+        /// </summary>
+        /// <param name="node">Execution plan node that have the command arguments</param>
+        public StartObjectDependencyEnumerator(PlanNode node)
+        {
+            this.node = node;
+        }
+
         /// <summary>
         /// Dependency enumeration implementation
         /// </summary>
@@ -22,8 +37,7 @@ namespace Integra.Vision.Engine.Commands.Start
         {
             try
             {
-                List<CommandDependency> dependencies = new List<CommandDependency>();
-                return dependencies.ToArray();
+                return new CommandDependency[] { };
             }
             catch (Exception e)
             {

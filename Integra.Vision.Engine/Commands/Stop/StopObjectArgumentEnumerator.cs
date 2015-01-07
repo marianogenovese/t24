@@ -3,16 +3,31 @@
 //     Copyright (c) Integra.Vision.Engine. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.Stop
+namespace Integra.Vision.Engine.Commands
 {
     using System;
     using System.Collections.Generic;
+    using Integra.Vision.Language;
     
     /// <summary>
     /// Contains argument enumerator logic for stop a object command
     /// </summary>
     internal sealed class StopObjectArgumentEnumerator : IArgumentEnumerator
     {
+        /// <summary>
+        /// Execution plan node that have the command arguments
+        /// </summary>
+        private readonly PlanNode node;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StopObjectArgumentEnumerator"/> class
+        /// </summary>
+        /// <param name="node">Execution plan node that have the command arguments</param>
+        public StopObjectArgumentEnumerator(PlanNode node)
+        {
+            this.node = node;
+        }
+
         /// <summary>
         /// Argument enumeration implementation
         /// </summary>
@@ -24,10 +39,9 @@ namespace Integra.Vision.Engine.Commands.Stop
 
             try
             {
-                /*
-                arguments.Add(new CommandArgument("UserDefinedObject", interpretedCommand.Plan.Root.Properties["UserDefinedObject"].ToString()));
-                arguments.Add(new CommandArgument("Name", interpretedCommand.Plan.Root.Children[0].Properties["Value"].ToString()));
-                */
+                arguments.Add(new CommandArgument("UserDefinedObject", this.node.Properties["UserDefinedObject"].ToString()));
+                arguments.Add(new CommandArgument("Name", this.node.Children[0].Properties["Value"].ToString()));
+
                 return arguments.ToArray();
             }
             catch (Exception e)

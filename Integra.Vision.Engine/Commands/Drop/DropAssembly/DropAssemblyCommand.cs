@@ -3,7 +3,7 @@
 //     Copyright (c) Integra.Vision.Engine. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.Drop.DropAssembly
+namespace Integra.Vision.Engine.Commands
 {
     using System;
     using Integra.Vision.Language;
@@ -14,14 +14,19 @@ namespace Integra.Vision.Engine.Commands.Drop.DropAssembly
     internal sealed class DropAssemblyCommand : DropObjectCommandBase
     {
         /// <summary>
+        /// Execution plan node
+        /// </summary>
+        private readonly PlanNode node;
+
+        /// <summary>
         /// Argument enumerator implementation for this command
         /// </summary>
-        private IArgumentEnumerator argumentEnumerator = new DropAssemblyArgumentEnumerator();
+        private IArgumentEnumerator argumentEnumerator;
 
         /// <summary>
         /// Dependency enumerator implementation for this command
         /// </summary>
-        private IDependencyEnumerator dependencyEnumerator = new DropAssemblyDependencyEnumerator();
+        private IDependencyEnumerator dependencyEnumerator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DropAssemblyCommand"/> class
@@ -29,6 +34,7 @@ namespace Integra.Vision.Engine.Commands.Drop.DropAssembly
         /// <param name="node">Execution plan node that have the command arguments</param>
         public DropAssemblyCommand(PlanNode node) : base(node)
         {
+            this.node = node;
         }
 
         /// <inheritdoc />
@@ -41,12 +47,28 @@ namespace Integra.Vision.Engine.Commands.Drop.DropAssembly
         }
 
         /// <summary>
+        /// Gets the assembly name
+        /// </summary>
+        public string Name
+        {
+            get
+            {
+                return this.Arguments["Name"].Value.ToString();
+            }
+        }
+
+        /// <summary>
         /// Gets command argument enumerator
         /// </summary>
         protected override IArgumentEnumerator ArgumentEnumerator
         {
             get
             {
+                if (this.argumentEnumerator == null)
+                {
+                    this.argumentEnumerator = new DropAssemblyArgumentEnumerator(this.node);
+                }
+
                 return this.argumentEnumerator;
             }
         }
@@ -58,44 +80,13 @@ namespace Integra.Vision.Engine.Commands.Drop.DropAssembly
         {
             get
             {
+                if (this.dependencyEnumerator == null)
+                {
+                    this.dependencyEnumerator = new DropAssemblyDependencyEnumerator(this.node);
+                }
+
                 return this.dependencyEnumerator;
             }
-        }
-
-        /// <summary>
-        /// Contains drop assembly logic
-        /// </summary>
-        protected override void OnExecute()
-        {
-            base.OnExecute();
-
-            // initialize context
-            Integra.Vision.Engine.Database.Contexts.ViewsContext vc = new Integra.Vision.Engine.Database.Contexts.ViewsContext("EngineDatabase");
-
-            // create repository
-            Database.Repositories.Repository<Database.Models.Assembly> repo = new Database.Repositories.Repository<Database.Models.Assembly>(vc);
-
-            // get the object name
-            string objectName = this.Arguments["Name"].Value.ToString();
-
-            // delete the object
-            repo.Delete(x => x.Name == objectName);
-            int objectCount = repo.Commit();
-
-            // throw an exception if not deleted a object
-            if (objectCount != 1)
-            {
-                // close connection
-                repo.Dispose();
-                vc.Dispose();
-
-                // throw the exception 
-                throw new Integra.Vision.Engine.Exceptions.DropUserDefinedObjectException("The object '" + objectName + "' was not removed");
-            }
-
-            // close connection
-            repo.Dispose();
-            vc.Dispose();
         }
     }
 }

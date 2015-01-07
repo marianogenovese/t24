@@ -221,12 +221,12 @@ namespace Integra.Vision.Language
         CreateSource = 152,
 
         /// <summary>
-        /// Create stream type.
+        /// Create join stream type.
         /// </summary>
         CreateStream = 153,
 
         /// <summary>
-        /// Create trigger type.
+        /// Create simple trigger type.
         /// </summary>
         CreateTrigger = 154,
 
@@ -338,52 +338,37 @@ namespace Integra.Vision.Language
         /// <summary>
         /// Stop assembly type.
         /// </summary>
-        StopAssembly = 180,
+        StopAssembly = 187,
 
         /// <summary>
         /// Stop adapter type.
         /// </summary>
-        StopAdapter = 181,
+        StopAdapter = 188,
 
         /// <summary>
         /// Stop source type.
         /// </summary>
-        StopSource = 182,
+        StopSource = 189,
 
         /// <summary>
         /// Stop stream type.
         /// </summary>
-        StopStream = 183,
+        StopStream = 190,
 
         /// <summary>
         /// Stop trigger type.
         /// </summary>
-        StopTrigger = 184,
+        StopTrigger = 191,
 
         /// <summary>
         /// Stop user type.
         /// </summary>
-        StopUser = 185,
+        StopUser = 192,
 
         /// <summary>
         /// Stop role type.
         /// </summary>
-        StopRole = 186,
-
-        /// <summary>
-        /// Grant type
-        /// </summary>
-        Grant = 190,
-
-        /// <summary>
-        /// Deny type
-        /// </summary>
-        Deny = 191,
-
-        /// <summary>
-        /// Revoke type
-        /// </summary>
-        Revoke = 192,
+        StopRole = 193,        
 
         /// <summary>
         /// Set trace adapter type.
@@ -416,8 +401,23 @@ namespace Integra.Vision.Language
         SpecificObject = 205,
 
         /// <summary>
+        /// Grant type
+        /// </summary>
+        Grant = 210,
+
+        /// <summary>
+        /// Deny type
+        /// </summary>
+        Deny = 211,
+
+        /// <summary>
+        /// Revoke type
+        /// </summary>
+        Revoke = 212,
+
+        /// <summary>
         /// System query type.
         /// </summary>
-        SystemQuery = 210        
+        SystemQuery = 220        
     }
 }

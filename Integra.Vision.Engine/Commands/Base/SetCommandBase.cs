@@ -10,7 +10,7 @@ namespace Integra.Vision.Engine.Commands
     /// <summary>
     /// Base class for set trace command
     /// </summary>
-    internal abstract class SetCommandBase : PublicCommandBase
+    internal abstract class SetCommandBase : CommandBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SetCommandBase"/> class

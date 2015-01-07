@@ -3,7 +3,7 @@
 //     Copyright (c) Integra.Vision.Engine. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.Trace
+namespace Integra.Vision.Engine.Commands
 {
     using Integra.Vision.Language;
 
@@ -13,14 +13,19 @@ namespace Integra.Vision.Engine.Commands.Trace
     internal sealed class SetTraceCommand : SetCommandBase
     {
         /// <summary>
+        /// Execution plan node
+        /// </summary>
+        private readonly PlanNode node;
+
+        /// <summary>
         /// Argument enumerator implementation for this command
         /// </summary>
-        private IArgumentEnumerator argumentEnumerator = new SetTraceArgumentEnumerator();
+        private IArgumentEnumerator argumentEnumerator;
 
         /// <summary>
         /// Dependency enumerator implementation for this command
         /// </summary>
-        private IDependencyEnumerator dependencyEnumerator = new SetTraceDependencyEnumerator();
+        private IDependencyEnumerator dependencyEnumerator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetTraceCommand"/> class
@@ -28,6 +33,7 @@ namespace Integra.Vision.Engine.Commands.Trace
         /// <param name="node">Execution plan node that have the command arguments</param>
         public SetTraceCommand(PlanNode node) : base(node)
         {
+            this.node = node;
         }
         
         /// <inheritdoc />
@@ -43,6 +49,11 @@ namespace Integra.Vision.Engine.Commands.Trace
         {
             get
             {
+                if (this.argumentEnumerator == null)
+                {
+                    this.argumentEnumerator = new SetTraceArgumentEnumerator(this.node);
+                }
+
                 return this.argumentEnumerator;
             }
         }
@@ -54,6 +65,11 @@ namespace Integra.Vision.Engine.Commands.Trace
         {
             get
             {
+                if (this.dependencyEnumerator == null)
+                {
+                    this.dependencyEnumerator = new SetTraceDependencyEnumerator(this.node);
+                }
+
                 return this.dependencyEnumerator;
             }
         }
@@ -63,8 +79,6 @@ namespace Integra.Vision.Engine.Commands.Trace
         /// </summary>
         protected override void OnExecute()
         {
-            base.OnExecute();
-
             // initialize context
             Integra.Vision.Engine.Database.Contexts.ViewsContext vc = new Integra.Vision.Engine.Database.Contexts.ViewsContext("EngineDatabase");
 
@@ -88,8 +102,6 @@ namespace Integra.Vision.Engine.Commands.Trace
                     setTrace = new Database.Models.SetTrace() { Level = level, UserDefinedObjectId = userDefinedObject.Id, CreationDate = System.DateTime.Now };
                     repoSetTrace.Create(setTrace);
                 }
-
-                repoSetTrace.Commit();
             }
             else if (objectName.ToLower().Equals(ObjectTypeEnum.Source.ToString().ToLower()))
             {
@@ -101,8 +113,6 @@ namespace Integra.Vision.Engine.Commands.Trace
                     Database.Models.SetTrace setTrace = new Database.Models.SetTrace() { Level = level, UserDefinedObjectId = userDefinedObject.Id, CreationDate = System.DateTime.Now };
                     repoSetTrace.Create(setTrace);
                 }
-
-                repoSetTrace.Commit();
             }
             else if (objectName.ToLower().Equals(ObjectTypeEnum.Stream.ToString().ToLower()))
             {
@@ -114,8 +124,6 @@ namespace Integra.Vision.Engine.Commands.Trace
                     Database.Models.SetTrace setTrace = new Database.Models.SetTrace() { Level = level, UserDefinedObjectId = userDefinedObject.Id, CreationDate = System.DateTime.Now };
                     repoSetTrace.Create(setTrace);
                 }
-
-                repoSetTrace.Commit();
             }
             else if (objectName.ToLower().Equals(ObjectTypeEnum.Trigger.ToString().ToLower()))
             {
@@ -127,8 +135,6 @@ namespace Integra.Vision.Engine.Commands.Trace
                     Database.Models.SetTrace setTrace = new Database.Models.SetTrace() { Level = level, UserDefinedObjectId = userDefinedObject.Id, CreationDate = System.DateTime.Now };
                     repoSetTrace.Create(setTrace);
                 }
-
-                repoSetTrace.Commit();
             }
             else if (objectName.ToLower().Equals(ObjectTypeEnum.Engine.ToString().ToLower()))
             {
@@ -140,8 +146,6 @@ namespace Integra.Vision.Engine.Commands.Trace
                     Database.Models.SetTrace setTrace = new Database.Models.SetTrace() { Level = level, UserDefinedObjectId = userDefinedObject.Id, CreationDate = System.DateTime.Now };
                     repoSetTrace.Create(setTrace);
                 }
-
-                repoSetTrace.Commit();
             }
             else
             {
@@ -151,12 +155,12 @@ namespace Integra.Vision.Engine.Commands.Trace
                 // create the trace
                 Database.Models.SetTrace setTrace = new Database.Models.SetTrace() { Level = level, UserDefinedObjectId = userDefinedObject.Id, CreationDate = System.DateTime.Now };
                 repoSetTrace.Create(setTrace);
-                repoSetTrace.Commit();
             }
 
+            // save changes
+            vc.SaveChanges();
+
             // close connections
-            repoSetTrace.Dispose();
-            repoObject.Dispose();
             vc.Dispose();
         }
     }

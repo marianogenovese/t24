@@ -3,16 +3,31 @@
 //     Copyright (c) Integra.Vision.Engine. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.SystemViews
+namespace Integra.Vision.Engine.Commands
 {
     using System;
     using System.Collections.Generic;
+    using Integra.Vision.Language;
     
     /// <summary>
     /// Contains dependency enumerator logic for the system views
     /// </summary>
     internal sealed class SystemQueriesDependencyEnumerator : IDependencyEnumerator
     {
+        /// <summary>
+        /// Execution plan node that have the command arguments
+        /// </summary>
+        private readonly PlanNode node;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SystemQueriesDependencyEnumerator"/> class
+        /// </summary>
+        /// <param name="node">Execution plan node that have the command arguments</param>
+        public SystemQueriesDependencyEnumerator(PlanNode node)
+        {
+            this.node = node;
+        }
+
         /// <summary>
         /// Dependency enumeration implementation
         /// </summary>
@@ -22,8 +37,7 @@ namespace Integra.Vision.Engine.Commands.SystemViews
         {
             try
             {
-                List<CommandDependency> dependencies = new List<CommandDependency>();
-                return dependencies.ToArray();
+                return new CommandDependency[] { };
             }
             catch (Exception e)
             {

@@ -3,16 +3,31 @@
 //     Copyright (c) Integra.Vision.Engine. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.Permission.Deny
+namespace Integra.Vision.Engine.Commands
 {
     using System;
     using System.Collections.Generic;
-    
+    using Integra.Vision.Language;
+
     /// <summary>
     /// Contains argument enumerator logic for deny permission command
     /// </summary>
     internal sealed class DenyPermissionArgumentEnumerator : IArgumentEnumerator
     {
+        /// <summary>
+        /// Execution plan node that have the command arguments
+        /// </summary>
+        private readonly PlanNode node;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DenyPermissionArgumentEnumerator"/> class
+        /// </summary>
+        /// <param name="node">Execution plan node that have the command arguments</param>
+        public DenyPermissionArgumentEnumerator(PlanNode node)
+        {
+            this.node = node;
+        }
+
         /// <summary>
         /// Argument enumeration implementation
         /// </summary>
@@ -24,12 +39,27 @@ namespace Integra.Vision.Engine.Commands.Permission.Deny
 
             try
             {
-                /*
-                arguments.Add(new CommandArgument("SecureObjectType", interpretedCommand.Plan.Root.Properties["SecureObjectType"].ToString()));
-                arguments.Add(new CommandArgument("SecureObjectName", interpretedCommand.Plan.Root.Children[0].Properties["Value"].ToString()));
-                arguments.Add(new CommandArgument("AsignableObjectType", interpretedCommand.Plan.Root.Children[1].Properties["To"].ToString()));
-                arguments.Add(new CommandArgument("AsignableObjectName", interpretedCommand.Plan.Root.Children[1].Children[0].Properties["Value"].ToString()));
-                */
+                if (this.node.Properties["SecureObjectType"].ToString().ToLower().Contains(ObjectTypeEnum.Role.ToString().ToLower()))
+                {
+                    arguments.Add(new CommandArgument("SecureObjectType", ObjectTypeEnum.Role));
+                }
+                else
+                {
+                    arguments.Add(new CommandArgument("SecureObjectType", ObjectTypeEnum.User));
+                }
+
+                if (this.node.Children[1].Properties["To"].ToString().Equals(ObjectTypeEnum.Role.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    arguments.Add(new CommandArgument("AsignableObjectType", ObjectTypeEnum.Role));
+                }
+                else
+                {
+                    arguments.Add(new CommandArgument("AsignableObjectType", ObjectTypeEnum.User));
+                }
+
+                arguments.Add(new CommandArgument("SecureObjectName", this.node.Children[0].Properties["Value"].ToString()));
+                arguments.Add(new CommandArgument("AsignableObjectName", this.node.Children[1].Children[0].Properties["Value"].ToString()));
+
                 return arguments.ToArray();
             }
             catch (Exception e)

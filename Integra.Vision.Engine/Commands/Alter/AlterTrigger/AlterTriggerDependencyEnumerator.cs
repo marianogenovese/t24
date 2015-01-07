@@ -3,7 +3,7 @@
 //     Copyright (c) Integra.Vision.Enigne. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.Alter.AlterTrigger
+namespace Integra.Vision.Engine.Commands
 {
     using System;
     using System.Collections.Generic;

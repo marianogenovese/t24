@@ -44,7 +44,8 @@ namespace Integra.Vision.Engine.Core
 
             foreach (CommandBase command in context.Commands)
             {
-                actionContext.ActionPipelineFactory = builderCache.GetOrAdd(command.Type, _ => actionPipelineFactoryBuilder.Build(command.Type));                
+                actionContext.ActionPipelineFactory = builderCache.GetOrAdd(command.Type, _ => actionPipelineFactoryBuilder.Build(command.Type));
+                actionContext.Command = command;
                 yield return actionContext;
             }
             

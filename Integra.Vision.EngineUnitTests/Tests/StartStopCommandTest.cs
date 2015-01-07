@@ -1,7 +1,4 @@
 ﻿using Integra.Vision.Engine.Commands;
-using Integra.Vision.Engine.Commands.Start;
-using Integra.Vision.Engine.Commands.Stop;
-using Integra.Vision.Engine.Commands.SystemViews;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;

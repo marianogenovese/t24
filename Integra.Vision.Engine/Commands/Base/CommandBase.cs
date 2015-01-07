@@ -37,6 +37,81 @@ namespace Integra.Vision.Engine.Commands
         }
 
         /// <summary>
+        /// Gets command dependencies
+        /// </summary>
+        public IReadOnlyNamedElementCollection<CommandDependency> Dependencies
+        {
+            get
+            {
+                if (this.ArgumentEnumerator == null)
+                {
+                    throw new DependencyEnumerationException(Resources.SR.EnumeratorNotImplemented);
+                }
+
+                try
+                {
+                    CommandDependency[] arguments = this.DependencyEnumerator.Enumerate(this);
+                    return new CommandDependencyCollection(arguments);
+                }
+                catch (Exception e)
+                {
+                    throw new DependencyEnumerationException(Resources.SR.EnumerationException, e);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the plan node
+        /// </summary>
+        protected PlanNode Node
+        {
+            get
+            {
+                return this.node;
+            }
+        }
+
+        /// <summary>
+        /// Gets an instance of argument enumerator
+        /// </summary>
+        protected abstract IArgumentEnumerator ArgumentEnumerator
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets command arguments
+        /// </summary>
+        protected IReadOnlyNamedElementCollection<CommandArgument> Arguments
+        {
+            get
+            {
+                if (this.ArgumentEnumerator == null)
+                {
+                    throw new ArgumentEnumerationException(Integra.Vision.Engine.SR.EnumeratorNotImplemented);
+                }
+
+                try
+                {
+                    CommandArgument[] arguments = this.ArgumentEnumerator.Enumerate(this);
+                    return new CommandArgumentCollection(arguments);
+                }
+                catch (Exception e)
+                {
+                    throw new ArgumentEnumerationException(Integra.Vision.Engine.SR.EnumerationException, e);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets an instance of dependency enumerator
+        /// </summary>
+        protected abstract IDependencyEnumerator DependencyEnumerator
+        {
+            get;
+        }
+        
+        /// <summary>
         /// Execute command
         /// </summary>
         public void Execute()

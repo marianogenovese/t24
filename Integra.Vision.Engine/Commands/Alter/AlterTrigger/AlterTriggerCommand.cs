@@ -3,11 +3,9 @@
 //     Copyright (c) Integra.Vision.Engine. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.Alter.AlterTrigger
+namespace Integra.Vision.Engine.Commands
 {
     using System;
-    using Integra.Vision.Engine.Commands.Create.CreateTrigger;
-    using Integra.Vision.Engine.Commands.Drop.DropTrigger;
     using Integra.Vision.Language;
 
     /// <summary>

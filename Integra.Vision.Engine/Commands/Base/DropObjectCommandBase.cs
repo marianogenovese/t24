@@ -10,7 +10,7 @@ namespace Integra.Vision.Engine.Commands
     /// <summary>
     /// Base class for drop commands of user defined object
     /// </summary>
-    internal abstract class DropObjectCommandBase : ReferenceableObjectCommandBase
+    internal abstract class DropObjectCommandBase : UserDefinedObjectCommandBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DropObjectCommandBase"/> class

@@ -3,7 +3,7 @@
 //     Copyright (c) Integra.Vision.Engine. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.Start
+namespace Integra.Vision.Engine.Commands
 {
     using Integra.Vision.Language;
 
@@ -13,14 +13,19 @@ namespace Integra.Vision.Engine.Commands.Start
     internal sealed class StartObjectCommand : StartStopObjectCommandBase
     {
         /// <summary>
+        /// Execution plan node
+        /// </summary>
+        private readonly PlanNode node;
+
+        /// <summary>
         /// Argument enumerator implementation for this command
         /// </summary>
-        private IArgumentEnumerator argumentEnumerator = new StartObjectArgumentEnumerator();
+        private IArgumentEnumerator argumentEnumerator;
 
         /// <summary>
         /// Dependency enumerator implementation for this command
         /// </summary>
-        private IDependencyEnumerator dependencyEnumerator = new StartObjectDependencyEnumerator();
+        private IDependencyEnumerator dependencyEnumerator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StartObjectCommand"/> class
@@ -28,6 +33,7 @@ namespace Integra.Vision.Engine.Commands.Start
         /// <param name="node">Execution plan node that have the command arguments</param>
         public StartObjectCommand(PlanNode node) : base(node)
         {
+            this.node = node;
         }
         
         /// <inheritdoc />
@@ -43,6 +49,11 @@ namespace Integra.Vision.Engine.Commands.Start
         {
             get
             {
+                if (this.argumentEnumerator == null)
+                {
+                    this.argumentEnumerator = new StartObjectArgumentEnumerator(this.node);
+                }
+
                 return this.argumentEnumerator;
             }
         }
@@ -54,6 +65,11 @@ namespace Integra.Vision.Engine.Commands.Start
         {
             get
             {
+                if (this.dependencyEnumerator == null)
+                {
+                    this.dependencyEnumerator = new StartObjectDependencyEnumerator(this.node);
+                }
+
                 return this.dependencyEnumerator;
             }
         }
@@ -84,10 +100,6 @@ namespace Integra.Vision.Engine.Commands.Start
 
                 // update the adapter
                 adapter.State = (int)UserDefinedObjectStateEnum.Started;
-                repoAdapter.Commit();
-                
-                // close connection
-                repoAdapter.Dispose();
             }
             else if (this.Arguments["UserDefinedObject"].Value.ToString().ToLower().Equals(ObjectTypeEnum.Source.ToString().ToLower()))
             {
@@ -99,10 +111,6 @@ namespace Integra.Vision.Engine.Commands.Start
 
                 // update the state
                 source.State = (int)UserDefinedObjectStateEnum.Started;
-                repoSource.Commit();
-
-                // close connection
-                repoSource.Dispose();
             }
             else if (this.Arguments["UserDefinedObject"].Value.ToString().ToLower().Equals(ObjectTypeEnum.Stream.ToString().ToLower()))
             {
@@ -114,10 +122,6 @@ namespace Integra.Vision.Engine.Commands.Start
 
                 // update the state
                 stream.State = (int)UserDefinedObjectStateEnum.Started;
-                repoStream.Commit();
-
-                // close connection
-                repoStream.Dispose();
             }
             else if (this.Arguments["UserDefinedObject"].Value.ToString().ToLower().Equals(ObjectTypeEnum.Trigger.ToString().ToLower()))
             {
@@ -129,11 +133,10 @@ namespace Integra.Vision.Engine.Commands.Start
 
                 // update the state
                 trigger.State = (int)UserDefinedObjectStateEnum.Started;
-                repoTrigger.Commit();
-
-                // close connection
-                repoTrigger.Dispose();
             }
+
+            // save changes
+            vc.SaveChanges();
 
             // close connection
             vc.Dispose();

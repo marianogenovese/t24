@@ -18,18 +18,18 @@ namespace Integra.Vision.Engine.Commands
         /// Grant
         /// Doc goes here
         /// </summary>
-        Grant = 0x0 << 400,
+        Grant = 1 << 0 << 400,
 
         /// <summary>
         /// Deny
         /// Doc goes here
         /// </summary>
-        Deny = 1 << 0 << 400,
+        Deny = 1 << 1 << 400,
 
         /// <summary>
         /// Revoke
         /// Doc goes here
         /// </summary>
-        Revoke = 1 << 1 << 400
+        Revoke = 1 << 2 << 400
     }
 }

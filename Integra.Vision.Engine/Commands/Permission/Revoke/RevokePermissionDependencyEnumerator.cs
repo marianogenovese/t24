@@ -3,16 +3,31 @@
 //     Copyright (c) Integra.Vision.Engine. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.Permission.Revoke
+namespace Integra.Vision.Engine.Commands
 {
     using System;
     using System.Collections.Generic;
+    using Integra.Vision.Language;
     
     /// <summary>
     /// Contains dependency enumerator logic for revoke permission command
     /// </summary>
     internal sealed class RevokePermissionDependencyEnumerator : IDependencyEnumerator
     {
+        /// <summary>
+        /// Execution plan node that have the command arguments
+        /// </summary>
+        private readonly PlanNode node;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RevokePermissionDependencyEnumerator"/> class
+        /// </summary>
+        /// <param name="node">Execution plan node that have the command arguments</param>
+        public RevokePermissionDependencyEnumerator(PlanNode node)
+        {
+            this.node = node;
+        }
+
         /// <summary>
         /// Dependency enumeration implementation
         /// </summary>
@@ -22,8 +37,7 @@ namespace Integra.Vision.Engine.Commands.Permission.Revoke
         {
             try
             {
-                List<CommandDependency> dependencies = new List<CommandDependency>();
-                return dependencies.ToArray();
+                return new CommandDependency[] { };
             }
             catch (Exception e)
             {

@@ -1,15 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Integra.Vision.Engine.Commands.Create;
 using Integra.Vision.Engine.Commands;
-using Integra.Vision.Engine.Commands.Create.CreateAdapter;
-using Integra.Vision.Engine.Commands.Create.CreateSource;
-using Integra.Vision.Engine.Commands.Create.CreateStream;
-using Integra.Vision.Engine.Commands.Create.CreateTrigger;
-using Integra.Vision.Engine.Commands.Create.CreateRole;
-using Integra.Vision.Engine.Commands.Create.CreateUser;
-using Integra.Vision.Engine.Commands.SystemViews;
 using System.Reflection;
 using System.Text;
 using System.Security.Cryptography;

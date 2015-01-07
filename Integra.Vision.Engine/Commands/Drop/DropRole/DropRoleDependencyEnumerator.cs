@@ -3,16 +3,31 @@
 //     Copyright (c) Integra.Vision.Engine.Database. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.Drop.DropRole
+namespace Integra.Vision.Engine.Commands
 {
     using System;
     using System.Collections.Generic;
+    using Integra.Vision.Language;
     
     /// <summary>
     /// Contains dependency enumerator logic for Drop Role command
     /// </summary>
     internal sealed class DropRoleDependencyEnumerator : IDependencyEnumerator
     {
+        /// <summary>
+        /// Execution plan node that have the command arguments
+        /// </summary>
+        private readonly PlanNode node;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DropRoleDependencyEnumerator"/> class
+        /// </summary>
+        /// <param name="node">Execution plan node that have the command arguments</param>
+        public DropRoleDependencyEnumerator(PlanNode node)
+        {
+            this.node = node;
+        }
+
         /// <summary>
         /// Dependency enumeration implementation
         /// </summary>

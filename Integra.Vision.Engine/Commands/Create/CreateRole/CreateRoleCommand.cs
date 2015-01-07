@@ -3,7 +3,7 @@
 //     Copyright (c) Integra.Vision.Engine. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Engine.Commands.Create.CreateRole
+namespace Integra.Vision.Engine.Commands
 {
     using System;
     using Integra.Vision.Language;
@@ -14,14 +14,19 @@ namespace Integra.Vision.Engine.Commands.Create.CreateRole
     internal sealed class CreateRoleCommand : CreateObjectCommandBase
     {
         /// <summary>
+        /// Execution plan node
+        /// </summary>
+        private readonly PlanNode node;
+
+        /// <summary>
         /// Argument enumerator implementation for this command
         /// </summary>
-        private IArgumentEnumerator argumentEnumerator = new CreateRoleArgumentEnumerator();
+        private IArgumentEnumerator argumentEnumerator;
 
         /// <summary>
         /// Dependency enumerator implementation for this command
         /// </summary>
-        private IDependencyEnumerator dependencyEnumerator = new CreateRoleDependencyEnumerator();
+        private IDependencyEnumerator dependencyEnumerator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateRoleCommand"/> class
@@ -29,6 +34,7 @@ namespace Integra.Vision.Engine.Commands.Create.CreateRole
         /// <param name="node">Execution plan node that have the command arguments</param>
         public CreateRoleCommand(PlanNode node) : base(node)
         {
+            this.node = node;
         }
 
         /// <inheritdoc />
@@ -41,12 +47,28 @@ namespace Integra.Vision.Engine.Commands.Create.CreateRole
         }
 
         /// <summary>
+        /// Gets the role name
+        /// </summary>
+        public string Name
+        {
+            get
+            {
+                return this.Arguments["Name"].Value.ToString();
+            }
+        }
+
+        /// <summary>
         /// Gets command dependency enumerator
         /// </summary>
         protected override IDependencyEnumerator DependencyEnumerator
         {
             get
             {
+                if (this.dependencyEnumerator == null)
+                {
+                    this.dependencyEnumerator = new CreateRoleDependencyEnumerator(this.node);
+                }
+
                 return this.dependencyEnumerator;
             }
         }
@@ -58,31 +80,13 @@ namespace Integra.Vision.Engine.Commands.Create.CreateRole
         {
             get
             {
+                if (this.argumentEnumerator == null)
+                {
+                    this.argumentEnumerator = new CreateRoleArgumentEnumerator(this.node);
+                }
+
                 return this.argumentEnumerator;
             }
-        }
-
-        /// <summary>
-        /// Contains create role logic
-        /// </summary>
-        protected override void OnExecute()
-        {
-            base.OnExecute();
-
-            // initialize context
-            Integra.Vision.Engine.Database.Contexts.ViewsContext vc = new Integra.Vision.Engine.Database.Contexts.ViewsContext("EngineDatabase");
-            
-            // create repository
-            Database.Repositories.Repository<Database.Models.Role> repoRole = new Database.Repositories.Repository<Database.Models.Role>(vc);
-            
-            // create role
-            Database.Models.Role role = new Database.Models.Role() { CreationDate = DateTime.Now, IsServerRole = false, IsSystemObject = false, Name = this.Arguments["Name"].Value.ToString(), State = (int)UserDefinedObjectStateEnum.Stopped, Type = ObjectTypeEnum.Role.ToString() };
-            repoRole.Create(role);
-            repoRole.Commit();
-
-            // close connections
-            repoRole.Dispose();
-            vc.Dispose();
         }
     }
 }
