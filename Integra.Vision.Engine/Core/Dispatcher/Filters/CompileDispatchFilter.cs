@@ -164,6 +164,7 @@ namespace Integra.Vision.Engine.Core
 
                     // QUERY
                     case PlanNodeTypeEnum.SystemQuery:
+                        command = new SystemQueriesCommand(node);
                         break;
                 }
 
