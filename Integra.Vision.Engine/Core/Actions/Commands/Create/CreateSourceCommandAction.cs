@@ -54,7 +54,7 @@ namespace Integra.Vision.Engine.Core
 
             // create the source
             Database.Repositories.Repository<Database.Models.Source> repoSource = new Database.Repositories.Repository<Database.Models.Source>(vc);
-            Database.Models.Source source = new Database.Models.Source() { AdapterId = adapter.Id, CreationDate = DateTime.Now, IsSystemObject = false, Name = this.command.Name, State = (int)UserDefinedObjectStateEnum.Stopped, Type = this.command.Type.ToString() };
+            Database.Models.Source source = new Database.Models.Source() { AdapterId = adapter.Id, CreationDate = DateTime.Now, IsSystemObject = false, Name = this.command.Name, State = (int)UserDefinedObjectStateEnum.Stopped, Type = ObjectTypeEnum.Source.ToString() };
             repoSource.Create(source);
 
             // create the conditions

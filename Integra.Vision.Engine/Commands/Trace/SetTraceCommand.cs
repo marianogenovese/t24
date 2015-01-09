@@ -10,7 +10,7 @@ namespace Integra.Vision.Engine.Commands
     /// <summary>
     /// Base class for trace objects
     /// </summary>
-    internal sealed class SetTraceCommand : SetCommandBase
+    internal class SetTraceCommand : SetCommandBase
     {
         /// <summary>
         /// Execution plan node
@@ -43,6 +43,17 @@ namespace Integra.Vision.Engine.Commands
         }
 
         /// <summary>
+        /// Gets the trace level
+        /// </summary>
+        public int Level
+        {
+            get
+            {
+                return (int)this.Arguments["Level"].Value;
+            }
+        }
+
+        /// <summary>
         /// Gets command argument enumerator
         /// </summary>
         protected override IArgumentEnumerator ArgumentEnumerator
@@ -72,96 +83,6 @@ namespace Integra.Vision.Engine.Commands
 
                 return this.dependencyEnumerator;
             }
-        }
-
-        /// <summary>
-        /// Contains trace object logic
-        /// </summary>
-        protected override void OnExecute()
-        {
-            // initialize context
-            Integra.Vision.Engine.Database.Contexts.ViewsContext vc = new Integra.Vision.Engine.Database.Contexts.ViewsContext("EngineDatabase");
-
-            // create repository
-            Database.Repositories.Repository<Database.Models.SetTrace> repoSetTrace = new Database.Repositories.Repository<Database.Models.SetTrace>(vc);
-            Database.Repositories.Repository<Database.Models.UserDefinedObject> repoObject = new Database.Repositories.Repository<Database.Models.UserDefinedObject>(vc);
-
-            // get the object
-            string objectName = this.Arguments["ObjectOrFamily"].Value.ToString();
-            int level = int.Parse(this.Arguments["Level"].Value.ToString());
-
-            if (objectName.ToLower().Equals(ObjectTypeEnum.Adapter.ToString().ToLower()))
-            {
-                string type = ObjectTypeEnum.Adapter.ToString();
-                Database.Models.SetTrace setTrace;
-                var objects = repoObject.Filter(x => x.Type == type);
-
-                foreach (Database.Models.UserDefinedObject userDefinedObject in objects)
-                {
-                    // create the trace
-                    setTrace = new Database.Models.SetTrace() { Level = level, UserDefinedObjectId = userDefinedObject.Id, CreationDate = System.DateTime.Now };
-                    repoSetTrace.Create(setTrace);
-                }
-            }
-            else if (objectName.ToLower().Equals(ObjectTypeEnum.Source.ToString().ToLower()))
-            {
-                string type = ObjectTypeEnum.Source.ToString();
-                var objects = repoObject.Filter(x => x.Type == type);
-                foreach (Database.Models.UserDefinedObject userDefinedObject in objects)
-                {
-                    // create the trace
-                    Database.Models.SetTrace setTrace = new Database.Models.SetTrace() { Level = level, UserDefinedObjectId = userDefinedObject.Id, CreationDate = System.DateTime.Now };
-                    repoSetTrace.Create(setTrace);
-                }
-            }
-            else if (objectName.ToLower().Equals(ObjectTypeEnum.Stream.ToString().ToLower()))
-            {
-                string type = ObjectTypeEnum.Stream.ToString();
-                var objects = repoObject.Filter(x => x.Type == type);
-                foreach (Database.Models.UserDefinedObject userDefinedObject in objects)
-                {
-                    // create the trace
-                    Database.Models.SetTrace setTrace = new Database.Models.SetTrace() { Level = level, UserDefinedObjectId = userDefinedObject.Id, CreationDate = System.DateTime.Now };
-                    repoSetTrace.Create(setTrace);
-                }
-            }
-            else if (objectName.ToLower().Equals(ObjectTypeEnum.Trigger.ToString().ToLower()))
-            {
-                string type = ObjectTypeEnum.Trigger.ToString();
-                var objects = repoObject.Filter(x => x.Type == type);
-                foreach (Database.Models.UserDefinedObject userDefinedObject in objects)
-                {
-                    // create the trace
-                    Database.Models.SetTrace setTrace = new Database.Models.SetTrace() { Level = level, UserDefinedObjectId = userDefinedObject.Id, CreationDate = System.DateTime.Now };
-                    repoSetTrace.Create(setTrace);
-                }
-            }
-            else if (objectName.ToLower().Equals(ObjectTypeEnum.Engine.ToString().ToLower()))
-            {
-                string type = ObjectTypeEnum.Engine.ToString();
-                var objects = repoObject.GetAll();
-                foreach (Database.Models.UserDefinedObject userDefinedObject in objects)
-                {
-                    // create the trace
-                    Database.Models.SetTrace setTrace = new Database.Models.SetTrace() { Level = level, UserDefinedObjectId = userDefinedObject.Id, CreationDate = System.DateTime.Now };
-                    repoSetTrace.Create(setTrace);
-                }
-            }
-            else
-            {
-                // find the user defined object
-                Database.Models.UserDefinedObject userDefinedObject = repoObject.Find(x => x.Name == objectName);
-
-                // create the trace
-                Database.Models.SetTrace setTrace = new Database.Models.SetTrace() { Level = level, UserDefinedObjectId = userDefinedObject.Id, CreationDate = System.DateTime.Now };
-                repoSetTrace.Create(setTrace);
-            }
-
-            // save changes
-            vc.SaveChanges();
-
-            // close connections
-            vc.Dispose();
         }
     }
 }

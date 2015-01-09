@@ -11,17 +11,22 @@ namespace Integra.Vision.Engine.Commands
     /// <summary>
     /// Base class for alter triggers
     /// </summary>
-    internal sealed class AlterTriggerCommand : AlterObjectCommandBase<CreateTriggerCommand, DropTriggerCommand>
+    internal sealed class AlterTriggerCommand : AlterObjectCommandBase
     {
+        /// <summary>
+        /// Execution plan node
+        /// </summary>
+        private readonly PlanNode node;
+
         /// <summary>
         /// Argument enumerator implementation for this command
         /// </summary>
-        private IArgumentEnumerator argumentEnumerator = new AlterTriggerArgumentEnumerator();
+        private IArgumentEnumerator argumentEnumerator;
 
         /// <summary>
         /// Dependency enumerator implementation for this command
         /// </summary>
-        private IDependencyEnumerator dependencyEnumerator = new AlterTriggerDependencyEnumerator();
+        private IDependencyEnumerator dependencyEnumerator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AlterTriggerCommand"/> class
@@ -29,6 +34,7 @@ namespace Integra.Vision.Engine.Commands
         /// <param name="node">Execution plan node that have the command arguments</param>
         public AlterTriggerCommand(PlanNode node) : base(node)
         {
+            this.node = node;
         }
 
         /// <inheritdoc />
@@ -41,12 +47,83 @@ namespace Integra.Vision.Engine.Commands
         }
 
         /// <summary>
+        /// Gets the trigger name
+        /// </summary>
+        public string Name
+        {
+            get
+            {
+                return this.Arguments["Name"].Value.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Gets the stream name
+        /// </summary>
+        public string StreamName
+        {
+            get
+            {
+                return this.Arguments["StreamName"].Value.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Gets list of output adapter names
+        /// </summary>
+        public string[] SendList
+        {
+            get
+            {
+                return (string[])this.Arguments["SendList"].Value;
+            }
+        }
+
+        /// <summary>
+        /// Gets trigger window
+        /// </summary>
+        public string ApplyWindow
+        {
+            get
+            {
+                return this.Arguments["ApplyWindow"].Value.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Gets trigger bifurcation list
+        /// </summary>
+        public Tuple<string, string[]>[] IfList
+        {
+            get
+            {
+                return (Tuple<string, string[]>[])this.Arguments["IfList"].Value;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether is a simple stream
+        /// </summary>
+        public bool IsSimpleTrigger
+        {
+            get
+            {
+                return (bool)this.Arguments["IsSimpleTrigger"].Value;
+            }
+        }
+
+        /// <summary>
         /// Gets command dependency enumerator
         /// </summary>
         protected override IDependencyEnumerator DependencyEnumerator
         {
             get
             {
+                if (this.dependencyEnumerator == null)
+                {
+                    this.dependencyEnumerator = new AlterTriggerDependencyEnumerator(this.node);
+                }
+
                 return this.dependencyEnumerator;
             }
         }
@@ -58,139 +135,12 @@ namespace Integra.Vision.Engine.Commands
         {
             get
             {
+                if (this.argumentEnumerator == null)
+                {
+                    this.argumentEnumerator = new AlterTriggerArgumentEnumerator(this.node);
+                }
+
                 return this.argumentEnumerator;
-            }
-        }
-
-        /// <summary>
-        /// Contains alter trigger logic
-        /// </summary>
-        protected override void OnExecute()
-        {
-            base.OnExecute();
-
-            // drop the especified trigger
-            DropObject dropTrigger = new DropObject(this.Arguments, this.Dependencies);
-            dropTrigger.Execute();
-
-            // create the new trigger
-            CreateObject createTrigger = new CreateObject(this.Arguments, this.Dependencies);
-            createTrigger.Execute();
-        }
-
-        /// <summary>
-        /// class for create a trigger without chain execution
-        /// </summary>
-        private class CreateObject : CreateTriggerCommand
-        {
-            /// <summary>
-            /// Argument enumerator implementation for this command
-            /// </summary>
-            private IReadOnlyNamedElementCollection<CommandArgument> arguments;
-
-            /// <summary>
-            /// Dependency enumerator implementation for this command
-            /// </summary>
-            private IReadOnlyNamedElementCollection<CommandDependency> dependencies;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="CreateObject"/> class
-            /// </summary>
-            /// <param name="arguments">alter command arguments</param>
-            /// /// <param name="dependencies">alter command dependencies</param>
-            public CreateObject(IReadOnlyNamedElementCollection<CommandArgument> arguments, IReadOnlyNamedElementCollection<CommandDependency> dependencies)
-                : base(null)
-            {
-                this.arguments = arguments;
-                this.dependencies = dependencies;
-            }
-
-            /// <summary>
-            /// Gets the alter command arguments passed to this class
-            /// </summary>
-            protected override IReadOnlyNamedElementCollection<CommandArgument> Arguments
-            {
-                get
-                {
-                    return this.arguments;
-                }
-            }
-
-            /// <summary>
-            /// Gets the alter command dependencies passed to this class
-            /// </summary>
-            protected override IReadOnlyNamedElementCollection<CommandDependency> Dependencies
-            {
-                get
-                {
-                    return this.dependencies;
-                }
-            }
-
-            /// <summary>
-            /// Save command arguments
-            /// </summary>
-            protected override void OnExecute()
-            {
-                this.SaveArguments();
-            }
-        }
-
-        /// <summary>
-        /// class for drop a trigger without chain execution
-        /// </summary>
-        private class DropObject : DropTriggerCommand
-        {
-            /// <summary>
-            /// Argument enumerator implementation for this command
-            /// </summary>
-            private IReadOnlyNamedElementCollection<CommandArgument> arguments;
-
-            /// <summary>
-            /// Dependency enumerator implementation for this command
-            /// </summary>
-            private IReadOnlyNamedElementCollection<CommandDependency> dependencies;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="DropObject"/> class
-            /// </summary>
-            /// <param name="arguments">alter command arguments</param>
-            /// /// <param name="dependencies">alter command dependencies</param>
-            public DropObject(IReadOnlyNamedElementCollection<CommandArgument> arguments, IReadOnlyNamedElementCollection<CommandDependency> dependencies)
-                : base(new PlanNode())
-            {
-                this.arguments = arguments;
-                this.dependencies = dependencies;
-            }
-
-            /// <summary>
-            /// Gets the alter command arguments passed to this class
-            /// </summary>
-            protected override IReadOnlyNamedElementCollection<CommandArgument> Arguments
-            {
-                get
-                {
-                    return this.arguments;
-                }
-            }
-
-            /// <summary>
-            /// Gets the alter command dependencies passed to this class
-            /// </summary>
-            protected override IReadOnlyNamedElementCollection<CommandDependency> Dependencies
-            {
-                get
-                {
-                    return this.dependencies;
-                }
-            }
-
-            /// <summary>
-            /// Save command arguments
-            /// </summary>
-            protected override void OnExecute()
-            {
-                this.DeleteArguments();
             }
         }
     }

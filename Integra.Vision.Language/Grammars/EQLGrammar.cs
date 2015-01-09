@@ -399,7 +399,7 @@ namespace Integra.Vision.Language.Grammars
             /* EXPRESIONES CREATE */
 
             /* CREAR ROL */
-            nt_CREATE_ROLE.Rule = terminalCreateAlter + terminalRole + terminalId;
+            nt_CREATE_ROLE.Rule = this.ToTerm("create") + terminalRole + terminalId;
             /* **************************** */
             /* CREAR USUARIO */
             nt_CREATE_USER.Rule = terminalCreateAlter + terminalUser + terminalId + terminalWith + terminalPassword + terminalIgual + terminalCadena + terminalComa + terminalStatus + terminalIgual + terminalUserStatus;

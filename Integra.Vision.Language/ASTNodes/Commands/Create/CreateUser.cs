@@ -20,7 +20,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
         /// <summary>
         /// reserved word
         /// </summary>
-        private string createWord;
+        private string createOrAlterWord;
 
         /// <summary>
         /// reserved word
@@ -71,7 +71,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
         {
             base.Init(context, treeNode);
 
-            this.createWord = (string)ChildrenNodes[0].Token.Value;
+            this.createOrAlterWord = (string)ChildrenNodes[0].Token.Value;
             this.userWord = (string)ChildrenNodes[1].Token.Value;
             this.userName = AddChild(NodeUseType.Parameter, SR.UserDefinedObjectRole, ChildrenNodes[2]) as AstNodeBase;
             this.withWord = (string)ChildrenNodes[3].Token.Value;
@@ -89,7 +89,15 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[0].Token.Location.Line;
-            this.result.NodeType = PlanNodeTypeEnum.CreateUser;
+
+            if (this.createOrAlterWord.Equals("create", System.StringComparison.InvariantCultureIgnoreCase))
+            {
+                this.result.NodeType = PlanNodeTypeEnum.CreateUser;
+            }
+            else if (this.createOrAlterWord.Equals("alter", System.StringComparison.InvariantCultureIgnoreCase))
+            {
+                this.result.NodeType = PlanNodeTypeEnum.AlterUser;
+            }
         }
 
         /// <summary>
@@ -105,7 +113,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
             PlanNode passwordAux = (PlanNode)this.password.Evaluate(thread);
             this.EndEvaluate(thread);
 
-            this.result.NodeText = SR.UserNodeText(this.createWord, this.userWord, userNameAux.NodeText, this.withWord, this.passwordWord, passwordAux.NodeText, this.statusWord, this.status.NodeText);
+            this.result.NodeText = SR.UserNodeText(this.createOrAlterWord, this.userWord, userNameAux.NodeText, this.withWord, this.passwordWord, passwordAux.NodeText, this.statusWord, this.status.NodeText);
 
             this.result.Children = new System.Collections.Generic.List<PlanNode>();
             this.result.Children.Add(userNameAux);

@@ -39,8 +39,32 @@ namespace Integra.Vision.Engine.Commands
 
             try
             {
-                arguments.Add(new CommandArgument("Level", this.node.Children[0].Properties["Value"].ToString()));
-                arguments.Add(new CommandArgument("ObjectOrFamily", this.node.Properties["ObjectToTrace"].ToString()));
+                arguments.Add(new CommandArgument("Level", (int)this.node.Children[0].Properties["Value"]));
+
+                if (this.node.Properties["ObjectToTrace"].ToString().Equals(ObjectTypeEnum.Adapter.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    arguments.Add(new CommandArgument("FamilyName", ObjectTypeEnum.Adapter));
+                }
+                else if (this.node.Properties["ObjectToTrace"].ToString().Equals(ObjectTypeEnum.Source.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    arguments.Add(new CommandArgument("FamilyName", ObjectTypeEnum.Source));
+                }
+                else if (this.node.Properties["ObjectToTrace"].ToString().Equals(ObjectTypeEnum.Stream.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    arguments.Add(new CommandArgument("FamilyName", ObjectTypeEnum.Stream));
+                }
+                else if (this.node.Properties["ObjectToTrace"].ToString().Equals(ObjectTypeEnum.Trigger.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    arguments.Add(new CommandArgument("FamilyName", ObjectTypeEnum.Trigger));
+                }
+                else if (this.node.Properties["ObjectToTrace"].ToString().Equals(ObjectTypeEnum.Engine.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    arguments.Add(new CommandArgument("FamilyName", ObjectTypeEnum.Engine));
+                }
+                else
+                {
+                    arguments.Add(new CommandArgument("ObjectName", this.node.Properties["ObjectToTrace"].ToString()));
+                }
 
                 return arguments.ToArray();
             }

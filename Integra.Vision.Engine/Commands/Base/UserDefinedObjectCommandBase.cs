@@ -32,7 +32,7 @@ namespace Integra.Vision.Engine.Commands
         {
             get
             {
-                return this.name;
+                return this.Arguments["Name"].Value.ToString();
             }
         }
     }

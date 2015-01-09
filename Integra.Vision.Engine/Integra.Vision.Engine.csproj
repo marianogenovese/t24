@@ -100,6 +100,48 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\Alter\AlterAdapter\AlterAdapterArgumentEnumerator.cs" />
+    <Compile Include="Commands\Alter\AlterAdapter\AlterAdapterCommand.cs" />
+    <Compile Include="Commands\Alter\AlterAdapter\AlterAdapterDependencyEnumerator.cs" />
+    <Compile Include="Commands\Alter\AlterAssembly\AlterAssemblyArgumentEnumerator.cs" />
+    <Compile Include="Commands\Alter\AlterAssembly\AlterAssemblyCommand.cs" />
+    <Compile Include="Commands\Alter\AlterAssembly\AlterAssemblyDependencyEnumerator.cs" />
+    <Compile Include="Commands\Alter\AlterSource\AlterSourceArgumentEnumerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Commands\Alter\AlterSource\AlterSourceCommand.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Commands\Alter\AlterSource\AlterSourceDependencyEnumerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Commands\Alter\AlterStream\AlterStreamArgumentEnumerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Commands\Alter\AlterStream\AlterStreamCommand.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Commands\Alter\AlterStream\AlterStreamDependencyEnumerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Commands\Alter\AlterTrigger\AlterTriggerArgumentEnumerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Commands\Alter\AlterTrigger\AlterTriggerCommand.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Commands\Alter\AlterTrigger\AlterTriggerDependencyEnumerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Commands\Alter\AlterUser\AlterUserArgumentEnumerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Commands\Alter\AlterUser\AlterUserCommand.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Commands\Alter\AlterUser\AlterUserDependencyEnumerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Commands\Base\AlterObjectCommandBase.cs" />
     <Compile Include="Commands\Base\CreateObjectCommandBase.cs" />
     <Compile Include="Commands\Base\DropObjectCommandBase.cs" />
@@ -113,6 +155,26 @@
     <Compile Include="Commands\Base\SetCommandBase.cs" />
     <Compile Include="Commands\Base\StartStopObjectCommandBase.cs" />
     <Compile Include="Commands\Base\UserDefinedObjectCommandBase.cs" />
+    <Compile Include="Commands\Start\StartAdapterCommand.cs" />
+    <Compile Include="Commands\Start\StartSourceCommand.cs" />
+    <Compile Include="Commands\Start\StartStreamCommand.cs" />
+    <Compile Include="Commands\Start\StartTriggerCommand.cs" />
+    <Compile Include="Commands\Stop\StopAdapterCommand.cs" />
+    <Compile Include="Commands\Stop\StopSourceCommand.cs" />
+    <Compile Include="Commands\Stop\StopStreamCommand.cs" />
+    <Compile Include="Commands\Stop\StopTriggerCommand.cs" />
+    <Compile Include="Commands\Trace\SetTraceAdapterCommand.cs" />
+    <Compile Include="Commands\Trace\SetTraceEngineCommand.cs" />
+    <Compile Include="Commands\Trace\SetTraceObjectCommand.cs" />
+    <Compile Include="Commands\Trace\SetTraceSourceCommand.cs" />
+    <Compile Include="Commands\Trace\SetTraceStreamCommand.cs" />
+    <Compile Include="Commands\Trace\SetTraceTriggerCommand.cs" />
+    <Compile Include="Core\Actions\Commands\Alter\AlterAdapterCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Alter\AlterAssemblyCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Alter\AlterSourceCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Alter\AlterStreamCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Alter\AlterTriggerCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Alter\AlterUserCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Drop\DropRoleCommandAction.cs" />
     <Compile Include="Configuration\RuntimeCommandConfigurationElement.cs" />
     <Compile Include="Configuration\CommandConfigurationElementCollection.cs" />
@@ -138,8 +200,28 @@
     <Compile Include="Core\Actions\Commands\Permission\DenyPermissionCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Permission\GrantPermissionCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Permission\RevokePermissionCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Start\StartAdapterCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Start\StartSourceCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Start\StartStreamCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Start\StartTriggerCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Stop\StopAdapterCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Stop\StopSourceCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Stop\StopStreamCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Stop\StopTriggerCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\SystemQueries\SystemQueriesCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Trace\SetTraceAdapterCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Trace\SetTraceEngineCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Trace\SetTraceObjectCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Trace\SetTraceSourceCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Trace\SetTraceStreamCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Trace\SetTraceTriggerCommandAction.cs" />
     <Compile Include="Core\Actions\DependencyActions.cs" />
+    <Compile Include="Core\Actions\Factories\Alter\AlterAdapterCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Alter\AlterAssemblyCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Alter\AlterSourceCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Alter\AlterStreamCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Alter\AlterTriggerCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Alter\AlterUserCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Create\CreateRoleCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Create\CreateUserCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Drop\DropAdapterCommandActionFactory.cs" />
@@ -152,7 +234,21 @@
     <Compile Include="Core\Actions\Factories\Permission\DenyPermissionCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Permission\GrantPermissionCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Permission\RevokePermissionCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Start\StartStreamCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Start\StartAdapterCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Start\StartSourceCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Start\StartTriggerCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Stop\StopAdapterCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Stop\StopSourceCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Stop\StopStreamCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Stop\StopTriggerCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\SystemQueries\SystemQueriesCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Trace\SetTraceAdapterCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Trace\SetTraceEngineCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Trace\SetTraceObjectCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Trace\SetTraceSourceCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Trace\SetTraceStreamCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Trace\SetTraceTriggerCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Pipeline\CommandActionResult.cs" />
     <Compile Include="Core\Actions\AuthorizationCommandActionBase.cs" />
     <Compile Include="Core\Actions\ExecutionCommandAction.cs" />

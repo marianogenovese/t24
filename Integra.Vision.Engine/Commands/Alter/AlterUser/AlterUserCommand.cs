@@ -11,7 +11,7 @@ namespace Integra.Vision.Engine.Commands
     /// <summary>
     /// Base class for alter users
     /// </summary>
-    internal sealed class AlterUserCommand : AlterObjectCommandBase<CreateUserCommand, DropUserCommand>
+    internal sealed class AlterUserCommand : AlterObjectCommandBase
     {
         /// <summary>
         /// Execution plan node
@@ -21,12 +21,12 @@ namespace Integra.Vision.Engine.Commands
         /// <summary>
         /// Argument enumerator implementation for this command
         /// </summary>
-        private IArgumentEnumerator argumentEnumerator = new AlterUserArgumentEnumerator();
+        private IArgumentEnumerator argumentEnumerator;
 
         /// <summary>
         /// Dependency enumerator implementation for this command
         /// </summary>
-        private IDependencyEnumerator dependencyEnumerator = new AlterUserDependencyEnumerator();
+        private IDependencyEnumerator dependencyEnumerator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AlterUserCommand"/> class
@@ -47,12 +47,39 @@ namespace Integra.Vision.Engine.Commands
         }
 
         /// <summary>
+        /// Gets user password
+        /// </summary>
+        public string Password
+        {
+            get
+            {
+                return this.Arguments["Password"].Value.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Gets user status
+        /// </summary>
+        public UserStatusEnum Status
+        {
+            get
+            {
+                return (UserStatusEnum)this.Arguments["Status"].Value;
+            }
+        }
+
+        /// <summary>
         /// Gets command dependency enumerator
         /// </summary>
         protected override IDependencyEnumerator DependencyEnumerator
         {
             get
             {
+                if (this.dependencyEnumerator == null)
+                {
+                    this.dependencyEnumerator = new CreateUserDependencyEnumerator(this.node);
+                }
+
                 return this.dependencyEnumerator;
             }
         }
@@ -64,131 +91,12 @@ namespace Integra.Vision.Engine.Commands
         {
             get
             {
+                if (this.argumentEnumerator == null)
+                {
+                    this.argumentEnumerator = new CreateUserArgumentEnumerator(this.node);
+                }
+
                 return this.argumentEnumerator;
-            }
-        }
-
-        /// <summary>
-        /// Contains create user logic
-        /// </summary>
-        protected override void OnExecute()
-        {
-            base.OnExecute();
-
-            // drop the especified user
-            DropObject dropUser = new DropObject(this.Arguments, this.Dependencies);
-            dropUser.Execute();
-
-            // create the new user
-            CreateObject createUser = new CreateObject(this.Arguments, this.Dependencies);
-            createUser.Execute();
-        }
-
-        /// <summary>
-        /// class for create a user without chain execution
-        /// </summary>
-        private class CreateObject : CreateUserCommand
-        {
-            /// <summary>
-            /// Argument enumerator implementation for this command
-            /// </summary>
-            private IReadOnlyNamedElementCollection<CommandArgument> arguments;
-
-            /// <summary>
-            /// Dependency enumerator implementation for this command
-            /// </summary>
-            private IReadOnlyNamedElementCollection<CommandDependency> dependencies;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="CreateObject"/> class
-            /// </summary>
-            /// <param name="arguments">alter command arguments</param>
-            /// /// <param name="dependencies">alter command dependencies</param>
-            public CreateObject(IReadOnlyNamedElementCollection<CommandArgument> arguments, IReadOnlyNamedElementCollection<CommandDependency> dependencies)
-                : base(null)
-            {
-                this.arguments = arguments;
-                this.dependencies = dependencies;
-            }
-
-            /// <summary>
-            /// Gets the alter command arguments passed to this class
-            /// </summary>
-            protected override IReadOnlyNamedElementCollection<CommandArgument> Arguments
-            {
-                get
-                {
-                    return this.arguments;
-                }
-            }
-
-            /// <summary>
-            /// Gets the alter command dependencies passed to this class
-            /// </summary>
-            protected override IReadOnlyNamedElementCollection<CommandDependency> Dependencies
-            {
-                get
-                {
-                    return this.dependencies;
-                }
-            }
-        }
-
-        /// <summary>
-        /// class for drop a user without chain execution
-        /// </summary>
-        private class DropObject : DropUserCommand
-        {
-            /// <summary>
-            /// Argument enumerator implementation for this command
-            /// </summary>
-            private IReadOnlyNamedElementCollection<CommandArgument> arguments;
-
-            /// <summary>
-            /// Dependency enumerator implementation for this command
-            /// </summary>
-            private IReadOnlyNamedElementCollection<CommandDependency> dependencies;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="DropObject"/> class
-            /// </summary>
-            /// <param name="arguments">alter command arguments</param>
-            /// /// <param name="dependencies">alter command dependencies</param>
-            public DropObject(IReadOnlyNamedElementCollection<CommandArgument> arguments, IReadOnlyNamedElementCollection<CommandDependency> dependencies)
-                : base(new PlanNode())
-            {
-                this.arguments = arguments;
-                this.dependencies = dependencies;
-            }
-
-            /// <summary>
-            /// Gets the alter command arguments passed to this class
-            /// </summary>
-            protected override IReadOnlyNamedElementCollection<CommandArgument> Arguments
-            {
-                get
-                {
-                    return this.arguments;
-                }
-            }
-
-            /// <summary>
-            /// Gets the alter command dependencies passed to this class
-            /// </summary>
-            protected override IReadOnlyNamedElementCollection<CommandDependency> Dependencies
-            {
-                get
-                {
-                    return this.dependencies;
-                }
-            }
-
-            /// <summary>
-            /// Save command arguments
-            /// </summary>
-            protected override void OnExecute()
-            {
-                this.DeleteArguments();
             }
         }
     }

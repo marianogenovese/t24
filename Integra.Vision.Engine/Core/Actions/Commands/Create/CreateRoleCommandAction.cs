@@ -45,8 +45,8 @@ namespace Integra.Vision.Engine.Core
             // create repository
             Database.Repositories.Repository<Database.Models.Role> repoRole = new Database.Repositories.Repository<Database.Models.Role>(vc);
 
-            // create role
-            Database.Models.Role role = new Database.Models.Role() { CreationDate = DateTime.Now, IsServerRole = false, IsSystemObject = false, Name = this.command.Name, State = (int)UserDefinedObjectStateEnum.Stopped, Type = this.command.Type.ToString() };
+            // create user
+            Database.Models.Role role = new Database.Models.Role() { CreationDate = DateTime.Now, IsServerRole = false, IsSystemObject = false, Name = this.command.Name, State = (int)UserDefinedObjectStateEnum.Stopped, Type = ObjectTypeEnum.Role.ToString() };
             repoRole.Create(role);
 
             // save changes

@@ -15,6 +15,20 @@ namespace Integra.Vision.Engine.Commands
     internal sealed class AlterAdapterArgumentEnumerator : IArgumentEnumerator
     {
         /// <summary>
+        /// Execution plan node that have the command arguments
+        /// </summary>
+        private readonly PlanNode node;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AlterAdapterArgumentEnumerator"/> class
+        /// </summary>
+        /// <param name="node">Execution plan node that have the command arguments</param>
+        public AlterAdapterArgumentEnumerator(PlanNode node)
+        {
+            this.node = node;
+        }
+
+        /// <summary>
         /// Argument enumeration implementation
         /// </summary>
         /// <param name="command">Command in context used for enumerate their arguments</param>
@@ -25,19 +39,25 @@ namespace Integra.Vision.Engine.Commands
 
             try
             {
-                /*
-                arguments.Add(new CommandArgument("Name", interpretedCommand.Plan.Root.Children[0].Properties["Value"].ToString()));
-                arguments.Add(new CommandArgument("Type", interpretedCommand.Plan.Root.Children[1].Properties["Value"].ToString()));
+                arguments.Add(new CommandArgument("Name", this.node.Children[0].Properties["Value"].ToString()));
 
-                System.Collections.Generic.List<object> parametersList = new System.Collections.Generic.List<object>();
-                foreach (PlanNode child in interpretedCommand.Plan.Root.Children[2].Children)
+                if (this.node.Children[1].Properties["Value"].ToString().Equals(AdapterTypeEnum.Input.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    arguments.Add(new CommandArgument("Type", AdapterTypeEnum.Input));
+                }
+                else
+                {
+                    arguments.Add(new CommandArgument("Type", AdapterTypeEnum.Output));
+                }
+
+                System.Collections.Generic.List<PlanNode> parametersList = new System.Collections.Generic.List<PlanNode>();
+                foreach (PlanNode child in this.node.Children[2].Children)
                 {
                     parametersList.Add(child);
                 }
 
                 arguments.Add(new CommandArgument("Parameters", parametersList));
-                arguments.Add(new CommandArgument("AssemblyName", interpretedCommand.Plan.Root.Children[3].Properties["Value"].ToString()));
-                */
+                arguments.Add(new CommandArgument("AssemblyName", this.node.Children[3].Properties["Value"].ToString()));
                 return arguments.ToArray();
             }
             catch (Exception e)

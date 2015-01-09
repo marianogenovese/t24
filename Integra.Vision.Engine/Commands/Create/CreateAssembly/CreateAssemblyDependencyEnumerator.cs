@@ -8,7 +8,7 @@ namespace Integra.Vision.Engine.Commands
     using Integra.Vision.Language;
 
     /// <summary>
-    /// Contains dependency enumerator logic for Create Assembly command
+    /// Contains dependency enumerator logic for Alter Assembly command
     /// </summary>
     internal sealed class CreateAssemblyDependencyEnumerator : IDependencyEnumerator
     {

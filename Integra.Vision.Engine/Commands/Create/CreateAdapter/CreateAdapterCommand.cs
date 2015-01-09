@@ -13,7 +13,7 @@ namespace Integra.Vision.Engine.Commands
     /// <summary>
     /// Base class for create adapters
     /// </summary>
-    internal class CreateAdapterCommand : CreateObjectCommandBase
+    internal sealed class CreateAdapterCommand : CreateObjectCommandBase
     {
         /// <summary>
         /// Execution plan node

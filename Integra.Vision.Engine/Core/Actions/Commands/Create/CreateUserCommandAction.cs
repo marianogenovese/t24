@@ -51,7 +51,7 @@ namespace Integra.Vision.Engine.Core
             string hash = this.GetMd5Hash(md5Hash, this.command.Password);
 
             // create role
-            Database.Models.User user = new Database.Models.User() { CreationDate = DateTime.Now, IsSystemObject = false, Name = this.command.Name, State = (int)this.command.Status, Password = hash, Type = this.command.Type.ToString(), SId = this.command.Name };
+            Database.Models.User user = new Database.Models.User() { CreationDate = DateTime.Now, IsSystemObject = false, Name = this.command.Name, State = (int)this.command.Status, Password = hash, Type = ObjectTypeEnum.User.ToString(), SId = this.command.Name };
             repoUser.Create(user);
 
             // save changes

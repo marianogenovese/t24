@@ -59,7 +59,7 @@ namespace Integra.Vision.Engine.Core
             Database.Repositories.Repository<Database.Models.SourceAssignedToStream> repoAsig = new Database.Repositories.Repository<Database.Models.SourceAssignedToStream>(vc);
             Database.Repositories.Repository<Database.Models.Source> repoSource = new Database.Repositories.Repository<Database.Models.Source>(vc);
 
-            Database.Models.Stream stream = new Database.Models.Stream() { Name = this.command.Name, Type = this.command.Type.ToString(), IsSystemObject = false, State = (int)UserDefinedObjectStateEnum.Stopped, CreationDate = DateTime.Now, UseJoin = false };
+            Database.Models.Stream stream = new Database.Models.Stream() { Name = this.command.Name, Type = ObjectTypeEnum.Stream.ToString(), IsSystemObject = false, State = (int)UserDefinedObjectStateEnum.Stopped, CreationDate = DateTime.Now, UseJoin = false };
             repoStream.Create(stream);
 
             string sourceName = this.command.From;

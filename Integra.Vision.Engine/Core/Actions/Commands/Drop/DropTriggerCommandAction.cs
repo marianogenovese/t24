@@ -51,7 +51,7 @@ namespace Integra.Vision.Engine.Core
             // get the trigger
             Database.Models.Trigger trigger = repoTrigger.Find(x => x.Name == this.command.Name);
 
-            // detele the statements
+            // delete the statements
             repoStmt.Delete(x => x.TriggerId == trigger.Id);
             /*
             int stmtCount = repoStmt.Commit();

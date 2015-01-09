@@ -21,7 +21,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
         /// <summary>
         /// reserved word create
         /// </summary>
-        private string createWord;
+        private string createOrAlterWord;
 
         /// <summary>
         /// reserved word trigger
@@ -77,7 +77,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
         {
             base.Init(context, treeNode);
 
-            this.createWord = (string)ChildrenNodes[0].Token.Value;
+            this.createOrAlterWord = (string)ChildrenNodes[0].Token.Value;
             this.triggerWord = (string)ChildrenNodes[1].Token.Value;
             this.triggerName = AddChild(NodeUseType.Parameter, " ", ChildrenNodes[2]) as AstNodeBase;
             this.onWord = (string)ChildrenNodes[3].Token.Value;
@@ -99,7 +99,15 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[0].Token.Location.Line;
-            this.result.NodeType = PlanNodeTypeEnum.CreateTrigger;
+
+            if (this.createOrAlterWord.Equals("create", System.StringComparison.InvariantCultureIgnoreCase))
+            {
+                this.result.NodeType = PlanNodeTypeEnum.CreateTrigger;
+            }
+            else if (this.createOrAlterWord.Equals("alter", System.StringComparison.InvariantCultureIgnoreCase))
+            {
+                this.result.NodeType = PlanNodeTypeEnum.AlterTrigger;
+            }
         }
 
         /// <summary>
@@ -120,7 +128,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
             {
                 List<PlanNode> sendExpressionsAux = (List<PlanNode>)this.sendExpressionList.Evaluate(thread);
 
-                this.result.NodeText = SR.TriggerNodeText1(this.createWord, this.triggerWord, triggerNameAux.NodeText, this.onWord, streamNameAux.NodeText, this.asWord);
+                this.result.NodeText = SR.TriggerNodeText1(this.createOrAlterWord, this.triggerWord, triggerNameAux.NodeText, this.onWord, streamNameAux.NodeText, this.asWord);
 
                 this.result.Children = new System.Collections.Generic.List<PlanNode>();
                 this.result.Children.Add(triggerNameAux);
@@ -142,7 +150,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
                 PlanNode applyWindowAux = (PlanNode)this.applyWindow.Evaluate(thread);
                 List<PlanNode> ifSendListAux = (List<PlanNode>)this.ifSendList.Evaluate(thread);
 
-                this.result.NodeText = SR.TriggerNodeText2(this.createWord, this.triggerWord, triggerNameAux.NodeText, this.onWord, streamNameAux.NodeText, applyWindowAux.NodeText, this.asWord);
+                this.result.NodeText = SR.TriggerNodeText2(this.createOrAlterWord, this.triggerWord, triggerNameAux.NodeText, this.onWord, streamNameAux.NodeText, applyWindowAux.NodeText, this.asWord);
 
                 this.result.Children = new System.Collections.Generic.List<PlanNode>();
                 this.result.Children.Add(triggerNameAux);

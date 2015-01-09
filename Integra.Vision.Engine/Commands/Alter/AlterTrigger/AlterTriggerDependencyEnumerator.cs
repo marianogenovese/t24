@@ -15,6 +15,20 @@ namespace Integra.Vision.Engine.Commands
     internal sealed class AlterTriggerDependencyEnumerator : IDependencyEnumerator
     {
         /// <summary>
+        /// Execution plan node that have the command arguments
+        /// </summary>
+        private readonly PlanNode node;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AlterTriggerDependencyEnumerator"/> class
+        /// </summary>
+        /// <param name="node">Execution plan node that have the command arguments</param>
+        public AlterTriggerDependencyEnumerator(PlanNode node)
+        {
+            this.node = node;
+        }
+
+        /// <summary>
         /// Dependency enumeration implementation
         /// </summary>
         /// <param name="command">Command in context used for enumerate their arguments</param>
@@ -24,35 +38,35 @@ namespace Integra.Vision.Engine.Commands
             try
             {
                 List<CommandDependency> dependencies = new List<CommandDependency>();
-                /*
-                dependencies.Add(new CommandDependency(interpretedCommand.Plan.Root.Children[1].Properties["Value"].ToString(), ObjectTypeEnum.Stream));
 
-                int childrenCount = interpretedCommand.Plan.Root.Children.Count;
+                dependencies.Add(new CommandDependency(this.node.Children[1].Properties["Value"].ToString(), ObjectTypeEnum.Stream));
+
+                int childrenCount = this.node.Children.Count;
                 if (childrenCount == 3)
                 {
-                    foreach (PlanNode plan in interpretedCommand.Plan.Root.Children[2].Children)
+                    foreach (Integra.Vision.Language.PlanNode plan in this.node.Children[2].Children)
                     {
                         dependencies.Add(new CommandDependency(plan.Children[1].Properties["Value"].ToString(), ObjectTypeEnum.Adapter));
                     }
                 }
                 else if (childrenCount == 4)
                 {
-                    foreach (PlanNode ifPlan in interpretedCommand.Plan.Root.Children[3].Children)
+                    foreach (Integra.Vision.Language.PlanNode ifPlan in this.node.Children[3].Children)
                     {
-                        if (ifPlan.NodeType == (uint)Integra.Vision.Language.PlanNodeTypeEnum.Send)
+                        if (ifPlan.NodeType == PlanNodeTypeEnum.Send)
                         {
                             dependencies.Add(new CommandDependency(ifPlan.Children[1].Properties["Value"].ToString(), ObjectTypeEnum.Adapter));
                         }
                         else
                         {
-                            foreach (PlanNode sendPlan in ifPlan.Children)
+                            foreach (Integra.Vision.Language.PlanNode sendPlan in ifPlan.Children)
                             {
                                 dependencies.Add(new CommandDependency(sendPlan.Children[1].Properties["Value"].ToString(), ObjectTypeEnum.Adapter));
                             }
                         }
                     }
                 }
-                */
+
                 return dependencies.ToArray();
             }
             catch (Exception e)

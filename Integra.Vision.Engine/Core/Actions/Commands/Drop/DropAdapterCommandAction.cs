@@ -14,19 +14,14 @@ namespace Integra.Vision.Engine.Core
     /// </summary>
     internal sealed class DropAdapterCommandAction : ExecutionCommandAction
     {
-        /// <summary>
-        /// Create adapter command
-        /// </summary>
-        private DropAdapterCommand command;
-
         /// <inheritdoc />
         protected override CommandActionResult OnExecuteCommand(CommandBase command)
         {
-            this.command = command as DropAdapterCommand;
-
             try
             {
-                this.DeleteObject();
+                // initialize context
+                Integra.Vision.Engine.Database.Contexts.ViewsContext vc = new Integra.Vision.Engine.Database.Contexts.ViewsContext("EngineDatabase");
+                this.DeleteObject(vc, command as DropAdapterCommand);
                 return new QueryCommandResult();
             }
             catch (Exception e)
@@ -36,20 +31,19 @@ namespace Integra.Vision.Engine.Core
         }
 
         /// <summary>
-        /// Contains drop adapter logic
+        /// Contains drop adapter logic.
         /// </summary>
-        private void DeleteObject()
+        /// <param name="vc">Current context</param>
+        /// <param name="command">Drop adapter command</param>
+        protected void DeleteObject(Integra.Vision.Engine.Database.Contexts.ViewsContext vc, DropAdapterCommand command)
         {
-            // initialize context
-            Integra.Vision.Engine.Database.Contexts.ViewsContext vc = new Integra.Vision.Engine.Database.Contexts.ViewsContext("EngineDatabase");
-
             // create repository
             Database.Repositories.Repository<Database.Models.Adapter> repoAdapter = new Database.Repositories.Repository<Database.Models.Adapter>(vc);
             Database.Repositories.Repository<Database.Models.Arg> repoArg = new Database.Repositories.Repository<Database.Models.Arg>(vc);
             Database.Repositories.Repository<Database.Models.Dependency> repoDependency = new Database.Repositories.Repository<Database.Models.Dependency>(vc);
 
             // get the stream
-            Database.Models.Adapter adapter = repoAdapter.Find(x => x.Name == this.command.Name);
+            Database.Models.Adapter adapter = repoAdapter.Find(x => x.Name == command.Name);
 
             // detele the conditions
             repoArg.Delete(x => x.AdapterId == adapter.Id);
@@ -86,7 +80,7 @@ namespace Integra.Vision.Engine.Core
             */
 
             // delete the object
-            repoAdapter.Delete(x => x.Name == this.command.Name);            
+            repoAdapter.Delete(x => x.Name == command.Name);            
             int objectCount = vc.SaveChanges();
 
             // throw an exception if not deleted a object
@@ -96,7 +90,7 @@ namespace Integra.Vision.Engine.Core
                 vc.Dispose();
 
                 // throw the exception 
-                throw new Integra.Vision.Engine.Exceptions.DropUserDefinedObjectException("The object '" + this.command.Name + "' was not removed");
+                throw new Integra.Vision.Engine.Exceptions.DropUserDefinedObjectException("The object '" + command.Name + "' was not removed");
             }
 
             // close connection

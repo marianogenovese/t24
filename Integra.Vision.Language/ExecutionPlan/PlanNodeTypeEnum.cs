@@ -301,6 +301,11 @@ namespace Integra.Vision.Language
         AlterUser = 174,
 
         /// <summary>
+        /// Alter assembly type
+        /// </summary>
+        AlterAssembly = 175,
+
+        /// <summary>
         /// Start assembly type.
         /// </summary>
         StartAssembly = 180,
@@ -398,7 +403,7 @@ namespace Integra.Vision.Language
         /// <summary>
         /// Set trace to specific object type
         /// </summary>
-        SpecificObject = 205,
+        SetTraceObject = 205,
 
         /// <summary>
         /// Grant type

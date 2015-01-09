@@ -21,7 +21,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
         /// <summary>
         /// reserved word
         /// </summary>
-        private string createWord;
+        private string createOrAlterWord;
 
         /// <summary>
         /// reserved word
@@ -87,7 +87,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
         {
             base.Init(context, treeNode);
 
-            this.createWord = (string)ChildrenNodes[0].Token.Value;
+            this.createOrAlterWord = (string)ChildrenNodes[0].Token.Value;
             this.streamWord = (string)ChildrenNodes[1].Token.Value;
             this.streamId = AddChild(NodeUseType.Parameter, "streamId", ChildrenNodes[2]) as AstNodeBase;
             this.asWord = (string)ChildrenNodes[3].Token.Value;
@@ -112,7 +112,15 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[0].Token.Location.Line;
-            this.result.NodeType = PlanNodeTypeEnum.CreateStream;
+
+            if (this.createOrAlterWord.Equals("create", System.StringComparison.InvariantCultureIgnoreCase))
+            {
+                this.result.NodeType = PlanNodeTypeEnum.CreateStream;
+            }
+            else if (this.createOrAlterWord.Equals("alter", System.StringComparison.InvariantCultureIgnoreCase))
+            {
+                this.result.NodeType = PlanNodeTypeEnum.AlterStream;
+            }
         }
 
         /// <summary>
@@ -134,7 +142,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
                 PlanNode whereAux = (PlanNode)this.where.Evaluate(thread);
                 PlanNode selectAux = (PlanNode)this.select.Evaluate(thread);
 
-                this.result.NodeText = SR.StreamNodeText1(this.createWord, this.streamWord, streamIdAux.NodeText, this.asWord, fromAux.NodeText, whereAux.NodeText, selectAux.NodeText);
+                this.result.NodeText = SR.StreamNodeText1(this.createOrAlterWord, this.streamWord, streamIdAux.NodeText, this.asWord, fromAux.NodeText, whereAux.NodeText, selectAux.NodeText);
 
                 this.result.Children = new System.Collections.Generic.List<PlanNode>();
                 this.result.Children.Add(streamIdAux);
@@ -151,7 +159,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
                 PlanNode whereAux = (PlanNode)this.where.Evaluate(thread);
                 PlanNode selectAux = (PlanNode)this.select.Evaluate(thread);
 
-                this.result.NodeText = SR.StreamNodeText2(this.createWord, this.streamWord, streamIdAux.NodeText, this.asWord, joinAux.NodeText, withAux.NodeText, onAux.NodeText, applyWindowAux.NodeText, whereAux.NodeText, selectAux.NodeText);
+                this.result.NodeText = SR.StreamNodeText2(this.createOrAlterWord, this.streamWord, streamIdAux.NodeText, this.asWord, joinAux.NodeText, withAux.NodeText, onAux.NodeText, applyWindowAux.NodeText, whereAux.NodeText, selectAux.NodeText);
 
                 this.result.Children = new System.Collections.Generic.List<PlanNode>();
                 this.result.Children.Add(streamIdAux);

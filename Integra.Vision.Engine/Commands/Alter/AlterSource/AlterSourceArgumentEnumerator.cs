@@ -7,12 +7,27 @@ namespace Integra.Vision.Engine.Commands
 {
     using System;
     using System.Collections.Generic;
+    using Integra.Vision.Language;
     
     /// <summary>
     /// Contains argument enumerator logic for alter source command
     /// </summary>
     internal sealed class AlterSourceArgumentEnumerator : IArgumentEnumerator
     {
+        /// <summary>
+        /// Execution plan node that have the command arguments
+        /// </summary>
+        private readonly PlanNode node;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AlterSourceArgumentEnumerator"/> class
+        /// </summary>
+        /// <param name="node">Execution plan node that have the command arguments</param>
+        public AlterSourceArgumentEnumerator(PlanNode node)
+        {
+            this.node = node;
+        }
+
         /// <summary>
         /// Argument enumeration implementation
         /// </summary>
@@ -24,11 +39,10 @@ namespace Integra.Vision.Engine.Commands
             
             try
             {
-                /*
-                arguments.Add(new CommandArgument("Name", interpretedCommand.Plan.Root.Children[0].Properties["Value"].ToString()));
-                arguments.Add(new CommandArgument("From", interpretedCommand.Plan.Root.Children[1].Children[0].Properties["Value"].ToString()));
-                arguments.Add(new CommandArgument("Where", interpretedCommand.Plan.Root.Children[2].Children[0].NodeText));
-                */
+                arguments.Add(new CommandArgument("Name", this.node.Children[0].Properties["Value"].ToString()));
+                arguments.Add(new CommandArgument("From", this.node.Children[1].Children[0].Properties["Value"].ToString()));
+                arguments.Add(new CommandArgument("Where", this.node.Children[2].Children[0].NodeText));
+
                 return arguments.ToArray();
             }
             catch (Exception e)

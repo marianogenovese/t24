@@ -23,7 +23,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
         /// <summary>
         /// reserved word
         /// </summary>
-        private string createWord;
+        private string createOrAlterWord;
 
         /// <summary>
         /// reserved word
@@ -63,7 +63,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
         public override void Init(AstContext context, ParseTreeNode treeNode)
         {
             base.Init(context, treeNode);
-            this.createWord = (string)ChildrenNodes[0].Token.Value;
+            this.createOrAlterWord = (string)ChildrenNodes[0].Token.Value;
             this.sourceWord = (string)ChildrenNodes[1].Token.Value;
             this.idSource = AddChild(NodeUseType.Parameter, SR.UserDefinedObjectRole, ChildrenNodes[2]) as AstNodeBase;
             this.asWord = (string)ChildrenNodes[3].Token.Value;
@@ -73,7 +73,15 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[1].Token.Location.Line;
-            this.result.NodeType = PlanNodeTypeEnum.CreateSource;
+
+            if (this.createOrAlterWord.Equals("create", System.StringComparison.InvariantCultureIgnoreCase))
+            {
+                this.result.NodeType = PlanNodeTypeEnum.CreateSource;
+            }
+            else if (this.createOrAlterWord.Equals("alter", System.StringComparison.InvariantCultureIgnoreCase))
+            {
+                this.result.NodeType = PlanNodeTypeEnum.AlterSource;
+            }
         }
 
         /// <summary>
@@ -90,7 +98,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
             PlanNode whereAux = (PlanNode)this.where.Evaluate(thread);
             this.EndEvaluate(thread);
 
-            this.result.NodeText = SR.SourceNodeText(this.createWord, this.sourceWord, idSourceAux.NodeText, this.asWord, fromAux.NodeText, whereAux.NodeText);
+            this.result.NodeText = SR.SourceNodeText(this.createOrAlterWord, this.sourceWord, idSourceAux.NodeText, this.asWord, fromAux.NodeText, whereAux.NodeText);
 
             this.result.Children = new System.Collections.Generic.List<PlanNode>();
             this.result.Children.Add(idSourceAux);

@@ -20,7 +20,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
         /// <summary>
         /// reserved word
         /// </summary>
-        private string createWord;
+        private string createOrAlterWord;
 
         /// <summary>
         /// reserved word
@@ -55,7 +55,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
         public override void Init(AstContext context, ParseTreeNode treeNode)
         {
             base.Init(context, treeNode);
-            this.createWord = (string)ChildrenNodes[0].Token.Value;
+            this.createOrAlterWord = (string)ChildrenNodes[0].Token.Value;
             this.assemblyWord = (string)ChildrenNodes[1].Token.Value;
             this.idAssembly = AddChild(NodeUseType.Parameter, SR.UserDefinedObjectRole, ChildrenNodes[2]) as AstNodeBase;
             this.fromWord = (string)ChildrenNodes[3].Token.Value;
@@ -64,7 +64,15 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[0].Token.Location.Line;
-            this.result.NodeType = PlanNodeTypeEnum.CreateAssembly;
+
+            if (this.createOrAlterWord.Equals("create", System.StringComparison.InvariantCultureIgnoreCase))
+            {
+                this.result.NodeType = PlanNodeTypeEnum.CreateAssembly;
+            }
+            else if (this.createOrAlterWord.Equals("alter", System.StringComparison.InvariantCultureIgnoreCase))
+            {
+                this.result.NodeType = PlanNodeTypeEnum.AlterAssembly;
+            }
         }
 
         /// <summary>
@@ -80,7 +88,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
             PlanNode auxPath = (PlanNode)this.path.Evaluate(thread);
             this.EndEvaluate(thread);
 
-            this.result.NodeText = SR.AssemblyNodeText(this.createWord, this.assemblyWord, auxIdAssembly.NodeText, this.fromWord, auxPath.NodeText);
+            this.result.NodeText = SR.AssemblyNodeText(this.createOrAlterWord, this.assemblyWord, auxIdAssembly.NodeText, this.fromWord, auxPath.NodeText);
             
             this.result.Children = new System.Collections.Generic.List<PlanNode>();
             this.result.Children.Add(auxIdAssembly);

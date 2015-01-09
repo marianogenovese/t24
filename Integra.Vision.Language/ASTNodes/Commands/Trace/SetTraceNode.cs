@@ -70,7 +70,6 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Trace
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[0].Token.Location.Line;
-            this.result.NodeType = PlanNodeTypeEnum.SetTraceAdapter;
         }
 
         /// <summary>
@@ -86,6 +85,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Trace
             string objectToTraceAux = (string)this.objectToTrace.Evaluate(thread);
             this.EndEvaluate(thread);
 
+            this.SelectNodeType(objectToTraceAux);
             this.result.Properties.Add("ObjectToTrace", objectToTraceAux);
 
             this.result.NodeText = this.setWord + " " + this.traceWord + " " + levelAux.NodeText + " " + this.toWord + " " + objectToTraceAux;
@@ -126,7 +126,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Trace
             }
             else
             {
-                this.result.NodeType = PlanNodeTypeEnum.SpecificObject;
+                this.result.NodeType = PlanNodeTypeEnum.SetTraceObject;
             }
         }
     }

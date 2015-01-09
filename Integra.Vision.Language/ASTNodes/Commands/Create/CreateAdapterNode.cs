@@ -21,7 +21,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
         /// <summary>
         /// reserved word
         /// </summary>
-        private string createWord;
+        private string createOrAlterWord;
 
         /// <summary>
         /// reserved word
@@ -76,7 +76,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
         public override void Init(AstContext context, ParseTreeNode treeNode)
         {
             base.Init(context, treeNode);
-            this.createWord = (string)ChildrenNodes[0].Token.Value;
+            this.createOrAlterWord = (string)ChildrenNodes[0].Token.Value;
             this.adapterWord = (string)ChildrenNodes[1].Token.Value;
             this.idAdapter = AddChild(NodeUseType.Parameter, SR.UserDefinedObjectRole, ChildrenNodes[2]) as AstNodeBase;
             this.forWord = (string)ChildrenNodes[3].Token.Value;
@@ -89,7 +89,15 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[0].Token.Location.Line;
-            this.result.NodeType = PlanNodeTypeEnum.CreateAdapter;
+
+            if (this.createOrAlterWord.Equals("create", System.StringComparison.InvariantCultureIgnoreCase))
+            {
+                this.result.NodeType = PlanNodeTypeEnum.CreateAdapter;
+            }
+            else if (this.createOrAlterWord.Equals("alter", System.StringComparison.InvariantCultureIgnoreCase)) 
+            {
+                this.result.NodeType = PlanNodeTypeEnum.AlterAdapter;
+            }
         }
 
         /// <summary>
@@ -116,7 +124,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
                 paramListText += " " + param.NodeText + " ";
             }
 
-            this.result.NodeText = SR.AdapterNodeText(this.createWord, this.adapterWord, auxIdAdapter.NodeText, this.forWord, auxAdapterType.NodeText, this.asWord, paramListText, this.referenceWord, auxReference.NodeText);
+            this.result.NodeText = SR.AdapterNodeText(this.createOrAlterWord, this.adapterWord, auxIdAdapter.NodeText, this.forWord, auxAdapterType.NodeText, this.asWord, paramListText, this.referenceWord, auxReference.NodeText);
 
             this.result.Children = new System.Collections.Generic.List<PlanNode>();
             this.result.Children.Add(auxIdAdapter);

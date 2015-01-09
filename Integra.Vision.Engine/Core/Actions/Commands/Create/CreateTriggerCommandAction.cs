@@ -59,7 +59,7 @@ namespace Integra.Vision.Engine.Core
             string streamName = this.command.StreamName;
             Database.Models.Stream stream = repoStream.Find(x => x.Name == streamName);
 
-            Database.Models.Trigger trigger = new Database.Models.Trigger() { CreationDate = DateTime.Now, Name = this.command.Name, State = (int)UserDefinedObjectStateEnum.Stopped, Type = this.command.Type.ToString(), IsSystemObject = false, StreamId = stream.Id };
+            Database.Models.Trigger trigger = new Database.Models.Trigger() { CreationDate = DateTime.Now, Name = this.command.Name, State = (int)UserDefinedObjectStateEnum.Stopped, Type = ObjectTypeEnum.Trigger.ToString(), IsSystemObject = false, StreamId = stream.Id };
             repoTrigger.Create(trigger);
 
             foreach (string adapterName in this.command.SendList)

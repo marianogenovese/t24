@@ -12,21 +12,20 @@ namespace Integra.Vision.Engine.Core
     /// <summary>
     /// Implements all the process of create a new adapter.
     /// </summary>
-    internal sealed class CreateAdapterCommandAction : ExecutionCommandAction
+    internal class CreateAdapterCommandAction : ExecutionCommandAction
     {
-        /// <summary>
-        /// Create adapter command
-        /// </summary>
-        private CreateAdapterCommand command;
-
         /// <inheritdoc />
         protected override CommandActionResult OnExecuteCommand(CommandBase command)
         {
-            this.command = command as CreateAdapterCommand;
-
             try
             {
-                this.SaveArguments();
+                // Initialize the context
+                Integra.Vision.Engine.Database.Contexts.ViewsContext context = new Integra.Vision.Engine.Database.Contexts.ViewsContext("EngineDatabase");
+
+                // save the arguments
+                this.SaveArguments(context, command as CreateAdapterCommand);
+
+                // return the result
                 return new QueryCommandResult();
             }
             catch (Exception e)
@@ -38,28 +37,27 @@ namespace Integra.Vision.Engine.Core
         /// <summary>
         /// Save the command arguments.
         /// </summary>
-        private void SaveArguments()
+        /// <param name="vc">Current context</param>
+        /// <param name="command">Create adapter command</param>
+        protected void SaveArguments(Integra.Vision.Engine.Database.Contexts.ViewsContext vc, CreateAdapterCommand command)
         {
-            // Initialize the context
-            Integra.Vision.Engine.Database.Contexts.ViewsContext vc = new Integra.Vision.Engine.Database.Contexts.ViewsContext("EngineDatabase");
-
             Repository<Database.Models.Assembly> repoAssembly = new Repository<Database.Models.Assembly>(vc);
-            string assemblyName = this.command.AssemblyName;
+            string assemblyName = command.AssemblyName;
             Database.Models.Assembly assembly = repoAssembly.Find(x => x.Name == assemblyName);
 
             Repository<Database.Models.Adapter> repoAdapter = new Repository<Database.Models.Adapter>(vc);
-            Database.Models.Adapter adapter = new Database.Models.Adapter() { CreationDate = DateTime.Now, IsSystemObject = false, Type = this.command.Type.ToString(), State = (int)UserDefinedObjectStateEnum.Stopped, Name = this.command.Name, AdapterType = (int)this.command.AdapterType, AssemblyId = assembly.Id };
+            Database.Models.Adapter adapter = new Database.Models.Adapter() { CreationDate = DateTime.Now, IsSystemObject = false, Type = ObjectTypeEnum.Adapter.ToString(), State = (int)UserDefinedObjectStateEnum.Stopped, Name = command.Name, AdapterType = (int)command.AdapterType, AssemblyId = assembly.Id };
             repoAdapter.Create(adapter);
 
             Repository<Database.Models.Arg> repoArg = new Repository<Database.Models.Arg>(vc);
-            foreach (Integra.Vision.Language.PlanNode planNode in this.command.Parameters)
+            foreach (Integra.Vision.Language.PlanNode planNode in command.Parameters)
             {
                 Database.Models.Arg arg = new Database.Models.Arg() { AdapterId = adapter.Id, Type = this.GetParameterDataType(planNode.Children[0].Properties["Value"].ToString()), Name = planNode.Children[1].Properties["Value"].ToString(), Value = this.GetBytes(planNode.Children[2].Properties["Value"].ToString()) };
                 repoArg.Create(arg);
             }
 
             // save dependencies of the adapter
-            DependencyActions dependencyAction = new DependencyActions(vc, this.command.Dependencies);
+            DependencyActions dependencyAction = new DependencyActions(vc, command.Dependencies);
             dependencyAction.SaveDependencies(adapter);
 
             // save changes

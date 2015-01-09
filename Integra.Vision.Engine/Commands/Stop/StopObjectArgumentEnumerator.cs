@@ -39,7 +39,23 @@ namespace Integra.Vision.Engine.Commands
 
             try
             {
-                arguments.Add(new CommandArgument("UserDefinedObject", this.node.Properties["UserDefinedObject"].ToString()));
+                if (this.node.Properties["UserDefinedObject"].ToString().Equals(ObjectTypeEnum.Adapter.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    arguments.Add(new CommandArgument("UserDefinedObject", ObjectTypeEnum.Adapter));
+                }
+                else if (this.node.Properties["UserDefinedObject"].ToString().Equals(ObjectTypeEnum.Source.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    arguments.Add(new CommandArgument("UserDefinedObject", ObjectTypeEnum.Source));
+                }
+                else if (this.node.Properties["UserDefinedObject"].ToString().Equals(ObjectTypeEnum.Stream.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    arguments.Add(new CommandArgument("UserDefinedObject", ObjectTypeEnum.Stream));
+                }
+                else if (this.node.Properties["UserDefinedObject"].ToString().Equals(ObjectTypeEnum.Trigger.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    arguments.Add(new CommandArgument("UserDefinedObject", ObjectTypeEnum.Trigger));
+                }
+
                 arguments.Add(new CommandArgument("Name", this.node.Children[0].Properties["Value"].ToString()));
 
                 return arguments.ToArray();
