@@ -6,5 +6,5 @@ SELECT actualObject.ObjectId as Id, actualObject.LocalPath
 FROM EngineDatabase.dbo.Assemblies actualObject 
 INNER JOIN EngineDatabase.dbo.UserDefinedObjects userDefinedObject
 ON actualObject.ObjectId = userDefinedObject.ObjectId
-INNER JOIN EngineDatabase.dbo.Objects baseObject
+INNER JOIN EngineDatabase.dbo.BaseObjects baseObject
 ON actualObject.ObjectId = baseObject.ObjectId

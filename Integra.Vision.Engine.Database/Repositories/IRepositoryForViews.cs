@@ -6,6 +6,7 @@
 namespace Integra.Vision.Engine.Database.Repositories
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
@@ -23,6 +24,6 @@ namespace Integra.Vision.Engine.Database.Repositories
         /// <param name="projection">projection statement</param>
         /// <param name="conditionParameters">where condition parameters</param>
         /// <returns>list of objects</returns>
-        object[] Query(string condition, string projection, params object[] conditionParameters);
+        IEnumerable Query(string condition, string projection, params object[] conditionParameters);
     }
 }

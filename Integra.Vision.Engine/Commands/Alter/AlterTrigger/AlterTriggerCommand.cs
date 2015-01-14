@@ -47,17 +47,6 @@ namespace Integra.Vision.Engine.Commands
         }
 
         /// <summary>
-        /// Gets the trigger name
-        /// </summary>
-        public string Name
-        {
-            get
-            {
-                return this.Arguments["Name"].Value.ToString();
-            }
-        }
-
-        /// <summary>
         /// Gets the stream name
         /// </summary>
         public string StreamName

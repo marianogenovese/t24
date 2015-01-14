@@ -19,7 +19,7 @@ namespace Integra.Vision.Language.Grammars
     internal class EQLLanguageRuntime : LanguageRuntime
     {
         /// <summary>
-        /// Initializes a new instance of the EQLLanguageRuntime class
+        /// Initializes a new instance of the <see cref="EQLLanguageRuntime"/> class
         /// </summary>
         public EQLLanguageRuntime()
             : base(new LanguageData(new EQLGrammar()))

@@ -16,13 +16,15 @@ namespace Integra.Vision.Engine.Core
     {
         /// <inheritdoc />
         protected override CommandActionResult OnExecuteCommand(CommandBase command)
-        {
+        {   
             try
             {
-                ViewsContext context = new ViewsContext("EngineDatabase");
+                using (ViewsContext context = new ViewsContext("EngineDatabase"))
+                {
+                    this.SaveArguments(context, command as CreateAssemblyCommand);
 
-                this.SaveArguments(context, command as CreateAssemblyCommand);
-                return new QueryCommandResult();
+                    return new OkCommandResult();
+                }
             }
             catch (Exception e)
             {
@@ -40,6 +42,10 @@ namespace Integra.Vision.Engine.Core
             Database.Repositories.Repository<Database.Models.Assembly> repo = new Database.Repositories.Repository<Database.Models.Assembly>(vc);
             Database.Models.Assembly assembly = new Database.Models.Assembly() { CreationDate = System.DateTime.Now, IsSystemObject = false, Type = ObjectTypeEnum.Assembly.ToString(), State = (int)UserDefinedObjectStateEnum.Stopped, Name = command.Name, LocalPath = command.LocalPath };
             repo.Create(assembly);
+
+            // Guarda el script del objeto
+            ScriptActions scriptActions = new ScriptActions(vc);
+            scriptActions.SaveScript(command.Script, assembly.Id);
 
             // Guarda los cambios
             vc.SaveChanges();

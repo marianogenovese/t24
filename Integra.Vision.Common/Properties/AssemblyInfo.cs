@@ -44,3 +44,4 @@ using System.Runtime.InteropServices;
 [assembly: InternalsVisibleTo("Integra.Vision.Language")]
 [assembly: InternalsVisibleTo("Integra.Vision.Common.Tests")]
 [assembly: InternalsVisibleTo("Integra.Vision.Engine.Host")]
+[assembly: InternalsVisibleTo("Integra.Vision.Engine.ClientTests")]

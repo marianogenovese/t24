@@ -39,6 +39,7 @@ namespace Integra.Vision.Engine.Commands
             
             try
             {
+                arguments.Add(new CommandArgument("Script", "create" + this.node.NodeText.Substring(5)));
                 arguments.Add(new CommandArgument("Name", this.node.Children[0].Properties["Value"].ToString()));
                 arguments.Add(new CommandArgument("From", this.node.Children[1].Children[0].Properties["Value"].ToString()));
                 arguments.Add(new CommandArgument("Where", this.node.Children[2].Children[0].NodeText));

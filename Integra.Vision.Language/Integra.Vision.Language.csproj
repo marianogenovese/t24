@@ -63,6 +63,7 @@
     <Compile Include="ASTNodes\Commands\Create\CreateTriggerNode.cs" />
     <Compile Include="ASTNodes\Commands\Create\CreateUser.cs" />
     <Compile Include="ASTNodes\Commands\Drop\DropUserDefinedObjectNode.cs" />
+    <Compile Include="ASTNodes\Commands\EngineActionsNode.cs" />
     <Compile Include="ASTNodes\Commands\General\AdapterTypeNode.cs" />
     <Compile Include="ASTNodes\Commands\Create\CreateAdapterNode.cs" />
     <Compile Include="ASTNodes\Commands\Create\CreateSourceNode.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="ASTNodes\Commands\General\SendNode.cs" />
     <Compile Include="ASTNodes\Commands\General\UserDefinedObjectsNode.cs" />
     <Compile Include="ASTNodes\Commands\General\ConstantStringValueNode.cs" />
+    <Compile Include="ASTNodes\Commands\LoadAssemblyNode.cs" />
     <Compile Include="ASTNodes\Commands\StartStop\ObjectToStartOrStopNode.cs" />
     <Compile Include="ASTNodes\Commands\StartStop\StartStopNode.cs" />
     <Compile Include="ASTNodes\Commands\Trace\SetTraceNode.cs" />
@@ -111,6 +113,7 @@
     <Compile Include="ASTNodes\SystemViews\SystemViewNode.cs" />
     <Compile Include="Errors\ErrorNode.cs" />
     <Compile Include="Errors\Errors.cs" />
+    <Compile Include="Parsers\ExpressionParser.cs" />
     <Compile Include="General\Adapter.cs" />
     <Compile Include="General\Agent.cs" />
     <Compile Include="General\EventObject.cs" />
@@ -120,10 +123,15 @@
     <Compile Include="General\Validations\TypeValidation.cs" />
     <Compile Include="Grammars\EQLGrammar.cs" />
     <Compile Include="Grammars\EQLLanguageRuntime.cs" />
-    <Compile Include="IntegraParser.cs" />
+    <Compile Include="Grammars\ExpressionGrammar.cs" />
+    <Compile Include="Grammars\ExpressionLanguageRuntime.cs" />
+    <Compile Include="Grammars\PrivateGrammar.cs" />
+    <Compile Include="Grammars\PrivateLanguageRuntime.cs" />
+    <Compile Include="Parsers\PublicParser.cs" />
     <Compile Include="ExecutionPlan\Plan.cs" />
     <Compile Include="ExecutionPlan\PlanNode.cs" />
     <Compile Include="ExecutionPlan\PlanNodeTypeEnum.cs" />
+    <Compile Include="Parsers\PrivateParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\SR.Designer.cs">
       <AutoGen>True</AutoGen>

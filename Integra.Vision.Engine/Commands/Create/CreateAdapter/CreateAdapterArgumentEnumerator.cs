@@ -39,6 +39,7 @@ namespace Integra.Vision.Engine.Commands
 
             try
             {
+                arguments.Add(new CommandArgument("Script", this.node.NodeText));
                 arguments.Add(new CommandArgument("Name", this.node.Children[0].Properties["Value"].ToString()));
 
                 if (this.node.Children[1].Properties["Value"].ToString().Equals(AdapterTypeEnum.Input.ToString(), StringComparison.InvariantCultureIgnoreCase))

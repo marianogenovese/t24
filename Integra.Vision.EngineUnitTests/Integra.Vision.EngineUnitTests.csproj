@@ -75,14 +75,14 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Tests\CreateCommandTest.cs" />
-    <Compile Include="Tests\DropCommandTest.cs" />
-    <Compile Include="Tests\PermissionCommandTest.cs" />
+    <None Include="Tests\CreateCommandTest.cs" />
+    <None Include="Tests\DropCommandTest.cs" />
+    <None Include="Tests\PermissionCommandTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tests\SetTraceCommandTest.cs" />
-    <Compile Include="Tests\StartStopCommandTest.cs" />
-    <Compile Include="Tests\AlterCommandTest.cs" />
-    <Compile Include="Tests\SystemViewsTest.cs" />
+    <None Include="Tests\SetTraceCommandTest.cs" />
+    <None Include="Tests\StartStopCommandTest.cs" />
+    <None Include="Tests\AlterCommandTest.cs" />
+    <None Include="Tests\SystemViewsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

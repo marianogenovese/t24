@@ -184,7 +184,7 @@ namespace Integra.Vision.Language.Resources
 	
 		/// <summary>
 		/// Looks up a localized string similar to: 
-		///	{0} {1} {2} {3} {4}
+		///	{0} {1}{2} {3} {4}
 		/// </summary>
 		public static string ParameterNodeText(object arg0, object arg1, object arg2, object arg3, object arg4)
 		{

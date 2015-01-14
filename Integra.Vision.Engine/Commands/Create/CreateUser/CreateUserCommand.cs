@@ -49,17 +49,6 @@ namespace Integra.Vision.Engine.Commands
         }
 
         /// <summary>
-        /// Gets user name
-        /// </summary>
-        public string Name
-        {
-            get
-            {
-                return this.Arguments["Name"].Value.ToString();
-            }
-        }
-
-        /// <summary>
         /// Gets user password
         /// </summary>
         public string Password

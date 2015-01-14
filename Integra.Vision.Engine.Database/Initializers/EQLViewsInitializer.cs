@@ -22,7 +22,7 @@ namespace Integra.Vision.Engine.Database.Initializers
         /// <param name="context">doc goes here</param>
         protected override void Seed(ViewsContext context)
         {
-            var sqlFiles = System.IO.Directory.GetFiles(@"Scripts\Views", "*.sql");
+            var sqlFiles = System.IO.Directory.GetFiles(@"..\..\..\Integra.Vision.Engine.Database\bin\Debug\Scripts\Views", "*.sql");
             foreach (string file in sqlFiles)
             {
                 context.Database.ExecuteSqlCommand(System.IO.File.ReadAllText(file));

@@ -8,7 +8,7 @@ namespace Integra.Vision.Engine.Core
     using System;
     using System.Collections.Generic;
     using Integra.Vision.Language;
-    
+
     /// <summary>
     /// Implements the parsing process in which receive a string and return a node as result of the parsing.
     /// </summary>
@@ -30,8 +30,24 @@ namespace Integra.Vision.Engine.Core
 
             try
             {
-                IntegraParser parser = new IntegraParser(context.Request.Script);
-                context.Nodes = parser.Parse();
+                if (context.Data["IsPrivateCommand"].Equals(true))
+                {
+                    if (context.Data.ContainsKey("IsConditionalExpression"))
+                    {
+                        ExpressionParser parser = new ExpressionParser(context.Request.Script);
+                        context.Nodes = parser.Parse();
+                    }
+                    else
+                    {
+                        PrivateParser parser = new PrivateParser(context.Request.Script);
+                        context.Nodes = parser.Parse();
+                    }
+                }
+                else
+                {
+                    PublicParser parser = new PublicParser(context.Request.Script);
+                    context.Nodes = parser.Parse();
+                }
             }
             catch (System.Exception e)
             {

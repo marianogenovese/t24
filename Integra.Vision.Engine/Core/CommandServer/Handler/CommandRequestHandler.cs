@@ -46,6 +46,7 @@ namespace Integra.Vision.Engine.Core
              * se toma del CurrentPrincipal el objeto que representa al usuario que viene del lado del cliente.
              */
             OperationContext context = new OperationContextWrapper(Thread.CurrentPrincipal, request);
+            context.Data.Add("IsPrivateCommand", false);
             this.scheduler.Schedule(context); // Se agenda la ejecución del contexto.
             await context.WaitForCompletion(); // Se espera por la terminación de la operación.
             return context.Response;

@@ -20,13 +20,13 @@ namespace Integra.Vision.Engine.Core
         {
             try
             {
-                // Initialize the context
-                ViewsContext context = new ViewsContext("EngineDatabase");
+                using (ViewsContext context = new ViewsContext("EngineDatabase"))
+                {
+                    this.UpdateObject(context, command as AlterAdapterCommand);
 
-                this.UpdateObject(context, command as AlterAdapterCommand);
-
-                // return the result
-                return new QueryCommandResult();
+                    // return the result
+                    return new OkCommandResult();
+                }
             }
             catch (Exception e)
             {
@@ -75,6 +75,10 @@ namespace Integra.Vision.Engine.Core
                 Database.Models.Arg arg = new Database.Models.Arg() { AdapterId = adapter.Id, Type = this.GetParameterDataType(planNode.Children[0].Properties["Value"].ToString()), Name = planNode.Children[1].Properties["Value"].ToString(), Value = this.GetBytes(planNode.Children[2].Properties["Value"].ToString()) };
                 repoArg.Create(arg);
             }
+
+            // update the object script
+            ScriptActions scriptActions = new ScriptActions(vc);
+            scriptActions.UpdateScript(command.Script, adapter.Id);
 
             // save dependencies of the adapter
             DependencyActions dependencyAction = new DependencyActions(vc, command.Dependencies);

@@ -42,6 +42,7 @@ namespace Integra.Vision.Engine.Commands
 
             try
             {
+                arguments.Add(new CommandArgument("Script", "create" + this.node.NodeText.Substring(5)));
                 arguments.Add(new CommandArgument("Name", this.node.Children[0].Properties["Value"].ToString()));
                 arguments.Add(new CommandArgument("StreamName", this.node.Children[1].Properties["Value"].ToString()));
 

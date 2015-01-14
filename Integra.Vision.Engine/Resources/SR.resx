@@ -171,4 +171,13 @@
   <data name="RequestTypeHeaderName" xml:space="preserve">
     <value>RequestType</value>
   </data>
+  <data name="BootResponseEmpty" xml:space="preserve">
+    <value>Boot fail, because the response is empty.</value>
+  </data>
+  <data name="BootResponseInvalid" xml:space="preserve">
+    <value>Boot fail, because the response is invalid. The type of response is {0}.</value>
+  </data>
+  <data name="BootResponseNull" xml:space="preserve">
+    <value>Boot fail, because the response is null.</value>
+  </data>
 </root>

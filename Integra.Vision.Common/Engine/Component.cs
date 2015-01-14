@@ -81,11 +81,6 @@ namespace Integra.Vision.Engine
         private bool raisedFaulted;
 
         /// <summary>
-        /// Can trace start/stop events.
-        /// </summary>
-        private bool traceStartAndStop;
-
-        /// <summary>
         /// Sender context on events.
         /// </summary>
         private object eventSender;

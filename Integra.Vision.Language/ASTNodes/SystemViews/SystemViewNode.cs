@@ -60,12 +60,23 @@ namespace Integra.Vision.Language.ASTNodes.SystemViews
         {
             base.Init(context, treeNode);
 
-            this.fromWord = (string)ChildrenNodes[0].Token.Value;
-            this.fromText = (string)ChildrenNodes[1].Token.Value;
-            this.whereWord = (string)ChildrenNodes[2].Token.Value;
-            this.whereText = (string)ChildrenNodes[3].Token.Value;
-            this.selectWord = (string)ChildrenNodes[4].Token.Value;
-            this.selectText = (string)ChildrenNodes[5].Token.Value;
+            int childrenCount = ChildrenNodes.Count;
+            if (childrenCount == 4)
+            {
+                this.fromWord = (string)ChildrenNodes[0].Token.Value;
+                this.fromText = (string)ChildrenNodes[1].Token.Value;
+                this.selectWord = (string)ChildrenNodes[2].Token.Value;
+                this.selectText = (string)ChildrenNodes[3].Token.Value;
+            }
+            else
+            {
+                this.fromWord = (string)ChildrenNodes[0].Token.Value;
+                this.fromText = (string)ChildrenNodes[1].Token.Value;
+                this.whereWord = (string)ChildrenNodes[2].Token.Value;
+                this.whereText = (string)ChildrenNodes[3].Token.Value;
+                this.selectWord = (string)ChildrenNodes[4].Token.Value;
+                this.selectText = (string)ChildrenNodes[5].Token.Value;
+            }
 
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;

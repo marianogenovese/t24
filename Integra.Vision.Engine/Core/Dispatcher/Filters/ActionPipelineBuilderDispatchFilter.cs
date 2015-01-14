@@ -48,34 +48,6 @@ namespace Integra.Vision.Engine.Core
                 actionContext.Command = command;
                 yield return actionContext;
             }
-            
-            /*
-            // Se usa un dictionario concurrente pues este metodo puede ser llamado concurrentemente y ademas el diccionario es estatico.
-            for (int i = 0; i <= 4; i++)
-            {
-                CommandActionFactory factory = null;
-                switch (i)
-                {
-                    case 0:
-                        factory = builderCache.GetOrAdd(CommandTypeEnum.CreateAssembly, _ => actionPipelineFactoryBuilder.Build(CommandTypeEnum.CreateAssembly));
-                        break;
-                    case 1:
-                        factory = builderCache.GetOrAdd(CommandTypeEnum.CreateAdapter, _ => actionPipelineFactoryBuilder.Build(CommandTypeEnum.CreateAdapter));
-                        break;
-                    case 2:
-                        factory = builderCache.GetOrAdd(CommandTypeEnum.CreateSource, _ => actionPipelineFactoryBuilder.Build(CommandTypeEnum.CreateSource));
-                        break;
-                    case 3:
-                        factory = builderCache.GetOrAdd(CommandTypeEnum.CreateStream, _ => actionPipelineFactoryBuilder.Build(CommandTypeEnum.CreateStream));
-                        break;
-                    case 4:
-                        factory = builderCache.GetOrAdd(CommandTypeEnum.CreateTrigger, _ => actionPipelineFactoryBuilder.Build(CommandTypeEnum.CreateTrigger));
-                        break;
-                }
-                
-                yield return factory;
-            }
-            */
         }
     }
 }

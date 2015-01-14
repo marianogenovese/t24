@@ -41,5 +41,10 @@ namespace Integra.Vision.Engine.Database.Models
         /// Gets or sets the trace level
         /// </summary>
         public virtual SetTrace SetTrace { get; set; }
+
+        /// <summary>
+        /// Gets or sets the scripts
+        /// </summary>
+        public ICollection<Script> Scripts { get; set; }
     }
 }

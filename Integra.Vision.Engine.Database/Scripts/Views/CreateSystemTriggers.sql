@@ -6,5 +6,5 @@ SELECT actualObject.ObjectId as Id, actualObject.DurationTime, actualObject.Stre
 FROM EngineDatabase.dbo.Triggers actualObject 
 INNER JOIN EngineDatabase.dbo.UserDefinedObjects userDefinedObject
 ON actualObject.ObjectId = userDefinedObject.ObjectId
-INNER JOIN EngineDatabase.dbo.Objects baseObject
+INNER JOIN EngineDatabase.dbo.BaseObjects baseObject
 ON actualObject.ObjectId = baseObject.ObjectId

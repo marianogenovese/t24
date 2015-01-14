@@ -22,19 +22,19 @@ namespace Integra.Vision.Engine.Core
             {
                 AlterTriggerCommand alterTriggerCommand = command as AlterTriggerCommand;
 
-                // Initialize the context
-                Integra.Vision.Engine.Database.Contexts.ViewsContext context = new Integra.Vision.Engine.Database.Contexts.ViewsContext("EngineDatabase");
-
-                if (alterTriggerCommand.IsSimpleTrigger)
+                using (ViewsContext context = new ViewsContext("EngineDatabase"))
                 {
-                    this.SaveSimpleTriggerArguments(context, alterTriggerCommand);
-                }
-                else
-                {
-                    this.SaveTriggerWithWindowArguments(context, alterTriggerCommand);
-                }
+                    if (alterTriggerCommand.IsSimpleTrigger)
+                    {
+                        this.SaveSimpleTriggerArguments(context, alterTriggerCommand);
+                    }
+                    else
+                    {
+                        this.SaveTriggerWithWindowArguments(context, alterTriggerCommand);
+                    }
 
-                return new QueryCommandResult();
+                    return new OkCommandResult();
+                }
             }
             catch (Exception e)
             {
@@ -84,6 +84,10 @@ namespace Integra.Vision.Engine.Core
                 Database.Models.Stmt stmt = new Database.Models.Stmt() { TriggerId = trigger.Id, AdapterId = adapter.Id, Type = (int)StmtTypeEnum.SendAlways };
                 repoStmt.Create(stmt);
             }
+
+            // update the object script
+            ScriptActions scriptActions = new ScriptActions(vc);
+            scriptActions.UpdateScript(command.Script, trigger.Id);
 
             // save trigger dependencies
             DependencyActions dependencyAction = new DependencyActions(vc, command.Dependencies);
@@ -158,6 +162,10 @@ namespace Integra.Vision.Engine.Core
                     adapterOrder++;
                 }
             }
+
+            // update the object script
+            ScriptActions scriptActions = new ScriptActions(vc);
+            scriptActions.UpdateScript(command.Script, trigger.Id);
 
             // save trigger dependencies
             DependencyActions dependencyAction = new DependencyActions(vc, command.Dependencies);

@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Engine\Commands\AdapterTypeEnum.cs" />
+    <Compile Include="Engine\Commands\AdminCommandTypeEnum.cs" />
     <Compile Include="Engine\Commands\ArgDataTypeEnum.cs" />
     <Compile Include="Engine\Commands\CommandAccessLevelEnum.cs" />
     <Compile Include="Engine\Commands\CommandCategoryEnum.cs" />

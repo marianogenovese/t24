@@ -8,7 +8,7 @@ namespace Integra.Vision.Engine.Core
     using System.Collections.Generic;
     using Integra.Vision.Engine.Commands;
     using Integra.Vision.Language;
-    
+
     /// <summary>
     /// Implements the logic of compiling in which receive a node and return a command as result of the compiling.
     /// </summary>
@@ -23,6 +23,7 @@ namespace Integra.Vision.Engine.Core
         public override ICompileFilterContext Execute(IParseFilterContext context)
         {
             ICompileFilterContext compileContext = context as ICompileFilterContext;
+            DispatchContext dispatchContext = context as DispatchContext;
 
             /*
              * Aqui se debe tomar los nodos y convertirlos a comandos
@@ -165,6 +166,16 @@ namespace Integra.Vision.Engine.Core
                     // QUERY
                     case PlanNodeTypeEnum.SystemQuery:
                         command = new SystemQueriesCommand(node);
+                        break;
+
+                    // BOOT ENGINE
+                    case PlanNodeTypeEnum.BootEngine:
+                        command = new BootEngineCommand(node);
+                        break;
+
+                    // LOAD ASSEMBLY
+                    case PlanNodeTypeEnum.LoadAssembly:
+                        command = new LoadAssemblyCommand(node);
                         break;
                 }
 

@@ -7,26 +7,23 @@ namespace Integra.Vision.Engine.Core
 {
     using System;
     using Integra.Vision.Engine.Commands;
+    using Integra.Vision.Engine.Database.Contexts;
 
     /// <summary>
     /// Base class for create roles
     /// </summary>
     internal sealed class CreateRoleCommandAction : ExecutionCommandAction
     {
-        /// <summary>
-        /// Create adapter command
-        /// </summary>
-        private CreateRoleCommand command;
-
         /// <inheritdoc />
         protected override CommandActionResult OnExecuteCommand(CommandBase command)
         {
-            this.command = command as CreateRoleCommand;
-
             try
             {
-                this.SaveArguments();
-                return new QueryCommandResult();
+                using (ViewsContext context = new ViewsContext("EngineDatabase"))
+                {
+                    this.SaveArguments(context, command as CreateRoleCommand);
+                    return new OkCommandResult();
+                }
             }
             catch (Exception e)
             {
@@ -37,17 +34,20 @@ namespace Integra.Vision.Engine.Core
         /// <summary>
         /// Save the command arguments.
         /// </summary>
-        private void SaveArguments()
+        /// <param name="vc">Current context</param>
+        /// <param name="command">Create role command</param>
+        private void SaveArguments(ViewsContext vc, CreateRoleCommand command)
         {
-            // initialize context
-            Integra.Vision.Engine.Database.Contexts.ViewsContext vc = new Integra.Vision.Engine.Database.Contexts.ViewsContext("EngineDatabase");
-
             // create repository
             Database.Repositories.Repository<Database.Models.Role> repoRole = new Database.Repositories.Repository<Database.Models.Role>(vc);
 
             // create user
-            Database.Models.Role role = new Database.Models.Role() { CreationDate = DateTime.Now, IsServerRole = false, IsSystemObject = false, Name = this.command.Name, State = (int)UserDefinedObjectStateEnum.Stopped, Type = ObjectTypeEnum.Role.ToString() };
+            Database.Models.Role role = new Database.Models.Role() { CreationDate = DateTime.Now, IsServerRole = false, IsSystemObject = false, Name = command.Name, State = (int)UserDefinedObjectStateEnum.Stopped, Type = ObjectTypeEnum.Role.ToString() };
             repoRole.Create(role);
+
+            // save the object script
+            ScriptActions scriptActions = new ScriptActions(vc);
+            scriptActions.SaveScript(command.Script, role.Id);
 
             // save changes
             vc.SaveChanges();

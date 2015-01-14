@@ -5,5 +5,5 @@ SELECT actualObject.PrincipalObjectId as Id, actualObject.DependencyObjectId as 
 FROM EngineDatabase.dbo.Dependencies actualObject 
 INNER JOIN EngineDatabase.dbo.UserDefinedObjects userDefinedObject
 ON actualObject.PrincipalObjectId = userDefinedObject.ObjectId
-INNER JOIN EngineDatabase.dbo.Objects baseObject
+INNER JOIN EngineDatabase.dbo.BaseObjects baseObject
 ON actualObject.PrincipalObjectId = baseObject.ObjectId

@@ -19,5 +19,16 @@ namespace Integra.Vision.Engine.Commands
         public AlterObjectCommandBase(PlanNode node) : base(node)
         {
         }
+
+        /// <summary>
+        /// Gets the script text of the create command
+        /// </summary>
+        public string Script
+        {
+            get
+            {
+                return this.Arguments["Script"].Value.ToString();
+            }
+        }
     }
 }

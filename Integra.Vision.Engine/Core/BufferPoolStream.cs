@@ -118,6 +118,16 @@ namespace Integra.Vision.Engine.Core
                 this.currentPosition = value;
             }
         }
+
+        /// <summary>
+        /// Creates a instance of a <see cref="BufferPoolStream"/>.
+        /// </summary>
+        /// <returns>A new instance of <see cref="BufferPoolStream"/></returns>
+        /// <param name="chunkSize">The size of the buffers to take.</param>
+        public static BufferPoolStream Create(int chunkSize)
+        {
+            return new BufferPoolStream(DependencyResolver.Default.Resolve<IBufferManager>(), chunkSize);
+        }
         
         /// <inheritdoc />
         public override long Seek(long offset, SeekOrigin origin)

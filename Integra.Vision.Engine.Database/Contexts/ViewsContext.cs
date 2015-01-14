@@ -113,6 +113,11 @@ namespace Integra.Vision.Engine.Database.Contexts
         /// Gets or sets the permission user
         /// </summary>
         public DbSet<PermissionUser> PermissionUser { get; set; }
+
+        /// <summary>
+        /// Gets or sets the script
+        /// </summary>
+        public DbSet<Script> Script { get; set; }
                 
         /// <summary>
         /// Model create event
@@ -141,6 +146,7 @@ namespace Integra.Vision.Engine.Database.Contexts
             modelBuilder.Configurations.Add(new AssemblyMap());
             modelBuilder.Configurations.Add(new DependencyMap());
             modelBuilder.Configurations.Add(new SourceAssignedToStreamMap());
+            modelBuilder.Configurations.Add(new ScriptMap());
                         
             base.OnModelCreating(modelBuilder);
         }

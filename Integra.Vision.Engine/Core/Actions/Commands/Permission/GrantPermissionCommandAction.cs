@@ -7,27 +7,23 @@ namespace Integra.Vision.Engine.Core
 {
     using System;
     using Integra.Vision.Engine.Commands;
-    using Integra.Vision.Engine.Database.Repositories;
+    using Integra.Vision.Engine.Database.Contexts;
 
     /// <summary>
     /// Implements all the process of grant permission to an object.
     /// </summary>
     internal sealed class GrantPermissionCommandAction : ExecutionCommandAction
     {
-        /// <summary>
-        /// Create adapter command
-        /// </summary>
-        private GrantPermissionCommand command;
-
         /// <inheritdoc />
         protected override CommandActionResult OnExecuteCommand(CommandBase command)
         {
-            this.command = command as GrantPermissionCommand;
-
             try
             {
-                this.SaveArguments();
-                return new QueryCommandResult();
+                using (ViewsContext context = new ViewsContext("EngineDatabase"))
+                {
+                    this.SaveArguments(context, command as GrantPermissionCommand);
+                    return new OkCommandResult();
+                }
             }
             catch (Exception e)
             {
@@ -38,16 +34,15 @@ namespace Integra.Vision.Engine.Core
         /// <summary>
         /// Contains grant permission logic
         /// </summary>
-        private void SaveArguments()
+        /// <param name="vc">Current context</param>
+        /// <param name="command">Grant command</param>
+        private void SaveArguments(ViewsContext vc, GrantPermissionCommand command)
         {
-            // initialize context
-            Integra.Vision.Engine.Database.Contexts.ViewsContext vc = new Integra.Vision.Engine.Database.Contexts.ViewsContext("EngineDatabase");
-
             // create UserDefinedObject repository
             Database.Repositories.Repository<Database.Models.UserDefinedObject> repoObject = new Database.Repositories.Repository<Database.Models.UserDefinedObject>(vc);
-            string objectName = this.command.SecureObjectName;
+            string objectName = command.SecureObjectName;
 
-            if (this.command.SecureObjectType.Equals(ObjectTypeEnum.Role))
+            if (command.SecureObjectType.Equals(ObjectTypeEnum.Role))
             {
                 // create repository
                 Database.Repositories.Repository<Database.Models.User> repoUser = new Database.Repositories.Repository<Database.Models.User>(vc);
@@ -56,7 +51,7 @@ namespace Integra.Vision.Engine.Core
                 Database.Repositories.Repository<Database.Models.PermissionUser> repoPermission = new Database.Repositories.Repository<Database.Models.PermissionUser>(vc);
 
                 // get the user
-                string userName = this.command.AssignableObjectName;
+                string userName = command.AssignableObjectName;
                 Database.Models.UserDefinedObject user = repoUser.Find(x => x.Name == userName);
 
                 // get the role
@@ -84,14 +79,14 @@ namespace Integra.Vision.Engine.Core
             {
                 Database.Models.UserDefinedObject userDefinedObject = repoObject.Find(x => x.Name == objectName);
 
-                if (this.command.AsignableObjectType.Equals(ObjectTypeEnum.User))
+                if (command.AsignableObjectType.Equals(ObjectTypeEnum.User))
                 {
                     // create repository
                     Database.Repositories.Repository<Database.Models.PermissionUser> repoPermission = new Database.Repositories.Repository<Database.Models.PermissionUser>(vc);
                     Database.Repositories.Repository<Database.Models.User> repoUser = new Database.Repositories.Repository<Database.Models.User>(vc);
 
                     // get the user
-                    string userName = this.command.AssignableObjectName;
+                    string userName = command.AssignableObjectName;
                     Database.Models.User user = repoUser.Find(x => x.Name == userName);
 
                     if (repoPermission.Exists(x => x.UserId == user.Id && x.UserDefinedObjectId == userDefinedObject.Id))
@@ -108,14 +103,14 @@ namespace Integra.Vision.Engine.Core
                         repoPermission.Create(permissionUser);
                     }
                 }
-                else if (this.command.AsignableObjectType.Equals(ObjectTypeEnum.Role))
+                else if (command.AsignableObjectType.Equals(ObjectTypeEnum.Role))
                 {
                     // create repository
                     Database.Repositories.Repository<Database.Models.PermissionRole> repoPermission = new Database.Repositories.Repository<Database.Models.PermissionRole>(vc);
                     Database.Repositories.Repository<Database.Models.Role> repoRole = new Database.Repositories.Repository<Database.Models.Role>(vc);
 
                     // get the role
-                    string roleName = this.command.AssignableObjectName;
+                    string roleName = command.AssignableObjectName;
                     Database.Models.Role role = repoRole.Find(x => x.Name == roleName);
 
                     if (repoPermission.Exists(x => x.RoleId == role.Id && x.UserDefinedObjectId == userDefinedObject.Id))

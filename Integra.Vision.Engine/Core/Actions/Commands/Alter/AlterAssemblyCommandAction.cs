@@ -19,10 +19,11 @@ namespace Integra.Vision.Engine.Core
         {
             try
             {
-                ViewsContext context = new ViewsContext("EngineDatabase");
-
-                this.UpdateObjects(context, command as AlterAssemblyCommand);
-                return new QueryCommandResult();
+                using (ViewsContext context = new ViewsContext("EngineDatabase"))
+                {
+                    this.UpdateObjects(context, command as AlterAssemblyCommand);
+                    return new OkCommandResult();
+                }
             }
             catch (Exception e)
             {
@@ -51,6 +52,10 @@ namespace Integra.Vision.Engine.Core
 
             // update the object
             repo.Update(assembly);
+
+            // update the object script
+            ScriptActions scriptActions = new ScriptActions(vc);
+            scriptActions.UpdateScript(command.Script, assembly.Id);
 
             // Guarda los cambios
             vc.SaveChanges();

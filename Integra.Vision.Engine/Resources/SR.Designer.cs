@@ -61,6 +61,33 @@ namespace Integra.Vision.Engine {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Boot fail, because the response is empty..
+        /// </summary>
+        internal static string BootResponseEmpty {
+            get {
+                return ResourceManager.GetString("BootResponseEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Boot fail, because the response is invalid. The type of response is {0}..
+        /// </summary>
+        internal static string BootResponseInvalid {
+            get {
+                return ResourceManager.GetString("BootResponseInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Boot fail, because the response is null..
+        /// </summary>
+        internal static string BootResponseNull {
+            get {
+                return ResourceManager.GetString("BootResponseNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MIIJNwIBAzCCCPcGCSqGSIb3DQEHAaCCCOgEggjkMIII4DCCBgkGCSqGSIb3DQEHAaCCBfoEggX2MIIF8jCCBe4GCyqGSIb3DQEMCgECoIIE/jCCBPowHAYKKoZIhvcNAQwBAzAOBAi4EilLEEMwPQICB9AEggTYh4SN7nxVCU6gcqWP5pm9DeAedTH9qZAZEI7gV7lwwc1nUN4eAL4epjGkbNhUiWa8BtkqmGiYgSbiJKaiQMbvH43uCup/RWdz/1+tV16mgEm8jy2qN7QL+OVJ36GGuD4Wqo6M9DvrEPDhhBNqpkLN2+4T8D1u21ftL3Xx/fZeH0qZ9c4egDGKbSqkdwsumUNJDLVJ6VzZYEwXTm9BV7NaTgtW3TCdLD2mTyhd53pk6iCoFd0h1onCHCB/CVMmJWRfHDQmqC7AqxjBuLlJ5AKymSoxd7Bc3Sh3Y9zaIt/9XrXSPuW9GU+cwu1pBhLxKkPAqLF0eFzgaeyZVJLdr6Zrg2iANCpSxd94 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string CertificateData {

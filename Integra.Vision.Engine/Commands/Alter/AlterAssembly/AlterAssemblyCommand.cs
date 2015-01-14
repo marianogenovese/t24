@@ -48,17 +48,6 @@ namespace Integra.Vision.Engine.Commands
         }
 
         /// <summary>
-        /// Gets the assembly name
-        /// </summary>
-        public string Name
-        {
-            get
-            {
-                return this.Arguments["Name"].Value.ToString();
-            }
-        }
-
-        /// <summary>
         /// Gets the path to the assembly file
         /// </summary>
         public string LocalPath

@@ -20,6 +20,30 @@ namespace Integra.Vision.Engine.Resources
 	{
 		/// <summary>
 		/// Looks up a localized string similar to: 
+		///	Boot fail, because the response is empty.
+		/// </summary>
+		public static string BootResponseEmpty { get { return global::Integra.Vision.Engine.SR.BootResponseEmpty; } }
+	
+		/// <summary>
+		/// Looks up a localized string similar to: 
+		///	Boot fail, because the response is invalid. The type of response is {0}.
+		/// </summary>
+		public static string BootResponseInvalid(object arg0)
+		{
+			return string.Format(global::Integra.Vision.Engine.SR.BootResponseInvalid, new object[]
+			{
+				arg0,
+			});
+		}
+	
+		/// <summary>
+		/// Looks up a localized string similar to: 
+		///	Boot fail, because the response is null.
+		/// </summary>
+		public static string BootResponseNull { get { return global::Integra.Vision.Engine.SR.BootResponseNull; } }
+	
+		/// <summary>
+		/// Looks up a localized string similar to: 
 		///	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
 		/// </summary>
 		public static string CertificateData { get { return global::Integra.Vision.Engine.SR.CertificateData; } }

@@ -42,6 +42,12 @@ namespace Integra.Vision.Engine.Commands
         /// StartStopType
         /// Doc goes here
         /// </summary>
-        StartStopType = 1 << 4 << 10
+        StartStopType = 1 << 4 << 10,
+
+        /// <summary>
+        /// AdminType
+        /// Doc goes here
+        /// </summary>
+        AdminType = 1 << 5 << 10
     }
 }

@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="IntegraParser.cs" company="Integra.Vision.Language">
+// <copyright file="PrivateParser.cs" company="Integra.Vision.Language">
 //     Copyright (c) Integra.Vision.Language. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -12,9 +12,9 @@ namespace Integra.Vision.Language
     using Irony.Parsing;
 
     /// <summary>
-    /// Class that implements the logic to parse commands
+    /// Class that implements the logic to parse private commands
     /// </summary>
-    internal sealed class IntegraParser
+    internal sealed class PrivateParser
     {
         /// <summary>
         /// Command text
@@ -22,16 +22,16 @@ namespace Integra.Vision.Language
         private string commandText;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="IntegraParser"/> class
+        /// Initializes a new instance of the <see cref="PrivateParser"/> class
         /// </summary>
         /// <param name="commandText">Command text</param>
-        public IntegraParser(string commandText)
+        public PrivateParser(string commandText)
         {
             this.commandText = commandText;
         }
 
         /// <summary>
-        /// Implements the logic to parse commands
+        /// Implements the logic to parse private commands
         /// </summary>
         /// <returns>Execution plan</returns>
         public List<PlanNode> Parse()
@@ -40,7 +40,7 @@ namespace Integra.Vision.Language
 
             try
             {
-                EQLGrammar grammar = new EQLGrammar();
+                PrivateGrammar grammar = new PrivateGrammar();
                 LanguageData language = new LanguageData(grammar);
                 Parser parser = new Parser(language);
                 ParseTree parseTree = parser.Parse(this.commandText);
@@ -53,7 +53,7 @@ namespace Integra.Vision.Language
                 }
                 else
                 {
-                    Irony.Interpreter.ScriptApp app = new Irony.Interpreter.ScriptApp(new Integra.Vision.Language.Grammars.EQLLanguageRuntime());
+                    Irony.Interpreter.ScriptApp app = new Irony.Interpreter.ScriptApp(new Integra.Vision.Language.Grammars.PrivateLanguageRuntime());
                     nodes = (List<PlanNode>)app.Evaluate(parseTree);
                 }
             }

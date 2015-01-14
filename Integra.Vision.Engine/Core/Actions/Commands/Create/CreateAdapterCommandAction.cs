@@ -7,6 +7,7 @@ namespace Integra.Vision.Engine.Core
 {
     using System;
     using Integra.Vision.Engine.Commands;
+    using Integra.Vision.Engine.Database.Contexts;
     using Integra.Vision.Engine.Database.Repositories;
 
     /// <summary>
@@ -19,14 +20,14 @@ namespace Integra.Vision.Engine.Core
         {
             try
             {
-                // Initialize the context
-                Integra.Vision.Engine.Database.Contexts.ViewsContext context = new Integra.Vision.Engine.Database.Contexts.ViewsContext("EngineDatabase");
+                using (ViewsContext context = new ViewsContext("EngineDatabase"))
+                {
+                    // save the arguments
+                    this.SaveArguments(context, command as CreateAdapterCommand);
 
-                // save the arguments
-                this.SaveArguments(context, command as CreateAdapterCommand);
-
-                // return the result
-                return new QueryCommandResult();
+                    // return the result
+                    return new OkCommandResult();
+                }
             }
             catch (Exception e)
             {
@@ -39,7 +40,7 @@ namespace Integra.Vision.Engine.Core
         /// </summary>
         /// <param name="vc">Current context</param>
         /// <param name="command">Create adapter command</param>
-        protected void SaveArguments(Integra.Vision.Engine.Database.Contexts.ViewsContext vc, CreateAdapterCommand command)
+        protected void SaveArguments(ViewsContext vc, CreateAdapterCommand command)
         {
             Repository<Database.Models.Assembly> repoAssembly = new Repository<Database.Models.Assembly>(vc);
             string assemblyName = command.AssemblyName;
@@ -55,6 +56,10 @@ namespace Integra.Vision.Engine.Core
                 Database.Models.Arg arg = new Database.Models.Arg() { AdapterId = adapter.Id, Type = this.GetParameterDataType(planNode.Children[0].Properties["Value"].ToString()), Name = planNode.Children[1].Properties["Value"].ToString(), Value = this.GetBytes(planNode.Children[2].Properties["Value"].ToString()) };
                 repoArg.Create(arg);
             }
+
+            // save the object script
+            ScriptActions scriptActions = new ScriptActions(vc);
+            scriptActions.SaveScript(command.Script, adapter.Id);
 
             // save dependencies of the adapter
             DependencyActions dependencyAction = new DependencyActions(vc, command.Dependencies);

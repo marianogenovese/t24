@@ -7,6 +7,7 @@ namespace Integra.Vision.Engine.Core
 {
     using System;
     using Integra.Vision.Engine.Commands;
+    using Integra.Vision.Engine.Database.Contexts;
     using Integra.Vision.Engine.Database.Repositories;
 
     /// <summary>
@@ -19,10 +20,11 @@ namespace Integra.Vision.Engine.Core
         {
             try
             {
-                // initialize context
-                Integra.Vision.Engine.Database.Contexts.ViewsContext vc = new Integra.Vision.Engine.Database.Contexts.ViewsContext("EngineDatabase");
-                this.DeleteObject(vc, command as DropAdapterCommand);
-                return new QueryCommandResult();
+                using (ViewsContext context = new ViewsContext("EngineDatabase"))
+                {
+                    this.DeleteObject(context, command as DropAdapterCommand);
+                    return new OkCommandResult();
+                }
             }
             catch (Exception e)
             {
@@ -35,7 +37,7 @@ namespace Integra.Vision.Engine.Core
         /// </summary>
         /// <param name="vc">Current context</param>
         /// <param name="command">Drop adapter command</param>
-        protected void DeleteObject(Integra.Vision.Engine.Database.Contexts.ViewsContext vc, DropAdapterCommand command)
+        private void DeleteObject(ViewsContext vc, DropAdapterCommand command)
         {
             // create repository
             Database.Repositories.Repository<Database.Models.Adapter> repoAdapter = new Database.Repositories.Repository<Database.Models.Adapter>(vc);

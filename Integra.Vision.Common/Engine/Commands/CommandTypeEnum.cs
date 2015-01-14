@@ -240,6 +240,18 @@ namespace Integra.Vision.Engine.Commands
         /// SystemQuery
         /// Doc goes here
         /// </summary>
-        SystemQuery = CommandAccessLevelEnum.Public | CommandCategoryEnum.SystemQueriesType
+        SystemQuery = CommandAccessLevelEnum.Public | CommandCategoryEnum.SystemQueriesType,
+
+        /// <summary>
+        /// Boot
+        /// Doc goes here
+        /// </summary>
+        Boot = CommandAccessLevelEnum.Private | CommandCategoryEnum.AdminType | AdminCommandTypeEnum.BootEngine,
+
+        /// <summary>
+        /// LoadAssembly
+        /// Doc goes here
+        /// </summary>
+        LoadAssembly = CommandAccessLevelEnum.Private | CommandCategoryEnum.AdminType | AdminCommandTypeEnum.LoadAssembly
     }
 }

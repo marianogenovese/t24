@@ -423,6 +423,16 @@ namespace Integra.Vision.Language
         /// <summary>
         /// System query type.
         /// </summary>
-        SystemQuery = 220        
+        SystemQuery = 220,
+
+        /// <summary>
+        /// Boot engine type
+        /// </summary>
+        BootEngine = 230,
+
+        /// <summary>
+        /// Load assembly type
+        /// </summary>
+        LoadAssembly = 231
     }
 }

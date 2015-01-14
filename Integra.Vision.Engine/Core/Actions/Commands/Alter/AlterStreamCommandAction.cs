@@ -21,19 +21,19 @@ namespace Integra.Vision.Engine.Core
             {
                 AlterStreamCommand alterStreamCommand = command as AlterStreamCommand;
 
-                // Initialize the context
-                Integra.Vision.Engine.Database.Contexts.ViewsContext context = new Integra.Vision.Engine.Database.Contexts.ViewsContext("EngineDatabase");
-
-                if (alterStreamCommand.IsSimpleStream)
+                using (ViewsContext context = new ViewsContext("EngineDatabase"))
                 {
-                    this.UpdateSimpleStreamArguments(context, alterStreamCommand);
-                }
-                else
-                {
-                    this.UpdateJoinStreamArguments(context, alterStreamCommand);
-                }
+                    if (alterStreamCommand.IsSimpleStream)
+                    {
+                        this.UpdateSimpleStreamArguments(context, alterStreamCommand);
+                    }
+                    else
+                    {
+                        this.UpdateJoinStreamArguments(context, alterStreamCommand);
+                    }
 
-                return new QueryCommandResult();
+                    return new OkCommandResult();
+                }
             }
             catch (Exception e)
             {
@@ -96,6 +96,10 @@ namespace Integra.Vision.Engine.Core
                 repoPList.Create(projectionTuple);
                 position++;
             }
+
+            // update the object script
+            ScriptActions scriptActions = new ScriptActions(vc);
+            scriptActions.UpdateScript(command.Script, stream.Id);
 
             // save dependencies of the stream
             DependencyActions dependencyAction = new DependencyActions(vc, command.Dependencies);
@@ -174,6 +178,10 @@ namespace Integra.Vision.Engine.Core
                 repoPList.Create(projectionTuple);
                 position++;
             }
+
+            // update the object script
+            ScriptActions scriptActions = new ScriptActions(vc);
+            scriptActions.UpdateScript(command.Script, stream.Id);
 
             // save dependencies of the stream
             DependencyActions dependencyAction = new DependencyActions(vc, command.Dependencies);

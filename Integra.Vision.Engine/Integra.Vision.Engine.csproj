@@ -155,6 +155,10 @@
     <Compile Include="Commands\Base\SetCommandBase.cs" />
     <Compile Include="Commands\Base\StartStopObjectCommandBase.cs" />
     <Compile Include="Commands\Base\UserDefinedObjectCommandBase.cs" />
+    <Compile Include="Commands\Load\LoadAssemblyCommand.cs" />
+    <Compile Include="Commands\Private\EngineActions\BootEngineCommand.cs" />
+    <Compile Include="Commands\Private\EngineActions\BootEngineArgumentEnumerator.cs" />
+    <Compile Include="Commands\Private\EngineActions\BootEngineDependencyEnumerator.cs" />
     <Compile Include="Commands\Start\StartAdapterCommand.cs" />
     <Compile Include="Commands\Start\StartSourceCommand.cs" />
     <Compile Include="Commands\Start\StartStreamCommand.cs" />
@@ -197,9 +201,14 @@
     <Compile Include="Core\Actions\Commands\Drop\DropStreamCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Drop\DropTriggerCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Drop\DropUserCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Boot\BootEngineCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Load\LoadAssemblyCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Permission\DenyPermissionCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Permission\GrantPermissionCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Permission\RevokePermissionCommandAction.cs" />
+    <Compile Include="Core\Actions\Factories\Load\LoadAssemblyCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Results\BootCommandResult.cs" />
+    <Compile Include="Core\Actions\ScriptActions.cs" />
     <Compile Include="Core\Actions\Commands\Start\StartAdapterCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Start\StartSourceCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Start\StartStreamCommandAction.cs" />
@@ -231,6 +240,7 @@
     <Compile Include="Core\Actions\Factories\Drop\DropStreamCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Drop\DropTriggerCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Drop\DropUserCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Engine\BootEngineCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Permission\DenyPermissionCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Permission\GrantPermissionCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Permission\RevokePermissionCommandActionFactory.cs" />
@@ -272,18 +282,16 @@
     <Compile Include="Core\Actions\Pipeline\CommandActionPipelineFactoryDependencyResolver.cs" />
     <None Include="Core\Actions\Pipeline\CommandActionResultType.cs" />
     <Compile Include="Core\Actions\Pipeline\CommandActionResultCollection.cs" />
-    <Compile Include="Core\Actions\Results\DataColumn.cs" />
-    <Compile Include="Core\Actions\Results\DataColumnCollection.cs" />
-    <Compile Include="Core\Actions\Results\DataRow.cs" />
-    <Compile Include="Core\Actions\Results\DataRowCollection.cs" />
-    <Compile Include="Core\Actions\Results\DataRowValidator.cs" />
-    <Compile Include="Core\Actions\Results\DataSet.cs" />
-    <Compile Include="Core\Actions\Results\DataSetException.cs" />
-    <Compile Include="Core\Actions\Results\DataType.cs" />
     <Compile Include="Core\Actions\Results\ErrorCommandResult.cs" />
-    <Compile Include="Core\Actions\Results\InternalDataColumnCollection.cs" />
     <Compile Include="Core\Actions\Results\NotAuthorizedCommandResult.cs" />
+    <Compile Include="Core\Actions\Results\OkCommandResult.cs" />
     <Compile Include="Core\Actions\Results\QueryCommandResult.cs" />
+    <Compile Include="Core\Actions\Results\QueryResultWriter.cs" />
+    <Compile Include="Core\Actions\Results\QueryRowValueWriter.cs" />
+    <Compile Include="Core\Actions\Results\QueryRowWriter.cs" />
+    <Compile Include="Core\Builders\BootEngineModuleBuilder.cs" />
+    <Compile Include="Core\BootEngineModule\IBootEngineModule.cs" />
+    <Compile Include="Core\BootEngineModule\BootEngineModule.cs" />
     <Compile Include="Core\Security\DbUserAuthenticator.cs" />
     <Compile Include="Core\CommandServer\CommandListener\CommandListenerClaims.cs" />
     <Compile Include="Core\Security\EngineClaimTypes.cs" />
@@ -453,6 +461,7 @@
     <Compile Include="Dynamic\Dynamic.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
+    <Compile Include="Exceptions\BootException.cs" />
     <Compile Include="Exceptions\DependencyEnumerationException.cs" />
     <Compile Include="Exceptions\ArgumentEnumerationException.cs" />
     <Compile Include="Exceptions\DropUserDefinedObjectException.cs" />
@@ -506,9 +515,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Core\Actions\Results\Columns\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Integra.Vision.Common\Integra.Vision.Common.csproj">
       <Project>{9d078a51-8ce3-4a74-9f9e-53cb882befaf}</Project>

@@ -27,7 +27,7 @@ namespace Integra.Vision.Engine.Core
             try
             {
                 this.SetTrace();
-                return new QueryCommandResult();
+                return new OkCommandResult();
             }
             catch (Exception e)
             {

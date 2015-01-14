@@ -18,7 +18,7 @@ namespace Integra.Vision.Engine.Database.Configurations
         /// </summary>
         public SystemObjectMap()
         {
-            this.ToTable("Objects");
+            this.ToTable("BaseObjects");
             this.HasKey(x => x.Id);
             this.Property(x => x.Id)
                 .HasColumnName("ObjectId")

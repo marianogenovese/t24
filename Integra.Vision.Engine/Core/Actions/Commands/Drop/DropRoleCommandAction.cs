@@ -7,6 +7,7 @@ namespace Integra.Vision.Engine.Core
 {
     using System;
     using Integra.Vision.Engine.Commands;
+    using Integra.Vision.Engine.Database.Contexts;
     using Integra.Vision.Engine.Database.Repositories;
 
     /// <summary>
@@ -14,20 +15,16 @@ namespace Integra.Vision.Engine.Core
     /// </summary>
     internal sealed class DropRoleCommandAction : ExecutionCommandAction
     {
-        /// <summary>
-        /// Create adapter command
-        /// </summary>
-        private DropRoleCommand command;
-
         /// <inheritdoc />
         protected override CommandActionResult OnExecuteCommand(CommandBase command)
         {
-            this.command = command as DropRoleCommand;
-
             try
             {
-                this.DeleteObject();
-                return new QueryCommandResult();
+                using (ViewsContext context = new ViewsContext("EngineDatabase"))
+                {
+                    this.DeleteObject(context, command as DropRoleCommand);
+                    return new OkCommandResult();
+                }
             }
             catch (Exception e)
             {
@@ -38,16 +35,15 @@ namespace Integra.Vision.Engine.Core
         /// <summary>
         /// Contains drop role logic
         /// </summary>
-        private void DeleteObject()
+        /// <param name="vc">Current context</param>
+        /// <param name="command">Drop role command</param>
+        private void DeleteObject(ViewsContext vc, DropRoleCommand command)
         {
-            // initialize context
-            Integra.Vision.Engine.Database.Contexts.ViewsContext vc = new Integra.Vision.Engine.Database.Contexts.ViewsContext("EngineDatabase");
-
             // create repository
             Database.Repositories.Repository<Database.Models.Role> repo = new Database.Repositories.Repository<Database.Models.Role>(vc);
 
             // delete the object
-            repo.Delete(x => x.Name == this.command.Name);
+            repo.Delete(x => x.Name == command.Name);
             int objectCount = vc.SaveChanges();
 
             // throw an exception if not deleted a object
@@ -57,7 +53,7 @@ namespace Integra.Vision.Engine.Core
                 vc.Dispose();
 
                 // throw the exception 
-                throw new Integra.Vision.Engine.Exceptions.DropUserDefinedObjectException("The object '" + this.command.Name + "' was not removed");
+                throw new Integra.Vision.Engine.Exceptions.DropUserDefinedObjectException("The object '" + command.Name + "' was not removed");
             }
 
             // close connection

@@ -21,11 +21,11 @@ namespace Integra.Vision.Engine.Core
         {
             try
             {
-                // initialize context
-                Integra.Vision.Engine.Database.Contexts.ViewsContext context = new Integra.Vision.Engine.Database.Contexts.ViewsContext("EngineDatabase");
-
-                this.SaveArguments(context, command as AlterUserCommand);
-                return new QueryCommandResult();
+                using (ViewsContext context = new ViewsContext("EngineDatabase"))
+                {
+                    this.SaveArguments(context, command as AlterUserCommand);
+                    return new OkCommandResult();
+                }
             }
             catch (Exception e)
             {
@@ -60,6 +60,10 @@ namespace Integra.Vision.Engine.Core
             
             // update the user
             repoUser.Update(user);
+
+            // update the object script
+            ScriptActions scriptActions = new ScriptActions(vc);
+            scriptActions.UpdateScript(command.Script, user.Id);
 
             // save changes
             vc.SaveChanges();

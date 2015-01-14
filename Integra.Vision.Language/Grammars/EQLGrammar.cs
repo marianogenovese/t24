@@ -26,25 +26,32 @@ namespace Integra.Vision.Language.Grammars
     /// <summary>
     /// EQLGrammar grammar for the commands and the predicates 
     /// </summary>
-    [Language("EQLGrammar", "0.2", "")]
+    [Language("EQLGrammar", "0.3", "")]
     internal sealed class EQLGrammar : InterpretedLanguageGrammar
     {
         /// <summary>
-        /// Initializes a new instance of the EQLGrammar class
+        /// Expression grammar
+        /// </summary>
+        private ExpressionGrammar expressionGrammar;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EQLGrammar"/> class
         /// </summary>
         public EQLGrammar()
             : base(false)
         {
+            this.expressionGrammar = new ExpressionGrammar();
             this.Grammar(false);
         }
 
         /// <summary>
-        /// Initializes a new instance of the EQLGrammar class
+        /// Initializes a new instance of the <see cref="EQLGrammar"/> class
         /// </summary>
         /// <param name="prueba">flag for tests</param>
         public EQLGrammar(bool prueba)
             : base(false)
         {
+            this.expressionGrammar = new ExpressionGrammar();
             this.Grammar(prueba);
         }
 
@@ -244,9 +251,14 @@ namespace Integra.Vision.Language.Grammars
             NonTerminal nt_COMPARATIVE_EXPRESSION = new NonTerminal("COMPARATIVE_EXPRESSION", typeof(ComparativeExpressionNode));
             nt_COMPARATIVE_EXPRESSION.AstConfig.NodeType = null;
             nt_COMPARATIVE_EXPRESSION.AstConfig.DefaultNodeCreator = () => new ComparativeExpressionNode();
+            
+            /*
             NonTerminal nt_LOGIC_EXPRESSION = new NonTerminal("LOGIC_EXPRESSION", typeof(LogicExpressionNode));
             nt_LOGIC_EXPRESSION.AstConfig.NodeType = null;
             nt_LOGIC_EXPRESSION.AstConfig.DefaultNodeCreator = () => new LogicExpressionNode();
+            */
+            NonTerminal nt_LOGIC_EXPRESSION = this.expressionGrammar.LogicExpression;
+
             NonTerminal nt_WHERE = new NonTerminal("WHERE", typeof(WhereNode));
             nt_WHERE.AstConfig.NodeType = null;
             nt_WHERE.AstConfig.DefaultNodeCreator = () => new WhereNode();
@@ -347,8 +359,10 @@ namespace Integra.Vision.Language.Grammars
             nt_COMMAND_LIST.AstConfig.DefaultNodeCreator = () => new CommandListNode();
             
             /* SYSTEM VIEWS */
-            nt_SYSTEM_VIEW.Rule = terminalFrom + terminalUnidadDeTexto 
+            nt_SYSTEM_VIEW.Rule = terminalFrom + terminalUnidadDeTexto
                                     + terminalWhere + terminalUnidadDeTexto
+                                    + terminalSelect + terminalUnidadDeTexto
+                                    | terminalFrom + terminalUnidadDeTexto
                                     + terminalSelect + terminalUnidadDeTexto;
             /* **************************** */
             /* SET TRACE */

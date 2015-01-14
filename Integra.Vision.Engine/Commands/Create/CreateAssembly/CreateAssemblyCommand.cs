@@ -11,7 +11,7 @@ namespace Integra.Vision.Engine.Commands
     /// <summary>
     /// Base class for create assemblies
     /// </summary>
-    internal sealed class CreateAssemblyCommand : CreateObjectCommandBase
+    internal class CreateAssemblyCommand : CreateObjectCommandBase
     {
         /// <summary>
         /// Execution plan node
@@ -43,17 +43,6 @@ namespace Integra.Vision.Engine.Commands
             get
             {
                 return CommandTypeEnum.CreateAssembly;
-            }
-        }
-
-        /// <summary>
-        /// Gets the assembly name
-        /// </summary>
-        public string Name
-        {
-            get
-            {
-                return this.Arguments["Name"].Value.ToString();
             }
         }
 

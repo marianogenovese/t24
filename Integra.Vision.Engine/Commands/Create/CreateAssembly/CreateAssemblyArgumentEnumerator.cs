@@ -37,6 +37,7 @@ namespace Integra.Vision.Engine.Commands
 
             try
             {
+                arguments.Add(new CommandArgument("Script", this.node.NodeText));
                 arguments.Add(new CommandArgument("Name", this.node.Children[0].Properties["Value"].ToString()));
                 arguments.Add(new CommandArgument("LocalPath", this.node.Children[1].Properties["Value"].ToString()));
                 return arguments.ToArray();

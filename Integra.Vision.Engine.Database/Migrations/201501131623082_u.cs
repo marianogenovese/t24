@@ -3,12 +3,12 @@ namespace Integra.Vision.Engine.Database.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class x : DbMigration
+    public partial class u : DbMigration
     {
         public override void Up()
         {
             CreateTable(
-                "dbo.Objects",
+                "dbo.BaseObjects",
                 c => new
                     {
                         ObjectId = c.Guid(nullable: false, identity: true),
@@ -42,6 +42,19 @@ namespace Integra.Vision.Engine.Database.Migrations
                 .ForeignKey("dbo.UserDefinedObjects", t => t.PrincipalObjectId)
                 .Index(t => t.DependencyObjectId)
                 .Index(t => t.PrincipalObjectId);
+            
+            CreateTable(
+                "dbo.Scripts",
+                c => new
+                    {
+                        ScriptId = c.Guid(nullable: false, identity: true),
+                        ScriptText = c.String(nullable: false),
+                        LastUpdate = c.DateTime(nullable: false),
+                        UserDefinedObjectId = c.Guid(nullable: false),
+                    })
+                .PrimaryKey(t => t.ScriptId)
+                .ForeignKey("dbo.UserDefinedObjects", t => t.UserDefinedObjectId)
+                .Index(t => t.UserDefinedObjectId);
             
             CreateTable(
                 "dbo.SetTraces",
@@ -177,7 +190,7 @@ namespace Integra.Vision.Engine.Database.Migrations
                         IsSystemObject = c.Boolean(nullable: false),
                     })
                 .PrimaryKey(t => t.ObjectId)
-                .ForeignKey("dbo.Objects", t => t.ObjectId)
+                .ForeignKey("dbo.BaseObjects", t => t.ObjectId)
                 .Index(t => t.ObjectId)
                 .Index(t => t.Name, unique: true, name: "IX_UniqueName");
             
@@ -282,7 +295,7 @@ namespace Integra.Vision.Engine.Database.Migrations
             DropForeignKey("dbo.Roles", "ObjectId", "dbo.UserDefinedObjects");
             DropForeignKey("dbo.Adapters", "Reference", "dbo.Assemblies");
             DropForeignKey("dbo.Adapters", "ObjectId", "dbo.UserDefinedObjects");
-            DropForeignKey("dbo.UserDefinedObjects", "ObjectId", "dbo.Objects");
+            DropForeignKey("dbo.UserDefinedObjects", "ObjectId", "dbo.BaseObjects");
             DropForeignKey("dbo.Dependencies", "PrincipalObjectId", "dbo.UserDefinedObjects");
             DropForeignKey("dbo.SourceConditions", "SourceId", "dbo.Sources");
             DropForeignKey("dbo.SourcesAsignedToStreams", "StreamId", "dbo.Streams");
@@ -298,6 +311,7 @@ namespace Integra.Vision.Engine.Database.Migrations
             DropForeignKey("dbo.PermissionRoles", "UserDefinedObjectId", "dbo.UserDefinedObjects");
             DropForeignKey("dbo.PermissionRoles", "RoleId", "dbo.Roles");
             DropForeignKey("dbo.SetTraces", "UserDefinedObjectId", "dbo.UserDefinedObjects");
+            DropForeignKey("dbo.Scripts", "UserDefinedObjectId", "dbo.UserDefinedObjects");
             DropForeignKey("dbo.Dependencies", "DependencyObjectId", "dbo.UserDefinedObjects");
             DropForeignKey("dbo.Args", "AdapterId", "dbo.Adapters");
             DropIndex("dbo.Assemblies", new[] { "ObjectId" });
@@ -326,6 +340,7 @@ namespace Integra.Vision.Engine.Database.Migrations
             DropIndex("dbo.PermissionRoles", new[] { "UserDefinedObjectId" });
             DropIndex("dbo.PermissionRoles", new[] { "RoleId" });
             DropIndex("dbo.SetTraces", new[] { "UserDefinedObjectId" });
+            DropIndex("dbo.Scripts", new[] { "UserDefinedObjectId" });
             DropIndex("dbo.Dependencies", new[] { "PrincipalObjectId" });
             DropIndex("dbo.Dependencies", new[] { "DependencyObjectId" });
             DropIndex("dbo.Args", new[] { "AdapterId" });
@@ -346,9 +361,10 @@ namespace Integra.Vision.Engine.Database.Migrations
             DropTable("dbo.RoleMembers");
             DropTable("dbo.PermissionRoles");
             DropTable("dbo.SetTraces");
+            DropTable("dbo.Scripts");
             DropTable("dbo.Dependencies");
             DropTable("dbo.Args");
-            DropTable("dbo.Objects");
+            DropTable("dbo.BaseObjects");
         }
     }
 }

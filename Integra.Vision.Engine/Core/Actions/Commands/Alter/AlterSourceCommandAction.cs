@@ -19,11 +19,11 @@ namespace Integra.Vision.Engine.Core
         {
             try
             {
-                // Initialize the context
-                ViewsContext context = new ViewsContext("EngineDatabase");
-
-                this.UpdateObject(context, command as AlterSourceCommand);
-                return new QueryCommandResult();
+                using (ViewsContext context = new ViewsContext("EngineDatabase"))
+                {
+                    this.UpdateObject(context, command as AlterSourceCommand);
+                    return new OkCommandResult();
+                }
             }
             catch (Exception e)
             {
@@ -68,6 +68,10 @@ namespace Integra.Vision.Engine.Core
             // create the conditions            
             Database.Models.SourceCondition sourceCondition = new Database.Models.SourceCondition() { Expression = command.Where, SourceId = source.Id, Type = (int)ConditionTypeEnum.FilterCondition };
             repoSourceCondition.Create(sourceCondition);
+
+            // update the object script
+            ScriptActions scriptActions = new ScriptActions(vc);
+            scriptActions.UpdateScript(command.Script, source.Id);
 
             // save dependencies of the source
             DependencyActions dependencyAction = new DependencyActions(vc, command.Dependencies);

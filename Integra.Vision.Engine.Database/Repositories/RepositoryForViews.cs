@@ -9,6 +9,7 @@ namespace Integra.Vision.Engine.Database.Repositories
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
+    using System.Linq.Dynamic;
     using Integra.Vision.Engine.Database.Contexts;
 
     /// <summary>
@@ -60,9 +61,19 @@ namespace Integra.Vision.Engine.Database.Repositories
         /// <param name="projection">projection statement</param>
         /// <param name="conditionParameters">where condition parameters</param>
         /// <returns>list of objects</returns>
-        public object[] Query(string condition, string projection, params object[] conditionParameters)
+        public IEnumerable Query(string condition, string projection, params object[] conditionParameters)
         {
-            throw new System.NotImplementedException();
+            if (condition.Equals(string.Empty))
+            {
+                return this.Set
+                    .Select(projection);
+            }
+            else
+            {
+                return this.Set
+                    .Where<TView>(condition, conditionParameters)
+                    .Select(projection);
+            }
         }
     }
 }

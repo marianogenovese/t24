@@ -37,17 +37,6 @@ namespace Integra.Vision.Engine.Commands
             this.node = node;
         }
 
-        /// <summary>
-        /// Gets the adapter name
-        /// </summary>
-        public string Name
-        {
-            get
-            {
-                return this.Arguments["Name"].Value.ToString();
-            }
-        }
-
         /// <inheritdoc />
         public override CommandTypeEnum Type
         {

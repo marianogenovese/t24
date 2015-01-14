@@ -7,27 +7,23 @@ namespace Integra.Vision.Engine.Core
 {
     using System;
     using Integra.Vision.Engine.Commands;
-    using Integra.Vision.Engine.Database.Repositories;
+    using Integra.Vision.Engine.Database.Contexts;
 
     /// <summary>
     /// Implements all the process of start a source.
     /// </summary>
     internal sealed class StartSourceCommandAction : ExecutionCommandAction
-    {        
-        /// <summary>
-        /// Create adapter command
-        /// </summary>
-        private StartSourceCommand command;
-
+    {       
         /// <inheritdoc />
         protected override CommandActionResult OnExecuteCommand(CommandBase command)
         {
-            this.command = command as StartSourceCommand;
-
             try
             {
-                this.StartObject();
-                return new QueryCommandResult();
+                using (ViewsContext context = new ViewsContext("EngineDatabase"))
+                {
+                    this.StartObject(context, command as StartSourceCommand);
+                    return new OkCommandResult();
+                }
             }
             catch (Exception e)
             {
@@ -38,16 +34,15 @@ namespace Integra.Vision.Engine.Core
         /// <summary>
         /// Contains start object logic
         /// </summary>
-        private void StartObject()
+        /// <param name="vc">Current context</param>
+        /// <param name="command">Start source command</param>
+        private void StartObject(ViewsContext vc, StartSourceCommand command)
         {
-            // initialize context
-            Integra.Vision.Engine.Database.Contexts.ViewsContext vc = new Integra.Vision.Engine.Database.Contexts.ViewsContext("EngineDatabase");
-
             // create repository
             Database.Repositories.Repository<Database.Models.UserDefinedObject> repoUserDefinedObject = new Database.Repositories.Repository<Database.Models.UserDefinedObject>(vc);
 
             // get the adapter
-            Database.Models.UserDefinedObject adapter = repoUserDefinedObject.Find(x => x.Name == this.command.Name);
+            Database.Models.UserDefinedObject adapter = repoUserDefinedObject.Find(x => x.Name == command.Name);
 
             // update the adapter
             adapter.State = (int)UserDefinedObjectStateEnum.Started;

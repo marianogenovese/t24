@@ -26,11 +26,13 @@ namespace Integra.Vision.Engine.Core
             EngineModuleBuilder engineModuleBuilder = new EngineModuleBuilder(DependencyResolver.Default);
             OperationDispatcherModuleBuilder operationHandlerModuleBuilder = new OperationDispatcherModuleBuilder(DependencyResolver.Default);
             OperationSchedulerModuleBuilder taskSchedulerModuleBuilder = new OperationSchedulerModuleBuilder(DependencyResolver.Default);
+            BootEngineModuleBuilder privateOperationHandlerModuleBuilder = new BootEngineModuleBuilder(DependencyResolver.Default);
             CommandServerModuleBuilder commandServerModuleBuilder = new CommandServerModuleBuilder(DependencyResolver.Default);
 
             DependencyResolver.Default.RegisterInstance<EngineModuleBuilder>(engineModuleBuilder);
             DependencyResolver.Default.RegisterInstance<OperationDispatcherModuleBuilder>(operationHandlerModuleBuilder);
             DependencyResolver.Default.RegisterInstance<OperationSchedulerModuleBuilder>(taskSchedulerModuleBuilder);
+            DependencyResolver.Default.RegisterInstance<BootEngineModuleBuilder>(privateOperationHandlerModuleBuilder);
             DependencyResolver.Default.RegisterInstance<CommandServerModuleBuilder>(commandServerModuleBuilder);
 
             /*

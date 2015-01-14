@@ -11,7 +11,7 @@ namespace Integra.Vision.Engine.Commands
     using Integra.Vision.Language;
  
     /// <summary>
-    /// Base class for create adapters
+    /// Base class for boot engine command
     /// </summary>
     internal sealed class CreateAdapterCommand : CreateObjectCommandBase
     {
@@ -45,17 +45,6 @@ namespace Integra.Vision.Engine.Commands
             get
             {
                 return CommandTypeEnum.CreateAdapter;
-            }
-        }
-
-        /// <summary>
-        /// Gets the adapter name
-        /// </summary>
-        public string Name
-        {
-            get
-            {
-                 return this.Arguments["Name"].Value.ToString();
             }
         }
 

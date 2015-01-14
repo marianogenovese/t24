@@ -50,17 +50,6 @@ namespace Integra.Vision.Engine.Commands
         }
 
         /// <summary>
-        /// Gets the adapter name
-        /// </summary>
-        public string Name
-        {
-            get
-            {
-                return this.Arguments["Name"].Value.ToString();
-            }
-        }
-
-        /// <summary>
         /// Gets the adapter type: input/output
         /// </summary>
         public AdapterTypeEnum AdapterType

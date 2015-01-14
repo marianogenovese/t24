@@ -184,7 +184,7 @@
     <value>On</value>
   </data>
   <data name="ParameterNodeText" xml:space="preserve">
-    <value>{0} {1} {2} {3} {4}</value>
+    <value>{0} {1}{2} {3} {4}</value>
   </data>
   <data name="ParametersRole" xml:space="preserve">
     <value>Parameters</value>
