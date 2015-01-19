@@ -32,16 +32,8 @@ namespace Integra.Vision.Engine.Core
             {
                 if (context.Data["IsPrivateCommand"].Equals(true))
                 {
-                    if (context.Data.ContainsKey("IsConditionalExpression"))
-                    {
-                        ExpressionParser parser = new ExpressionParser(context.Request.Script);
-                        context.Nodes = parser.Parse();
-                    }
-                    else
-                    {
-                        PrivateParser parser = new PrivateParser(context.Request.Script);
-                        context.Nodes = parser.Parse();
-                    }
+                    PrivateParser parser = new PrivateParser(context.Request.Script);
+                    context.Nodes = parser.Parse();
                 }
                 else
                 {

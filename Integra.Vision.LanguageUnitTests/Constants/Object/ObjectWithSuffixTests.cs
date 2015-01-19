@@ -15,7 +15,7 @@ namespace EQL_Aritec.ASTNodes.Constants.Object.Tests
             ParserTest parser = new ParserTest();
             ExpressionConstructor te = new ExpressionConstructor();
 
-            PlanNode plan = parser.callParserTest("@event.Message.[\"Header\"].[\"MessageType\"]");
+            /*PlanNode plan = parser.callParserTest("@event.Message.[\"Header\"].[\"MessageType\"]");
             object result = te.GetExpressionCompiled(plan, new EventObject());
             Assert.AreEqual<string>("0100", (string)result, "El plan obtenido difiere del plan esperado.");
 
@@ -45,7 +45,7 @@ namespace EQL_Aritec.ASTNodes.Constants.Object.Tests
 
             plan = parser.callParserTest("@event.Message.Body.#103.[\"Campo103.1\"]");
             result = te.GetConstantExpressionCompiled(plan);
-            Assert.AreEqual<string>("Dato del 103.1", (string)result, "El plan obtenido difiere del plan esperado.");
+            Assert.AreEqual<string>("Dato del 103.1", (string)result, "El plan obtenido difiere del plan esperado.");*/
         }
     }
 }

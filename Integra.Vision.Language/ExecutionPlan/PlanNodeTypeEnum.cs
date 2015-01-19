@@ -126,6 +126,11 @@ namespace Integra.Vision.Language
         ObjectWithPrefix = 75,
 
         /// <summary>
+        /// Object prefix type
+        /// </summary>
+        ObjectPrefix = 76,
+
+        /// <summary>
         /// Negate type
         /// </summary>
         Negate = 90,

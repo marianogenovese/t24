@@ -5,9 +5,6 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Engine.Core
 {
-    using System.Threading;
-    using System.Threading.Tasks;
-    
     /// <summary>
     /// This class allow to implement a queue module for scheduling a request.
     /// </summary>

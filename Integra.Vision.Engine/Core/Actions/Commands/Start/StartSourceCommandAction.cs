@@ -8,6 +8,10 @@ namespace Integra.Vision.Engine.Core
     using System;
     using Integra.Vision.Engine.Commands;
     using Integra.Vision.Engine.Database.Contexts;
+    using Integra.Vision.Engine.Database.Repositories;
+    using Integra.Vision.Language;
+    using Integra.Vision.Language.General;
+    using Integra.Vision.Language.Runtime;
 
     /// <summary>
     /// Implements all the process of start a source.
@@ -39,19 +43,41 @@ namespace Integra.Vision.Engine.Core
         private void StartObject(ViewsContext vc, StartSourceCommand command)
         {
             // create repository
-            Database.Repositories.Repository<Database.Models.UserDefinedObject> repoUserDefinedObject = new Database.Repositories.Repository<Database.Models.UserDefinedObject>(vc);
+            Repository<Database.Models.UserDefinedObject> repoUserDefinedObject = new Repository<Database.Models.UserDefinedObject>(vc);
+            Repository<Database.Models.SourceCondition> repoConditions = new Repository<Database.Models.SourceCondition>(vc);
 
             // get the adapter
-            Database.Models.UserDefinedObject adapter = repoUserDefinedObject.Find(x => x.Name == command.Name);
+            Database.Models.UserDefinedObject source = repoUserDefinedObject.Find(x => x.Name == command.Name);
 
             // update the adapter
-            adapter.State = (int)UserDefinedObjectStateEnum.Started;
+            source.State = (int)UserDefinedObjectStateEnum.Started;
+
+            // get the source conditions
+            Database.Models.SourceCondition conditions = repoConditions.Find(x => x.SourceId == source.Id);
+            
+            // load object
+            this.LoadObject(conditions.Expression);
 
             // save changes
             vc.SaveChanges();
 
             // close connection
             vc.Dispose();
+        }
+
+        /// <summary>
+        /// Contains load source logic.
+        /// </summary>
+        /// <param name="whereCondition">Conditional expression</param>
+        private void LoadObject(string whereCondition)
+        {
+            /*System.Diagnostics.Debug.WriteLine("*** Iniciará start del source ***");
+            ExpressionParser expressionParser = new ExpressionParser(whereCondition);
+            PlanNode expressionNode = expressionParser.Parse();
+
+            ExpressionConstructor constructor = new ExpressionConstructor();
+            var resultWhereCondition = constructor.CompileWhere(expressionNode);
+            System.Diagnostics.Debug.WriteLine("*** Terminó start del source ***");*/
         }
     }
 }

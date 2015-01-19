@@ -43,16 +43,23 @@ namespace Integra.Vision.Engine.Core
             Database.Repositories.Repository<Database.Models.UserDefinedObject> repoUserDefinedObject = new Database.Repositories.Repository<Database.Models.UserDefinedObject>(vc);
 
             // get the adapter
-            Database.Models.UserDefinedObject adapter = repoUserDefinedObject.Find(x => x.Name == command.Name);
+            Database.Models.UserDefinedObject trigger = repoUserDefinedObject.Find(x => x.Name == command.Name);
 
             // update the adapter
-            adapter.State = (int)UserDefinedObjectStateEnum.Started;
+            trigger.State = (int)UserDefinedObjectStateEnum.Started;
 
             // save changes
             vc.SaveChanges();
 
             // close connection
             vc.Dispose();
+        }
+
+        /// <summary>
+        /// Contains load trigger logic.
+        /// </summary>
+        private void LoadObject()
+        {
         }
     }
 }

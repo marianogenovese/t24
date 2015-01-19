@@ -72,6 +72,7 @@
     <Compile Include="Constants\IdentifierNodeTests.cs" />
     <Compile Include="Constants\NullValueNodeTests.cs" />
     <Compile Include="Constants\NumberNodeTests.cs" />
+    <Compile Include="Constants\ExpressionParserTests.cs" />
     <Compile Include="Constants\Object\ObjectWithSuffixTests.cs" />
     <Compile Include="Constants\ParserTest.cs" />
     <Compile Include="Constants\StringNodeTests.cs" />

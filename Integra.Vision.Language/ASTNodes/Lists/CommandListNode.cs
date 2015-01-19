@@ -6,8 +6,8 @@
 namespace Integra.Vision.Language.ASTNodes.Lists
 {
     using System.Collections.Generic;
-    using System.Linq;
     using Integra.Vision.Language.ASTNodes.Base;
+    using Integra.Vision.Language.Errors;
     using Irony.Ast;
     using Irony.Interpreter;
     using Irony.Interpreter.Ast;
@@ -63,6 +63,10 @@ namespace Integra.Vision.Language.ASTNodes.Lists
         protected override object DoEvaluate(ScriptThread thread)
         {
             this.BeginEvaluate(thread);
+
+            List<ErrorNode> errorList = new List<ErrorNode>();
+            Binding b1 = thread.Bind("errorList", BindingRequestFlags.Write | BindingRequestFlags.NewOnly);
+            b1.SetValueRef(thread, errorList);
 
             int childrenCount = ChildrenNodes.Count;
             if (childrenCount == 2)

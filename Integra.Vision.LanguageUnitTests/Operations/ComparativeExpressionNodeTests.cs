@@ -173,7 +173,7 @@ namespace EQL_Aritec.ASTNodes.Operations.Tests
         [TestMethod()]
         public void InitTestEqualObject()
         {
-            ParserTest parser = new ParserTest();
+            ExpressionParserTests parser = new ExpressionParserTests();
             ExpressionConstructor te = new ExpressionConstructor();
 
             PlanNode plan = parser.callParserTest("@event.Message.Body.#103.[\"Campo103.1\"] == @event.Message.Body.#103.[\"Campo103.1\"]");

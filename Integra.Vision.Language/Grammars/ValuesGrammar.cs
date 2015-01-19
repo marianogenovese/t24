@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="ExpressionGrammar.cs" company="Integra.Vision.Language">
+// <copyright file="ValuesGrammar.cs" company="Integra.Vision.Language">
 //     Copyright (c) Integra.Vision.Language. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -17,55 +17,39 @@ namespace Integra.Vision.Language.Grammars
     /// <summary>
     /// EQLGrammar grammar for the commands and the predicates 
     /// </summary>
-    [Language("ExpressionsGrammar", "0.1", "")]
-    internal sealed class ExpressionGrammar : InterpretedLanguageGrammar
+    [Language("ValueGrammar", "0.1", "")]
+    internal sealed class ValuesGrammar : InterpretedLanguageGrammar
     {
         /// <summary>
-        /// Grammar to add the expression rules
+        /// Expression grammar
         /// </summary>
-        private NonTerminal logicExpression;
-                
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ExpressionGrammar"/> class
-        /// </summary>
-        public ExpressionGrammar()
-            : base(false)
-        {
-            this.Grammar(false);
-        }
+        private NonTerminal values;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExpressionGrammar"/> class
+        /// Initializes a new instance of the <see cref="ValuesGrammar"/> class
         /// </summary>
-        /// <param name="prueba">flag for tests</param>
-        public ExpressionGrammar(bool prueba)
+        public ValuesGrammar()
             : base(false)
         {
-            this.Grammar(prueba);
+            this.CreateGrammar();
         }
 
         /// <summary>
         /// Gets the nonterminal for expression conditions
         /// </summary>
-        public NonTerminal LogicExpression
+        public NonTerminal Values
         {
             get
             {
-                return this.logicExpression;
+                return this.values;
             }
         }
 
         /// <summary>
         /// Specify the language grammar
         /// </summary>
-        /// <param name="prueba">flag for tests</param>
-        public void Grammar(bool prueba)
+        public void CreateGrammar()
         {
-            /* PALABRAS RESERVADAS */
-            KeyTerm terminalLike = ToTerm("like", "like");
-            KeyTerm terminalNot = ToTerm("not", "not");
-            KeyTerm terminalIn = ToTerm("in", "in");
-
             /* FUNCIONES */
             KeyTerm terminalHour = ToTerm("hour", "hour");
             KeyTerm terminalMinute = ToTerm("minute", "minute");
@@ -83,25 +67,13 @@ namespace Integra.Vision.Language.Grammars
             KeyTerm terminalMenos = ToTerm("-", "menos");
             KeyTerm terminalMas = ToTerm("+", "mas");
 
-            /* OPERADORES COMPARATIVOS */
-            KeyTerm terminalIgualIgual = ToTerm("==", "igualIgual");
-            KeyTerm terminalNoIgual = ToTerm("!=", "noIgual");
-            KeyTerm terminalMayorIgual = ToTerm(">=", "mayorIgual");
-            KeyTerm terminalMenorIgual = ToTerm("<=", "menorIgual");
-            KeyTerm terminalMayorQue = ToTerm(">", "mayorQue");
-            KeyTerm terminalMenorQue = ToTerm("<", "menorQue");
-
-            /* OPERADORES LOGICOS */
-            KeyTerm terminalAnd = ToTerm("and", "and");
-            KeyTerm terminalOr = ToTerm("or", "or");
-            
             /* SIMBOLOS */
             KeyTerm terminalParentesisIz = ToTerm("(", "parentesisIz");
             KeyTerm terminalParentesisDer = ToTerm(")", "parentesisDer");
             KeyTerm terminalCorcheteIz = ToTerm("[", "corcheteIz");
-            KeyTerm terminalCorcheteDer = ToTerm("]", "corchete_der");
-            KeyTerm terminalLlaveIz = ToTerm("{", "llave_iz");
-            KeyTerm terminalLlaveDer = ToTerm("}", "llave_der");
+            KeyTerm terminalCorcheteDer = ToTerm("]", "corcheteDer");
+            KeyTerm terminalLlaveIz = ToTerm("{", "llaveIz");
+            KeyTerm terminalLlaveDer = ToTerm("}", "llaveDer");
             KeyTerm terminalPunto = ToTerm(".", "punto");
             KeyTerm terminalPorcentaje = ToTerm("%", "porcentaje");
             KeyTerm terminalNumeral = ToTerm("#", "numeral");
@@ -109,7 +81,7 @@ namespace Integra.Vision.Language.Grammars
             KeyTerm terminalComa = ToTerm(",", "coma");
             KeyTerm terminalArroba = ToTerm("@", "arroba");
             KeyTerm terminalIgual = ToTerm("=", "igual");
-            
+
             /* CONSTANTES E IDENTIFICADORES */
             Terminal terminalNumero = TerminalFactory.CreateCSharpNumber("numero");
             terminalNumero.AstConfig.NodeType = null;
@@ -129,31 +101,19 @@ namespace Integra.Vision.Language.Grammars
             terminalNull.Add("null", null);
             terminalNull.AstConfig.NodeType = null;
             terminalNull.AstConfig.DefaultNodeCreator = () => new NullValueNode();
-            
-            /*Terminal terminalId = TerminalFactory.CreateCSharpIdentifier("identificador");
-            terminalId.AstConfig.NodeType = null;
-            terminalId.AstConfig.DefaultNodeCreator = () => new IdentifierNode();*/
 
             RegexBasedTerminal terminalId = new RegexBasedTerminal("[a-zA-Z]+([a-zA-Z0-9][_])*");
             terminalId.AstConfig.NodeType = null;
             terminalId.AstConfig.DefaultNodeCreator = () => new IdentifierNode();
 
             /* PRECEDENCIA Y ASOCIATIVIDAD */
-            this.RegisterBracePair("(", ")");
-            this.RegisterBracePair("[", "]");
-            this.RegisterBracePair("{", "}");
-            this.RegisterOperators(40, Associativity.Right, terminalParentesisIz, terminalParentesisDer);
-            this.RegisterOperators(35, Associativity.Right, terminalMenos);
-            this.RegisterOperators(30, Associativity.Right, terminalIgualIgual, terminalNoIgual, terminalMayorIgual, terminalMayorQue, terminalMenorIgual, terminalMenorQue, terminalLike, terminalIn);
-            this.RegisterOperators(20, Associativity.Right, terminalAnd);
-            this.RegisterOperators(10, Associativity.Right, terminalOr);
-            this.RegisterOperators(5, Associativity.Right, terminalNot);
-            this.MarkPunctuation(terminalParentesisIz, terminalParentesisDer, terminalCorcheteIz, terminalCorcheteDer, terminalLlaveIz, terminalLlaveDer);
+            this.AddBracePair();
+            this.AddMarkPunctuation();
 
             /* NO TERMINALES */
-            NonTerminal nt_VALUES = new NonTerminal("VALUES", typeof(ConstantValueNode));
-            nt_VALUES.AstConfig.NodeType = null;
-            nt_VALUES.AstConfig.DefaultNodeCreator = () => new ConstantValueNode();
+            this.values = new NonTerminal("VALUES", typeof(ConstantValueNode));
+            this.values.AstConfig.NodeType = null;
+            this.values.AstConfig.DefaultNodeCreator = () => new ConstantValueNode();
             NonTerminal nt_PARAMETER_VALUES = new NonTerminal("PARAMETER_VALUES", typeof(ConstantValueNode));
             nt_PARAMETER_VALUES.AstConfig.NodeType = null;
             nt_PARAMETER_VALUES.AstConfig.DefaultNodeCreator = () => new ConstantValueNode();
@@ -187,47 +147,9 @@ namespace Integra.Vision.Language.Grammars
             NonTerminal nt_UNARY_ARITHMETIC_EXPRESSION = new NonTerminal("UNARY_ARITHMETIC_EXPRESSION", typeof(UnaryArithmeticExpressionNode));
             nt_UNARY_ARITHMETIC_EXPRESSION.AstConfig.NodeType = null;
             nt_UNARY_ARITHMETIC_EXPRESSION.AstConfig.DefaultNodeCreator = () => new UnaryArithmeticExpressionNode();
-            NonTerminal nt_ARITHMETIC_EXPRESSION = new NonTerminal("ARITHMETIC_EXPRESSION", typeof(ArithmeticExpressionNode));
-            nt_ARITHMETIC_EXPRESSION.AstConfig.NodeType = null;
-            nt_ARITHMETIC_EXPRESSION.AstConfig.DefaultNodeCreator = () => new ArithmeticExpressionNode();
-            NonTerminal nt_COMPARATIVE_EXPRESSION = new NonTerminal("COMPARATIVE_EXPRESSION", typeof(ComparativeExpressionNode));
-            nt_COMPARATIVE_EXPRESSION.AstConfig.NodeType = null;
-            nt_COMPARATIVE_EXPRESSION.AstConfig.DefaultNodeCreator = () => new ComparativeExpressionNode();
-            this.logicExpression = new NonTerminal("LOGIC_EXPRESSION", typeof(LogicExpressionNode));
-            this.logicExpression.AstConfig.NodeType = null;
-            this.logicExpression.AstConfig.DefaultNodeCreator = () => new LogicExpressionNode();
 
-            this.logicExpression.Rule = this.logicExpression + terminalAnd + this.logicExpression
-                                    | this.logicExpression + terminalOr + this.logicExpression
-                                    | terminalParentesisIz + this.logicExpression + terminalParentesisDer
-                                    | terminalNot + terminalParentesisIz + this.logicExpression + terminalParentesisDer
-                                    | nt_COMPARATIVE_EXPRESSION;
-            /* **************************** */
-            /* EXPRESIONES COMPARATIVAS */
-            nt_COMPARATIVE_EXPRESSION.Rule = nt_COMPARATIVE_EXPRESSION + terminalIgualIgual + nt_COMPARATIVE_EXPRESSION
-                                            | nt_COMPARATIVE_EXPRESSION + terminalNoIgual + nt_COMPARATIVE_EXPRESSION
-                                            | nt_COMPARATIVE_EXPRESSION + terminalMayorIgual + nt_COMPARATIVE_EXPRESSION
-                                            | nt_COMPARATIVE_EXPRESSION + terminalMayorQue + nt_COMPARATIVE_EXPRESSION
-                                            | nt_COMPARATIVE_EXPRESSION + terminalMenorIgual + nt_COMPARATIVE_EXPRESSION
-                                            | nt_COMPARATIVE_EXPRESSION + terminalMenorQue + nt_COMPARATIVE_EXPRESSION
-                                            | nt_COMPARATIVE_EXPRESSION + terminalLike + terminalCadena
-                                            | terminalParentesisIz + nt_COMPARATIVE_EXPRESSION + terminalParentesisDer
-                                            | terminalNot + nt_COMPARATIVE_EXPRESSION
-                                            | nt_ARITHMETIC_EXPRESSION;
-            /* **************************** */
-            /* EXPRESIONES ARITMETICAS */
-            nt_ARITHMETIC_EXPRESSION.Rule = nt_ARITHMETIC_EXPRESSION + terminalMenos + nt_ARITHMETIC_EXPRESSION
-                                            | nt_VALUES;
-            /* **************************** */
-            /* VALORES PERMITIDOS PARA LOS PARAMETROS DE UN ADAPTADOR */
-            nt_PARAMETER_VALUES.Rule = terminalDateTimeValue
-                                        | terminalBool
-                                        | terminalNull
-                                        | terminalNumero
-                                        | terminalCadena;
-            /* **************************** */
             /* CONSTANTES */
-            nt_VALUES.Rule = terminalDateTimeValue
+            this.values.Rule = terminalDateTimeValue
                             | terminalBool
                             | terminalNull
                             | terminalNumero
@@ -272,7 +194,7 @@ namespace Integra.Vision.Language.Grammars
                                         | terminalId + terminalPunto + nt_EVENT_PROPERTIES;
             /* **************************** */
 
-            this.Root = this.logicExpression;
+            this.Root = this.values;
 
             this.LanguageFlags = Irony.Parsing.LanguageFlags.CreateAst;
         }

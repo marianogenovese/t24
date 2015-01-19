@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="ExpressionParser.cs" company="Integra.Vision.Language">
+// <copyright file="ProjectionParser.cs" company="Integra.Vision.Language">
 //     Copyright (c) Integra.Vision.Language. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -7,14 +7,13 @@ namespace Integra.Vision.Language
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using Integra.Vision.Language.Grammars;
     using Irony.Parsing;
 
     /// <summary>
-    /// Class that implements the logic to parse conditional expressions
+    /// Class that implements the logic to parse command projections
     /// </summary>
-    internal sealed class ExpressionParser
+    internal sealed class ProjectionParser
     {
         /// <summary>
         /// Command text
@@ -22,16 +21,16 @@ namespace Integra.Vision.Language
         private string commandText;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExpressionParser"/> class
+        /// Initializes a new instance of the <see cref="ProjectionParser"/> class
         /// </summary>
         /// <param name="commandText">Command text</param>
-        public ExpressionParser(string commandText)
+        public ProjectionParser(string commandText)
         {
             this.commandText = commandText;
         }
 
         /// <summary>
-        /// Implements the logic to parse commands
+        /// Implements the logic to parse private commands
         /// </summary>
         /// <returns>Execution plan</returns>
         public PlanNode Parse()
@@ -40,7 +39,7 @@ namespace Integra.Vision.Language
 
             try
             {
-                ExpressionGrammar grammar = new ExpressionGrammar();
+                ProjectionGrammar grammar = new ProjectionGrammar();
                 LanguageData language = new LanguageData(grammar);
                 Parser parser = new Parser(language);
                 ParseTree parseTree = parser.Parse(this.commandText);
@@ -53,7 +52,7 @@ namespace Integra.Vision.Language
                 }
                 else
                 {
-                    Irony.Interpreter.ScriptApp app = new Irony.Interpreter.ScriptApp(new Integra.Vision.Language.Grammars.ExpressionLanguageRuntime());
+                    Irony.Interpreter.ScriptApp app = new Irony.Interpreter.ScriptApp(new Integra.Vision.Language.Grammars.ProjectionLanguageRuntime());
                     nodes = (PlanNode)app.Evaluate(parseTree);
                 }
             }

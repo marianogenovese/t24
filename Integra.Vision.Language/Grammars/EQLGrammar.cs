@@ -35,12 +35,18 @@ namespace Integra.Vision.Language.Grammars
         private ExpressionGrammar expressionGrammar;
 
         /// <summary>
+        /// Projection grammar
+        /// </summary>
+        private ProjectionGrammar projectionGrammar;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="EQLGrammar"/> class
         /// </summary>
         public EQLGrammar()
             : base(false)
         {
             this.expressionGrammar = new ExpressionGrammar();
+            this.projectionGrammar = new ProjectionGrammar();
             this.Grammar(false);
         }
 
@@ -52,6 +58,7 @@ namespace Integra.Vision.Language.Grammars
             : base(false)
         {
             this.expressionGrammar = new ExpressionGrammar();
+            this.projectionGrammar = new ProjectionGrammar();
             this.Grammar(prueba);
         }
 
@@ -136,9 +143,9 @@ namespace Integra.Vision.Language.Grammars
             KeyTerm terminalParentesisIz = ToTerm("(", "parentesisIz");
             KeyTerm terminalParentesisDer = ToTerm(")", "parentesisDer");
             KeyTerm terminalCorcheteIz = ToTerm("[", "corcheteIz");
-            KeyTerm terminalCorcheteDer = ToTerm("]", "corchete_der");
-            KeyTerm terminalLlaveIz = ToTerm("{", "llave_iz");
-            KeyTerm terminalLlaveDer = ToTerm("}", "llave_der");
+            KeyTerm terminalCorcheteDer = ToTerm("]", "corcheteDer");
+            KeyTerm terminalLlaveIz = ToTerm("{", "llaveIz");
+            KeyTerm terminalLlaveDer = ToTerm("}", "llaveDer");
             KeyTerm terminalPunto = ToTerm(".", "punto");
             KeyTerm terminalPorcentaje = ToTerm("%", "porcentaje");
             KeyTerm terminalNumeral = ToTerm("#", "numeral");
@@ -166,9 +173,6 @@ namespace Integra.Vision.Language.Grammars
             terminalNull.Add("null", null);
             terminalNull.AstConfig.NodeType = null;
             terminalNull.AstConfig.DefaultNodeCreator = () => new NullValueNode();
-            Terminal terminalId = TerminalFactory.CreateCSharpIdentifier("identificador");
-            terminalId.AstConfig.NodeType = null;
-            terminalId.AstConfig.DefaultNodeCreator = () => new IdentifierNode();
             ConstantTerminal terminalAdapterType = new ConstantTerminal("terminalAdateperType");
             terminalAdapterType.Add("input", "input");
             terminalAdapterType.Add("output", "output");
@@ -184,6 +188,16 @@ namespace Integra.Vision.Language.Grammars
             terminalCreateAlter.Add("alter", "alter");
             terminalCreateAlter.AstConfig.NodeType = null;
             terminalCreateAlter.AstConfig.DefaultNodeCreator = () => new ConstantStringValueNode();
+            
+            /*
+            Terminal terminalId = TerminalFactory.CreateCSharpIdentifier("identificador");
+            terminalId.AstConfig.NodeType = null;
+            terminalId.AstConfig.DefaultNodeCreator = () => new IdentifierNode();
+            */
+
+            RegexBasedTerminal terminalId = new RegexBasedTerminal("[a-zA-Z]+([a-zA-Z]|[0-9]|[_])*");
+            terminalId.AstConfig.NodeType = null;
+            terminalId.AstConfig.DefaultNodeCreator = () => new IdentifierNode();
 
             /* VISTAS DEL SISTEMA */
             RegexBasedTerminal terminalUnidadDeTexto = new RegexBasedTerminal("texto", @"((?!where)|(?!from)|(?!select)).+");
@@ -257,14 +271,19 @@ namespace Integra.Vision.Language.Grammars
             nt_LOGIC_EXPRESSION.AstConfig.NodeType = null;
             nt_LOGIC_EXPRESSION.AstConfig.DefaultNodeCreator = () => new LogicExpressionNode();
             */
+
             NonTerminal nt_LOGIC_EXPRESSION = this.expressionGrammar.LogicExpression;
 
             NonTerminal nt_WHERE = new NonTerminal("WHERE", typeof(WhereNode));
             nt_WHERE.AstConfig.NodeType = null;
             nt_WHERE.AstConfig.DefaultNodeCreator = () => new WhereNode();
-            NonTerminal nt_SELECT = new NonTerminal("SELECT", typeof(SelectNode));
+            
+            /*NonTerminal nt_SELECT = new NonTerminal("SELECT", typeof(SelectNode));
             nt_SELECT.AstConfig.NodeType = null;
-            nt_SELECT.AstConfig.DefaultNodeCreator = () => new SelectNode();
+            nt_SELECT.AstConfig.DefaultNodeCreator = () => new SelectNode();*/
+
+            NonTerminal nt_SELECT = this.projectionGrammar.ProjectionList;
+
             NonTerminal nt_FROM = new NonTerminal("FROM", typeof(FromNode));
             nt_FROM.AstConfig.NodeType = null;
             nt_FROM.AstConfig.DefaultNodeCreator = () => new FromNode();
@@ -585,7 +604,7 @@ namespace Integra.Vision.Language.Grammars
 
             if (prueba)
             {
-                this.Root = nt_VALUES;
+                this.Root = nt_LOGIC_EXPRESSION;
             }
             else
             {

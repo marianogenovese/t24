@@ -67,6 +67,9 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Event
             PlanNode eventObjectAux = (PlanNode)this.eventObject.Evaluate(thread);
             this.EndEvaluate(thread);
 
+            // se cambia el tipo de nodo del primer hijo
+            idObjectAux.NodeType = PlanNodeTypeEnum.ObjectPrefix;
+
             this.result.NodeText = idObjectAux.NodeText + this.point + eventObjectAux.NodeText;
 
             this.result.Children = new System.Collections.Generic.List<PlanNode>();

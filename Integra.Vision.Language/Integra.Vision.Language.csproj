@@ -63,7 +63,7 @@
     <Compile Include="ASTNodes\Commands\Create\CreateTriggerNode.cs" />
     <Compile Include="ASTNodes\Commands\Create\CreateUser.cs" />
     <Compile Include="ASTNodes\Commands\Drop\DropUserDefinedObjectNode.cs" />
-    <Compile Include="ASTNodes\Commands\EngineActionsNode.cs" />
+    <Compile Include="ASTNodes\Commands\Private\EngineActionsNode.cs" />
     <Compile Include="ASTNodes\Commands\General\AdapterTypeNode.cs" />
     <Compile Include="ASTNodes\Commands\Create\CreateAdapterNode.cs" />
     <Compile Include="ASTNodes\Commands\Create\CreateSourceNode.cs" />
@@ -73,7 +73,7 @@
     <Compile Include="ASTNodes\Commands\General\SendNode.cs" />
     <Compile Include="ASTNodes\Commands\General\UserDefinedObjectsNode.cs" />
     <Compile Include="ASTNodes\Commands\General\ConstantStringValueNode.cs" />
-    <Compile Include="ASTNodes\Commands\LoadAssemblyNode.cs" />
+    <Compile Include="ASTNodes\Commands\Private\LoadAssemblyNode.cs" />
     <Compile Include="ASTNodes\Commands\StartStop\ObjectToStartOrStopNode.cs" />
     <Compile Include="ASTNodes\Commands\StartStop\StartStopNode.cs" />
     <Compile Include="ASTNodes\Commands\Trace\SetTraceNode.cs" />
@@ -113,6 +113,11 @@
     <Compile Include="ASTNodes\SystemViews\SystemViewNode.cs" />
     <Compile Include="Errors\ErrorNode.cs" />
     <Compile Include="Errors\Errors.cs" />
+    <Compile Include="Grammars\Common\InterpretedLanguageGrammarExtensions.cs" />
+    <Compile Include="Grammars\ProjectionGrammar.cs" />
+    <Compile Include="Grammars\ProjectionLanguageRuntime.cs" />
+    <Compile Include="Grammars\ValuesGrammar.cs" />
+    <Compile Include="Grammars\ValuesLanguageRuntime.cs" />
     <Compile Include="Parsers\ExpressionParser.cs" />
     <Compile Include="General\Adapter.cs" />
     <Compile Include="General\Agent.cs" />
@@ -127,6 +132,7 @@
     <Compile Include="Grammars\ExpressionLanguageRuntime.cs" />
     <Compile Include="Grammars\PrivateGrammar.cs" />
     <Compile Include="Grammars\PrivateLanguageRuntime.cs" />
+    <Compile Include="Parsers\ProjectionParser.cs" />
     <Compile Include="Parsers\PublicParser.cs" />
     <Compile Include="ExecutionPlan\Plan.cs" />
     <Compile Include="ExecutionPlan\PlanNode.cs" />
@@ -143,6 +149,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SR.tt</DependentUpon>
     </Compile>
+    <Compile Include="Runtime\ExpressionCompiler.cs" />
     <Compile Include="Runtime\ExpressionConstructor.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -10,7 +10,7 @@ namespace Integra.Vision.Language.Runtime
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
-    
+
     using Integra.Vision.Language.General;
 
     /// <summary>
@@ -22,16 +22,119 @@ namespace Integra.Vision.Language.Runtime
     internal sealed class ExpressionConstructor
     {
         /// <summary>
-        /// Event parameter
+        /// Parameter list
         /// </summary>
-        private ParameterExpression eventParameter;
+        private List<ParameterExpression> parameterList = new List<ParameterExpression>();
+
+        /// <summary>
+        /// Object prefix
+        /// </summary>
+        private string objectPrefix;
+
+        /// <summary>
+        /// Get the compiled function
+        /// </summary>
+        /// <param name="type">Return type</param>
+        /// <param name="expression">Expression tree</param>
+        /// <returns>Compiled function</returns>
+        public object GetCompiledFunction(string type, Expression expression)
+        {
+            if (this.parameterList.Count == 0)
+            {
+                return this.CreateFunctionWithoutParameters(type, expression);
+            }
+            else if (this.parameterList.Count == 1)
+            {
+                return this.CreateFunctionWithOneParameter(type, expression);
+            }
+            else if (this.parameterList.Count == 2)
+            {
+                return this.CreateFunctionWithTwoParameters(type, expression);
+            }
+            else
+            {
+                throw new Exception("El numero de parametros es incorrecto.");
+            }
+        }
+
+        /// <summary>
+        /// GetSelectValues
+        /// Gets the projection
+        /// </summary>
+        /// <param name="plan">Plan that contains the projection plans</param>
+        /// <returns>Dictionary of functions</returns>
+        public IDictionary<string, object> GetSelectValues(PlanNode plan)
+        {
+            Expression result = this.GenerateSelectExpression(plan);
+            return result.CompileExpression<Func<IDictionary<string, object>>>(this.parameterList)();
+        }
+
+        /// <summary>
+        /// CompileSelect
+        /// Doc go here
+        /// </summary>
+        /// <param name="plan">Plan to compile</param>
+        /// <returns>compiled function</returns>
+        public Func<EventObject, IDictionary<string, object>> CompileSelect(PlanNode plan)
+        {
+            Expression result = this.GenerateSelectExpression(plan);
+            return result.CompileExpression<Func<EventObject, Dictionary<string, object>>>(this.parameterList);
+        }
+
+        /// <summary>
+        /// CompileJoinSelect
+        /// Doc go here
+        /// </summary>
+        /// <param name="plan">Plan to compile</param>
+        /// <returns>compiled function</returns>
+        public Func<EventObject, EventObject, IDictionary<string, object>> CompileJoinSelect(PlanNode plan)
+        {
+            Expression result = this.GenerateSelectExpression(plan);
+            return result.CompileExpression<Func<EventObject, EventObject, Dictionary<string, object>>>(this.parameterList);
+        }
+
+        /// <summary>
+        /// GetWhereValues
+        /// Doc go here
+        /// </summary>
+        /// <param name="plan">Plan that contains the where conditions</param>
+        /// <returns>Result of the where condition</returns>
+        public bool GetWhereValues(PlanNode plan)
+        {
+            Expression resultExp = this.GenerateExpressionTree(plan);
+            return resultExp.CompileExpression<Func<bool>>(this.parameterList)();
+        }
+
+        /// <summary>
+        /// CompileWhere
+        /// Doc go here
+        /// </summary>
+        /// <param name="plan">Plan to compile</param>
+        /// <returns>Compiled function</returns>
+        public Func<EventObject, bool> CompileWhere(PlanNode plan)
+        {
+            Expression resultExp = this.GenerateExpressionTree(plan);
+            return resultExp.CompileExpression<Func<EventObject, bool>>(this.parameterList);
+        }
+
+        /// <summary>
+        /// CompileJoinWhere
+        /// Doc go here
+        /// </summary>
+        /// <param name="plan">Plan to compile</param>
+        /// <returns>Compiled function</returns>
+        public Func<EventObject, EventObject, bool> CompileJoinWhere(PlanNode plan)
+        {
+            Expression resultExp = this.GenerateExpressionTree(plan);
+            return resultExp.CompileExpression<Func<EventObject, EventObject, bool>>(this.parameterList);
+        }
 
         /// <summary>
         /// Create a expression tree
         /// </summary>
         /// <param name="plan">plan node to convert</param>
         /// <returns>expression tree of actual plan</returns>
-        public Expression GenerateExpressionTree(PlanNode plan)
+        private Expression GenerateExpressionTree(PlanNode plan)
         {
             if (plan == null)
             {
@@ -64,7 +167,7 @@ namespace Integra.Vision.Language.Runtime
         /// <param name="leftNode">left child expression</param>
         /// <param name="rightNode">right child expression</param>
         /// <returns>expression tree of actual plan</returns>
-        public Expression CreateExpressionNode(PlanNode actualNode, Expression leftNode, Expression rightNode)
+        private Expression CreateExpressionNode(PlanNode actualNode, Expression leftNode, Expression rightNode)
         {
             PlanNodeTypeEnum nodeType = actualNode.NodeType;
 
@@ -94,8 +197,6 @@ namespace Integra.Vision.Language.Runtime
                     return this.GenerateOr(actualNode, leftNode, rightNode);
                 case PlanNodeTypeEnum.And:
                     return this.GenerateAnd(actualNode, leftNode, rightNode);
-                case PlanNodeTypeEnum.Event:
-                    return this.GenerateEvent(actualNode);
                 case PlanNodeTypeEnum.ObjectPart:
                     return this.GenerateObjectPart(actualNode, leftNode, rightNode);
                 case PlanNodeTypeEnum.ObjectField:
@@ -109,6 +210,7 @@ namespace Integra.Vision.Language.Runtime
                     }
 
                 case PlanNodeTypeEnum.ObjectValue:
+                    Expression exp = this.GenerateValueOfObject(actualNode, leftNode);
                     return this.GenerateValueOfObject(actualNode, leftNode);
                 case PlanNodeTypeEnum.ObjectMessage:
                     return this.GenerateObjectMessage(actualNode, (ParameterExpression)leftNode);
@@ -120,70 +222,55 @@ namespace Integra.Vision.Language.Runtime
                     return this.GenerateProperty(actualNode, leftNode);
                 case PlanNodeTypeEnum.From:
                     return this.GenerateFrom(actualNode, leftNode);
+                case PlanNodeTypeEnum.ObjectWithPrefix:
+                    return this.GetEventWithPrefixValue(actualNode, leftNode, rightNode);
+                case PlanNodeTypeEnum.Event:
+                    return this.GenerateEvent(actualNode);
+                case PlanNodeTypeEnum.ObjectPrefix:
+                    return this.GenerateObjectPrefix(actualNode);
                 default:
                     return Expression.Constant(null);
             }
         }
 
         /// <summary>
-        /// Create a expression tree
+        /// Creates a function based on a expression tree with two parameter.
         /// </summary>
-        /// <param name="plan">plan node to convert</param>
-        /// <returns>expression tree of actual plan</returns>
-        public object GetConstantExpressionCompiled(PlanNode plan)
+        /// <param name="type">Type to return</param>
+        /// <param name="expression">Expression tree</param>
+        /// <returns>Compiled function</returns>
+        private object CreateFunctionWithTwoParameters(string type, Expression expression)
         {
-            return this.GetExpressionCompiled(plan, new EventObject());
-        }
-
-        /// <summary>
-        /// Create a expression tree
-        /// </summary>
-        /// <param name="plan">actual plan</param>
-        /// <param name="eventObject">incoming event</param>
-        /// <returns>expression tree of actual plan</returns>
-        public object GetExpressionCompiled(PlanNode plan, EventObject eventObject)
-        {
-            Expression resultExp = this.GenerateExpressionTree(plan);
-
-            if (!plan.Properties.ContainsKey("DataType"))
-            {
-                return Expression.Lambda<Func<object>>(resultExp).Compile()();
-            }
-
-            if (this.eventParameter == null)
-            {
-                this.eventParameter = Expression.Parameter(typeof(EventObject));
-            }
-
-            string a = resultExp.ToString();
             try
             {
-                switch (plan.Properties["DataType"].ToString())
+                switch (type)
                 {
                     case "System.String":
-                        return Expression.Lambda<Func<EventObject, string>>(resultExp, new[] { this.eventParameter }).Compile()(eventObject);
+                        return Expression.Lambda<Func<EventObject, EventObject, string>>(expression, this.parameterList.ToArray()).Compile();
                     case "System.Boolean":
-                        return Expression.Lambda<Func<EventObject, bool>>(resultExp, new[] { this.eventParameter }).Compile()(eventObject);
+                        return Expression.Lambda<Func<EventObject, EventObject, bool>>(expression, this.parameterList.ToArray()).Compile();
                     case "System.DateTime":
-                        return Expression.Lambda<Func<EventObject, DateTime>>(resultExp, new[] { this.eventParameter }).Compile()(eventObject);
+                        return Expression.Lambda<Func<EventObject, EventObject, DateTime>>(expression, this.parameterList.ToArray()).Compile();
                     case "System.Object":
-                        return Expression.Lambda<Func<EventObject, object>>(resultExp, new[] { this.eventParameter }).Compile()(eventObject);
+                        return Expression.Lambda<Func<EventObject, EventObject, object>>(expression, this.parameterList.ToArray()).Compile();
                     case "System.Int16":
-                        return Expression.Lambda<Func<EventObject, short>>(resultExp, new[] { this.eventParameter }).Compile()(eventObject);
+                        return Expression.Lambda<Func<EventObject, EventObject, short>>(expression, this.parameterList.ToArray()).Compile();
                     case "System.Int32":
-                        return Expression.Lambda<Func<EventObject, int>>(resultExp, new[] { this.eventParameter }).Compile()(eventObject);
+                        return Expression.Lambda<Func<EventObject, EventObject, int>>(expression, this.parameterList.ToArray()).Compile();
                     case "System.Int64":
-                        return Expression.Lambda<Func<EventObject, long>>(resultExp, new[] { this.eventParameter }).Compile()(eventObject);
+                        return Expression.Lambda<Func<EventObject, EventObject, long>>(expression, this.parameterList.ToArray()).Compile();
                     case "System.Decimal":
-                        return Expression.Lambda<Func<EventObject, decimal>>(resultExp, new[] { this.eventParameter }).Compile()(eventObject);
+                        return Expression.Lambda<Func<EventObject, EventObject, decimal>>(expression, this.parameterList.ToArray()).Compile();
                     case "System.Double":
-                        return Expression.Lambda<Func<EventObject, double>>(resultExp, new[] { this.eventParameter }).Compile()(eventObject);
+                        return Expression.Lambda<Func<EventObject, EventObject, double>>(expression, this.parameterList.ToArray()).Compile();
                     case "System.Float":
-                        return Expression.Lambda<Func<EventObject, float>>(resultExp, new[] { this.eventParameter }).Compile()(eventObject);
+                        return Expression.Lambda<Func<EventObject, EventObject, float>>(expression, this.parameterList.ToArray()).Compile();
                     case "System.TimeSpan":
-                        return Expression.Lambda<Func<EventObject, TimeSpan>>(resultExp, new[] { this.eventParameter }).Compile()(eventObject);
+                        return Expression.Lambda<Func<EventObject, EventObject, TimeSpan>>(expression, this.parameterList.ToArray()).Compile();
+                    case "System.Collections.Generic.Dictionary`2[System.String,System.Object]":
+                        return expression.CompileExpression<Func<EventObject, EventObject, Dictionary<string, object>>>(this.parameterList);
                     default:
-                        return Expression.Lambda<Func<object>>(resultExp).Compile()();
+                        return Expression.Lambda<Func<object>>(expression).Compile()();
                 }
             }
             catch (Exception e)
@@ -194,67 +281,141 @@ namespace Integra.Vision.Language.Runtime
         }
 
         /// <summary>
-        /// GetSelectValues
-        /// Gets the projection
+        /// Creates a function based on a expression tree with one parameter.
+        /// </summary>
+        /// <param name="type">Type to return</param>
+        /// <param name="expression">Expression tree</param>
+        /// <returns>Compiled function</returns>
+        private object CreateFunctionWithOneParameter(string type, Expression expression)
+        {
+            try
+            {
+                switch (type)
+                {
+                    case "System.String":
+                        return Expression.Lambda<Func<EventObject, string>>(expression, this.parameterList.ToArray()).Compile();
+                    case "System.Boolean":
+                        return Expression.Lambda<Func<EventObject, bool>>(expression, this.parameterList.ToArray()).Compile();
+                    case "System.DateTime":
+                        return Expression.Lambda<Func<EventObject, DateTime>>(expression, this.parameterList.ToArray()).Compile();
+                    case "System.Object":
+                        return Expression.Lambda<Func<EventObject, object>>(expression, this.parameterList.ToArray()).Compile();
+                    case "System.Int16":
+                        return Expression.Lambda<Func<EventObject, short>>(expression, this.parameterList.ToArray()).Compile();
+                    case "System.Int32":
+                        return Expression.Lambda<Func<EventObject, int>>(expression, this.parameterList.ToArray()).Compile();
+                    case "System.Int64":
+                        return Expression.Lambda<Func<EventObject, long>>(expression, this.parameterList.ToArray()).Compile();
+                    case "System.Decimal":
+                        return Expression.Lambda<Func<EventObject, decimal>>(expression, this.parameterList.ToArray()).Compile();
+                    case "System.Double":
+                        return Expression.Lambda<Func<EventObject, double>>(expression, this.parameterList.ToArray()).Compile();
+                    case "System.Float":
+                        return Expression.Lambda<Func<EventObject, float>>(expression, this.parameterList.ToArray()).Compile();
+                    case "System.TimeSpan":
+                        return Expression.Lambda<Func<EventObject, TimeSpan>>(expression, this.parameterList.ToArray()).Compile();
+                    case "System.Collections.Generic.Dictionary`2[System.String,System.Object]":
+                        return expression.CompileExpression<Func<EventObject, Dictionary<string, object>>>(this.parameterList);
+                    default:
+                        return Expression.Lambda<Func<object>>(expression).Compile()();
+                }
+            }
+            catch (Exception e)
+            {
+                // aqui tambien entran errores de Exceptions
+                return Expression.Lambda<Func<object>>(Expression.Constant(null)).Compile()();
+            }
+        }
+
+        /// <summary>
+        /// Creates a function based on a expression tree without parameters.
+        /// </summary>
+        /// <param name="type">Type to return</param>
+        /// <param name="expression">Expression tree</param>
+        /// <returns>Compiled function</returns>
+        private object CreateFunctionWithoutParameters(string type, Expression expression)
+        {
+            try
+            {
+                Type a = typeof(string);
+                switch (type)
+                {
+                    case "System.String":
+                        return expression.CompileExpression<Func<string>>(this.parameterList);
+                    case "System.Boolean":
+                        return expression.CompileExpression<Func<bool>>(this.parameterList);
+                    case "System.DateTime":
+                        return expression.CompileExpression<Func<DateTime>>(this.parameterList);
+                    case "System.Object":
+                        return expression.CompileExpression<Func<object>>(this.parameterList);
+                    case "System.Int16":
+                        return expression.CompileExpression<Func<short>>(this.parameterList);
+                    case "System.Int32":
+                        return expression.CompileExpression<Func<int>>(this.parameterList);
+                    case "System.Int64":
+                        return expression.CompileExpression<Func<long>>(this.parameterList);
+                    case "System.Decimal":
+                        return expression.CompileExpression<Func<decimal>>(this.parameterList);
+                    case "System.Double":
+                        return expression.CompileExpression<Func<double>>(this.parameterList);
+                    case "System.Float":
+                        return expression.CompileExpression<Func<float>>(this.parameterList);
+                    case "System.TimeSpan":
+                        return expression.CompileExpression<Func<TimeSpan>>(this.parameterList);
+                    case "System.Collections.Generic.Dictionary`2[System.String,System.Object]":
+                        return expression.CompileExpression<Func<Dictionary<string, object>>>(this.parameterList);
+                    default:
+                        return expression.CompileExpression<Func<object>>(this.parameterList);
+                }
+            }
+            catch (Exception e)
+            {
+                // aqui tambien entran errores de Exceptions
+                return Expression.Lambda<Func<object>>(Expression.Constant(null)).Compile()();
+            }
+        }        
+
+        /// <summary>
+        /// Generate the select block expression
         /// </summary>
         /// <param name="plans">Plan that contains the projection plans</param>
-        /// <param name="eventObject">Incoming event</param>
-        /// <returns>Dictionary of functions</returns>
-        public Dictionary<string, object> GetSelectValues(PlanNode plans, EventObject eventObject)
+        /// <returns>Select block expression</returns>
+        private Expression GenerateSelectExpression(PlanNode plans)
         {
-            Dictionary<string, object> result = new Dictionary<string, object>();
+            ConstantExpression dictionaryExpression = Expression.Constant(new Dictionary<string, object>(), typeof(Dictionary<string, object>));
+            List<Expression> expressionList = new List<Expression>();
+
             foreach (var plan in plans.Children)
             {
-                var key = this.GetExpressionCompiled(plan.Children[0], eventObject);
-                var value = this.GetExpressionCompiled(plan.Children[1], eventObject);
-                result.Add(key.ToString(), value);
+                Expression key = this.GenerateExpressionTree(plan.Children[0]);
+                Expression value = this.GenerateExpressionTree(plan.Children[1]);
+
+                Expression tryCatchExpr =
+                    Expression.Block(
+                        Expression.TryCatch(
+                            Expression.Block(
+                                    Expression.Call(dictionaryExpression, typeof(Dictionary<string, object>).GetMethod("Add", new Type[] { typeof(string), value.GetType() }), new[] { Expression.ConvertChecked(key, typeof(string)), Expression.ConvertChecked(value, typeof(object)) }),
+                                    Expression.Empty()
+                                ),
+                            Expression.Catch(
+                                typeof(Exception),
+                                Expression.Block(
+                                    Expression.Throw(
+                                        Expression.New(
+                                            typeof(Exception).GetConstructor(new Type[] { typeof(string) }),
+                                            Expression.Constant("Error al agregar los valores al diccionario, linea: " + plan.Line + " columna: " + plan.Column + " con " + plan.NodeText)
+                                        )
+                                    )
+                                )
+                            )
+                        ),
+                        dictionaryExpression
+                        );
+
+                expressionList.Add(tryCatchExpr);
             }
 
-            return result;
-        }
-
-        /// <summary>
-        /// CompileSelect
-        /// Doc go here
-        /// </summary>
-        /// <param name="plan">Plan to compile</param>
-        /// <returns>compiled function</returns>
-        public Func<EventObject, IDictionary<string, object>> CompileSelect(PlanNode plan)
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// CompileJoinSelect
-        /// Doc go here
-        /// </summary>
-        /// <param name="plan">Plan to compile</param>
-        /// <returns>compiled function</returns>
-        public Func<EventObject, EventObject, IDictionary<string, object>> CompileJoinSelect(PlanNode plan)
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// CompileWhere
-        /// Doc go here
-        /// </summary>
-        /// <param name="plan">Plan to compile</param>
-        /// <returns>compiled function</returns>
-        public Func<EventObject, bool> CompileWhere(PlanNode plan)
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// CompileJoinWhere
-        /// Doc go here
-        /// </summary>
-        /// <param name="plan">Plan to compile</param>
-        /// <returns>compiled function</returns>
-        public Func<EventObject, EventObject, bool> CompileJoinWhere(PlanNode plan)
-        {
-            return null;
+            return Expression.Block(expressionList.ToArray());
         }
 
         /// <summary>
@@ -318,15 +479,50 @@ namespace Integra.Vision.Language.Runtime
         /// Create a expression tree
         /// </summary>
         /// <param name="actualNode">plan node to convert</param>
+        /// <param name="leftNode">Left expression</param>
+        /// <param name="rightNode">Right expression</param>
+        /// <returns>expression tree of actual plan</returns>
+        private Expression GetEventWithPrefixValue(PlanNode actualNode, Expression leftNode, Expression rightNode)
+        {
+            return rightNode;
+        }
+
+        /// <summary>
+        /// Create a expression tree
+        /// </summary>
+        /// <param name="actualNode">plan node to convert</param>
         /// <returns>expression tree of actual plan</returns>
         private ParameterExpression GenerateEvent(PlanNode actualNode)
         {
-            if (this.eventParameter == null)
+            ParameterExpression currentParameter = null;
+            bool existsParameter = false;
+            string parameterName;
+
+            if (this.objectPrefix == null)
             {
-                this.eventParameter = Expression.Parameter(typeof(EventObject), "EventObjectParameter");
+                parameterName = actualNode.Properties["Value"].ToString();
+            }
+            else
+            {
+                parameterName = this.objectPrefix;
             }
 
-            return this.eventParameter;
+            foreach (ParameterExpression parameter in this.parameterList)
+            {
+                if (parameter.Name.Equals(parameterName))
+                {
+                    currentParameter = parameter;
+                    existsParameter = true;
+                }
+            }
+
+            if (!existsParameter)
+            {
+                currentParameter = Expression.Parameter(typeof(EventObject), parameterName);
+                this.parameterList.Add(currentParameter);
+            }
+
+            return currentParameter;
         }
 
         /// <summary>
@@ -571,6 +767,7 @@ namespace Integra.Vision.Language.Runtime
                         new[] { param },
                         Expression.TryCatch(
                             Expression.Block(
+                                Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Call(objeto, typeof(Integra.Messaging.MessageField).GetMethod("get_Value"))),
                                 Expression.Assign(param, Expression.Call(objeto, typeof(Integra.Messaging.MessageField).GetMethod("get_Value"))),
                                 Expression.Empty()
                                 ),
@@ -691,7 +888,7 @@ namespace Integra.Vision.Language.Runtime
                         auxField
                         ),
                         Expression.Assign(
-                        v, 
+                        v,
                         Expression.Call(
                             part,
                             typeof(Integra.Messaging.MessagePart).GetMethod("get_Item", new Type[] { tipo }),
@@ -1268,6 +1465,17 @@ namespace Integra.Vision.Language.Runtime
             }
 
             return Expression.Constant(plan.Properties["Value"], Type.GetType(plan.Properties["DataType"].ToString()));
-        }        
+        }
+
+        /// <summary>
+        /// Get the object prefix value
+        /// </summary>
+        /// <param name="actualNode">Current node</param>
+        /// <returns>Object prefix expression</returns>
+        private Expression GenerateObjectPrefix(PlanNode actualNode)
+        {
+            this.objectPrefix = actualNode.Properties["Value"].ToString();
+            return Expression.Constant(actualNode.Properties["Value"], Type.GetType(actualNode.Properties["DataType"].ToString()));
+        }
     }
 }

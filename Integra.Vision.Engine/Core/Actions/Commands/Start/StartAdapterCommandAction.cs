@@ -53,5 +53,12 @@ namespace Integra.Vision.Engine.Core
             // close connection
             vc.Dispose();
         }
+
+        /// <summary>
+        /// Contains load adapter logic.
+        /// </summary>
+        private void LoadObject()
+        {
+        }
     }
 }

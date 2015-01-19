@@ -106,7 +106,8 @@ namespace Integra.Vision.Language.General
                             new MessageField(102, "AccountIdentification1") { Value = "00001613000000000001" },
                             new MessageField(103, "Campo103")
                             { 
-                                new MessageField(1, "Campo103.1") { Value = "Dato del 103.1" }
+                                new MessageField(1, "Campo103.1") { Value = "Dato del 103.1" },
+                                new MessageField(2, "Campo103.2") { Value = "Dato del 103.2" }
                             },
                             new MessageField(104, "campo104") { Value = -1 },
                             new MessageField(105, "campo105") { Value = 1 }
