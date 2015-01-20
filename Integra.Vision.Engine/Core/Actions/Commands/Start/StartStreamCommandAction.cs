@@ -100,7 +100,7 @@ namespace Integra.Vision.Engine.Core
         private void LoadObject(string onCondition, string whereCondition, string projection)
         {
             System.Diagnostics.Debug.WriteLine("*** Iniciará start del stream ***");
-            /*ProjectionParser projectionParser = new ProjectionParser(projection);
+            ProjectionParser projectionParser = new ProjectionParser(projection);
             PlanNode projectionNode = projectionParser.Parse();
 
             ExpressionParser onConditionParser = new ExpressionParser(onCondition);
@@ -110,9 +110,11 @@ namespace Integra.Vision.Engine.Core
             PlanNode whereConditionNode = whereConditionParser.Parse();
 
             ExpressionConstructor constructor = new ExpressionConstructor();
-            var resultProjection = constructor.GetSelectValues(projectionNode);
+            var resultProjection = constructor.CompileJoinSelect(projectionNode);
+            constructor = new ExpressionConstructor();
             var resultOnCondition = constructor.CompileJoinWhere(onConditionNode);
-            var resultWhereCondition = constructor.CompileJoinWhere(whereConditionNode);*/
+            constructor = new ExpressionConstructor();
+            var resultWhereCondition = constructor.CompileJoinWhere(whereConditionNode);
             System.Diagnostics.Debug.WriteLine("*** Terminó start del stream ***");
         }
 
@@ -124,15 +126,16 @@ namespace Integra.Vision.Engine.Core
         private void LoadObject(string whereCondition, string projection)
         {
             System.Diagnostics.Debug.WriteLine("*** Iniciará start del stream ***");
-            /*ProjectionParser projectionParser = new ProjectionParser(projection);
+            ProjectionParser projectionParser = new ProjectionParser(projection);
             PlanNode projectionNode = projectionParser.Parse();
 
             ExpressionParser whereConditionParser = new ExpressionParser(whereCondition);
             PlanNode whereConditionNode = whereConditionParser.Parse();
 
             ExpressionConstructor constructor = new ExpressionConstructor();
-            var resultProjection = constructor.GetSelectValues(projectionNode);
-            var resultWhereCondition = constructor.CompileWhere(whereConditionNode);*/
+            var resultProjection = constructor.CompileSelect(projectionNode);
+            constructor = new ExpressionConstructor();
+            var resultWhereCondition = constructor.CompileWhere(whereConditionNode);
             System.Diagnostics.Debug.WriteLine("*** Terminó start del stream ***");
         }
 

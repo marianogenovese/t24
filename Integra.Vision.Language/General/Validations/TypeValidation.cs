@@ -7,7 +7,7 @@ namespace Integra.Vision.Language.General.Validations
 {
     using System;
     using Integra.Vision.Language.Errors;
-    
+
     using Irony.Interpreter;
 
     /// <summary>
@@ -61,7 +61,7 @@ namespace Integra.Vision.Language.General.Validations
         /// Gets or sets the actual thread
         /// </summary>
         public ScriptThread Thread { get; set; }
-                
+
         /// <summary>
         /// Gets the selected type to cast
         /// </summary>
@@ -72,7 +72,11 @@ namespace Integra.Vision.Language.General.Validations
 
             try
             {
-                if (this.RightType.ToString().Equals(this.LeftType.ToString()))
+                if (this.RightType == null || this.LeftType == null)
+                {
+                    selectedType = null;
+                }
+                else if (this.RightType.ToString().Equals(this.LeftType.ToString()))
                 {
                     selectedType = null;
                 }
@@ -117,7 +121,7 @@ namespace Integra.Vision.Language.General.Validations
             }
             catch (Exception e)
             {
-                selectedType = null;
+                throw new Exception("Invalid types -> left type: " + this.LeftType + ", right type: " + this.RightType, e);
             }
 
             return selectedType;

@@ -71,13 +71,13 @@ namespace Integra.Vision.Engine.Core
         /// <param name="whereCondition">Conditional expression</param>
         private void LoadObject(string whereCondition)
         {
-            /*System.Diagnostics.Debug.WriteLine("*** Iniciará start del source ***");
+            System.Diagnostics.Debug.WriteLine("*** Creando función de la condicion where del source ***");
             ExpressionParser expressionParser = new ExpressionParser(whereCondition);
             PlanNode expressionNode = expressionParser.Parse();
 
             ExpressionConstructor constructor = new ExpressionConstructor();
             var resultWhereCondition = constructor.CompileWhere(expressionNode);
-            System.Diagnostics.Debug.WriteLine("*** Terminó start del source ***");*/
+            System.Diagnostics.Debug.WriteLine("*** Función creada exitosamente ***");
         }
     }
 }
