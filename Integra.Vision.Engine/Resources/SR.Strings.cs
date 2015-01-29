@@ -158,6 +158,12 @@ namespace Integra.Vision.Engine.Resources
 	
 		/// <summary>
 		/// Looks up a localized string similar to: 
+		///	httpSource
+		/// </summary>
+		public static string SourceHttpType { get { return global::Integra.Vision.Engine.SR.SourceHttpType; } }
+	
+		/// <summary>
+		/// Looks up a localized string similar to: 
 		///	Invalid input. Syntax error: {0}. Line {1}, column {2}
 		/// </summary>
 		public static string SyntaxError(object arg0, object arg1, object arg2)

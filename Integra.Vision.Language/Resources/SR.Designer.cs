@@ -493,6 +493,15 @@ namespace Integra.Vision.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Source.
+        /// </summary>
+        internal static string SourceRole {
+            get {
+                return ResourceManager.GetString("SourceRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} {1} {2}.
         /// </summary>
         internal static string StartStopNodeText {

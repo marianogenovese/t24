@@ -41,6 +41,7 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Engine\Commands\ActionTypeEnum.cs" />
     <Compile Include="Engine\Commands\AdapterTypeEnum.cs" />
     <Compile Include="Engine\Commands\AdminCommandTypeEnum.cs" />
     <Compile Include="Engine\Commands\ArgDataTypeEnum.cs" />

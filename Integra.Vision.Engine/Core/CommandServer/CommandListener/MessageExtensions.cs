@@ -6,6 +6,9 @@
 namespace Integra.Vision.Engine.Core
 {
     using System;
+    using System.IO;
+    using System.Runtime.Serialization;
+    using System.Runtime.Serialization.Formatters.Binary;
     using System.ServiceModel.Channels;
 
     /// <summary>
@@ -21,7 +24,17 @@ namespace Integra.Vision.Engine.Core
         /// <returns>True if the message can be converted to a proper command script request.</returns>
         public static bool TryConvertToOperationRequest(this Message message, out OperationRequest request)
         {
-            request = new OperationRequest(message.GetCommandText(), message.GetClientAddress());
+            Tuple<string, Integra.Vision.Event.EventObject> data = message.GetIncommingData();
+
+            if (data.Item2 != null)
+            {
+                request = new OperationRequest(data.Item1, data.Item2, message.GetClientAddress());
+            }
+            else
+            {
+                request = new OperationRequest(data.Item1, message.GetClientAddress());
+            }
+
             return true;
         }
 
@@ -40,9 +53,14 @@ namespace Integra.Vision.Engine.Core
         /// </summary>
         /// <param name="message">The message request.</param>
         /// <returns>The command text.</returns>
-        public static string GetCommandText(this Message message)
+        public static Tuple<string, Integra.Vision.Event.EventObject> GetIncommingData(this Message message)
         {
-            return message.GetReaderAtBodyContents().ReadContentAsString();
+            string stringStream = message.GetReaderAtBodyContents().ReadContentAsString();
+            byte[] a = System.Convert.FromBase64String(stringStream);
+            MemoryStream stream = new MemoryStream(a);
+            IFormatter formatter = new BinaryFormatter();
+            stream.Seek(0, SeekOrigin.Begin);
+            return (Tuple<string, Integra.Vision.Event.EventObject>)formatter.Deserialize(stream);
         }
     }
 }

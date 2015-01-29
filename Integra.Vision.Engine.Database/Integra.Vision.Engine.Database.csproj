@@ -52,9 +52,6 @@
     <Reference Include="System.Data.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configurations\AdapterMap.cs" />
-    <Compile Include="Configurations\ArgMap.cs" />
-    <Compile Include="Configurations\AssemblyMap.cs" />
     <Compile Include="Configurations\DependencyMap.cs" />
     <Compile Include="Configurations\ScriptMap.cs" />
     <Compile Include="Configurations\SourceAssignedToStreamMap.cs" />
@@ -67,7 +64,6 @@
     <Compile Include="Configurations\RoleMemberMap.cs" />
     <Compile Include="Configurations\SetTraceMap.cs" />
     <Compile Include="Configurations\SourceMap.cs" />
-    <Compile Include="Configurations\StmtMap.cs" />
     <Compile Include="Configurations\StreamMap.cs" />
     <Compile Include="Configurations\SystemObjectMap.cs" />
     <Compile Include="Configurations\SystemViews\SystemAdapterMap.cs" />
@@ -87,16 +83,21 @@
     <Compile Include="Configurations\SystemViews\SystemTriggerMap.cs" />
     <Compile Include="Configurations\SystemViews\SystemUserDefinedObjectMap.cs" />
     <Compile Include="Configurations\SystemViews\SystemUserMap.cs" />
-    <Compile Include="Configurations\TriggerMap.cs" />
     <Compile Include="Configurations\UserDefinedObjectMap.cs" />
     <Compile Include="Configurations\UserMap.cs" />
     <Compile Include="Contexts\SystemViewsContext.cs" />
-    <Compile Include="Contexts\ViewsContext.cs" />
+    <Compile Include="Contexts\ObjectsContext.cs" />
     <Compile Include="Migrations\201501131623082_u.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Migrations\201501131623082_u.Designer.cs">
       <DependentUpon>201501131623082_u.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201501262112151_updatedDB.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Migrations\201501262112151_updatedDB.Designer.cs">
+      <DependentUpon>201501262112151_updatedDB.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Script.cs" />
     <Compile Include="Repositories\UnitOfWorkForObjects.cs" />
@@ -109,9 +110,6 @@
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="Models\Adapter.cs" />
-    <Compile Include="Models\Arg.cs" />
-    <Compile Include="Models\Assembly.cs" />
     <Compile Include="Models\Dependency.cs" />
     <Compile Include="Models\SourceAssignedToStream.cs" />
     <Compile Include="Models\SourceCondition.cs" />
@@ -123,7 +121,6 @@
     <Compile Include="Models\RoleMember.cs" />
     <Compile Include="Models\SetTrace.cs" />
     <Compile Include="Models\Source.cs" />
-    <Compile Include="Models\Stmt.cs" />
     <Compile Include="Models\Stream.cs" />
     <Compile Include="Models\SystemObject.cs" />
     <Compile Include="Models\SystemViews\SystemCondition.cs" />
@@ -143,7 +140,6 @@
     <Compile Include="Models\SystemViews\SystemTrigger.cs" />
     <Compile Include="Models\SystemViews\SystemUserDefinedObject.cs" />
     <Compile Include="Models\SystemViews\SystemUser.cs" />
-    <Compile Include="Models\Trigger.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserDefinedObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -159,15 +155,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\Views\CreateSystemAdapters.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\Views\CreateSystemArgs.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\Views\CreateSystemAssemblies.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Scripts\Views\CreateSystemConditions.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -195,13 +182,7 @@
     <Content Include="Scripts\Views\CreateSystemSourcesAsignedToStreams.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\Views\CreateSystemStmts.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Scripts\Views\CreateSystemStreams.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\Views\CreateSystemTriggers.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\Views\CreateSystemUserDefinedObjects.sql">
@@ -214,6 +195,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201501131623082_u.resx">
       <DependentUpon>201501131623082_u.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501262112151_updatedDB.resx">
+      <DependentUpon>201501262112151_updatedDB.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

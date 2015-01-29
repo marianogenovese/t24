@@ -18,7 +18,7 @@ namespace Integra.Vision.Engine.Core
         /// <summary>
         /// Actual context
         /// </summary>
-        private ViewsContext context;
+        private ObjectsContext context;
 
         /// <summary>
         /// Dependencies of the actual object
@@ -30,7 +30,7 @@ namespace Integra.Vision.Engine.Core
         /// </summary>
         /// <param name="context">Current context</param>
         /// <param name="dependencies">Object dependencies</param>
-        public DependencyActions(ViewsContext context, IReadOnlyNamedElementCollection<CommandDependency> dependencies)
+        public DependencyActions(ObjectsContext context, IReadOnlyNamedElementCollection<CommandDependency> dependencies)
         {
             this.dependencies = dependencies;
             this.context = context;

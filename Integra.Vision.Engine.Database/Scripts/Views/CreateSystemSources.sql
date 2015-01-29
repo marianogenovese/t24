@@ -1,6 +1,6 @@
 create view dbo.System_Sources
 AS
-SELECT actualObject.ObjectId as Id, actualObject.AdapterId
+SELECT actualObject.ObjectId as Id
 , userDefinedObject.Name, userDefinedObject.State, userDefinedObject.IsSystemObject
 , baseObject.CreationDate
 FROM EngineDatabase.dbo.Sources actualObject 

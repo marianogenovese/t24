@@ -13,16 +13,6 @@ namespace Integra.Vision.Engine.Database.Models
     internal sealed class Source : UserDefinedObject
     {
         /// <summary>
-        /// Gets or sets the adapter id
-        /// </summary>
-        public System.Guid AdapterId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the adapter entity
-        /// </summary>
-        public Adapter Adapter { get; set; }
-
-        /// <summary>
         /// Gets or sets the source conditions
         /// </summary>
         public ICollection<SourceCondition> Conditions { get; set; }

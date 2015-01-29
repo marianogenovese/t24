@@ -41,8 +41,8 @@ namespace Integra.Vision.Engine.Core
         private void SetTrace()
         {
             // initialize context
-            Integra.Vision.Engine.Database.Contexts.ViewsContext vc = new Integra.Vision.Engine.Database.Contexts.ViewsContext("EngineDatabase");
-            Integra.Vision.Engine.Database.Contexts.ViewsContext vc2 = new Integra.Vision.Engine.Database.Contexts.ViewsContext("EngineDatabase");
+            Integra.Vision.Engine.Database.Contexts.ObjectsContext vc = new Integra.Vision.Engine.Database.Contexts.ObjectsContext("EngineDatabase");
+            Integra.Vision.Engine.Database.Contexts.ObjectsContext vc2 = new Integra.Vision.Engine.Database.Contexts.ObjectsContext("EngineDatabase");
 
             // create repository
             Database.Repositories.Repository<Database.Models.SetTrace> repoSetTrace = new Database.Repositories.Repository<Database.Models.SetTrace>(vc);

@@ -19,7 +19,7 @@ namespace Integra.Vision.Engine.Core
         {
             try
             {
-                using (ViewsContext context = new ViewsContext("EngineDatabase"))
+                using (ObjectsContext context = new ObjectsContext("EngineDatabase"))
                 {
                     this.StopObject(context, command as StopSourceCommand);
                     return new OkCommandResult();
@@ -36,7 +36,7 @@ namespace Integra.Vision.Engine.Core
         /// </summary>
         /// <param name="vc">Current context</param>
         /// <param name="command">Stop source command</param>
-        private void StopObject(ViewsContext vc, StopSourceCommand command)
+        private void StopObject(ObjectsContext vc, StopSourceCommand command)
         {
             // create repository
             Database.Repositories.Repository<Database.Models.UserDefinedObject> repoUserDefinedObject = new Database.Repositories.Repository<Database.Models.UserDefinedObject>(vc);

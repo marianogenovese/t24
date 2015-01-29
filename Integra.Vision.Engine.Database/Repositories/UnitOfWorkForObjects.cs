@@ -17,7 +17,7 @@ namespace Integra.Vision.Engine.Database.Repositories
         /// <summary>
         /// Current context
         /// </summary>
-        private ViewsContext context = new ViewsContext("EngineDatabase");
+        private ObjectsContext context = new ObjectsContext("EngineDatabase");
 
         /// <summary>
         /// Repository of objects.
@@ -34,7 +34,7 @@ namespace Integra.Vision.Engine.Database.Repositories
         /// </summary>
         public UnitOfWorkForObjects()
         {
-            this.context = new ViewsContext("EngineDatabase");
+            this.context = new ObjectsContext("EngineDatabase");
         }
 
         /// <summary>

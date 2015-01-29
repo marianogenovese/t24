@@ -438,6 +438,21 @@ namespace Integra.Vision.Language
         /// <summary>
         /// Load assembly type
         /// </summary>
-        LoadAssembly = 231
+        LoadAssembly = 231,
+
+        /// <summary>
+        /// Receive type
+        /// </summary>
+        Receive = 241,
+
+        /// <summary>
+        /// Publish type
+        /// </summary>
+        Publish = 242,
+
+        /// <summary>
+        /// User query type
+        /// </summary>
+        UserQuery = 250
     }
 }

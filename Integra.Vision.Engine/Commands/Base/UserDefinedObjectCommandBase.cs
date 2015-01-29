@@ -21,7 +21,8 @@ namespace Integra.Vision.Engine.Commands
         /// Initializes a new instance of the <see cref="UserDefinedObjectCommandBase"/> class
         /// </summary>
         /// <param name="node">Execution plan node that have the command arguments</param>
-        public UserDefinedObjectCommandBase(PlanNode node) : base(node)
+        public UserDefinedObjectCommandBase(PlanNode node)
+            : base(node)
         {
         }
 
@@ -32,7 +33,12 @@ namespace Integra.Vision.Engine.Commands
         {
             get
             {
-                return this.Arguments["Name"].Value.ToString();
+                if (this.name == null)
+                {
+                    this.name = this.Arguments["Name"].Value.ToString();
+                }
+
+                return this.name;
             }
         }
     }

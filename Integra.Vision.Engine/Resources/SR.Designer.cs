@@ -241,6 +241,15 @@ namespace Integra.Vision.Engine {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to httpSource.
+        /// </summary>
+        internal static string SourceHttpType {
+            get {
+                return ResourceManager.GetString("SourceHttpType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid input. Syntax error: {0}. Line {1}, column {2}.
         /// </summary>
         internal static string SyntaxError {

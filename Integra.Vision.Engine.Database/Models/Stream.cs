@@ -33,11 +33,6 @@ namespace Integra.Vision.Engine.Database.Models
         public ICollection<PList> PList { get; set; }
 
         /// <summary>
-        /// Gets or sets the trigger
-        /// </summary>
-        public ICollection<Trigger> Triggers { get; set; }
-
-        /// <summary>
         /// Gets or sets the assigned sources
         /// </summary>
         public ICollection<SourceAssignedToStream> AsignedSources { get; set; }

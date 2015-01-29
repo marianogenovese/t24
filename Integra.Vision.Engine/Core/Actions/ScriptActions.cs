@@ -17,13 +17,13 @@ namespace Integra.Vision.Engine.Core
         /// <summary>
         /// Actual context.
         /// </summary>
-        private ViewsContext context;
+        private ObjectsContext context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ScriptActions"/> class
         /// </summary>
         /// <param name="context">Current context.</param>
-        public ScriptActions(ViewsContext context)
+        public ScriptActions(ObjectsContext context)
         {
             this.context = context;
         }

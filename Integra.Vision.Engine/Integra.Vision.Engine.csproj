@@ -90,6 +90,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Messaging" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Threading.Tasks.Dataflow, Version=4.5.24.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -100,12 +101,6 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\Alter\AlterAdapter\AlterAdapterArgumentEnumerator.cs" />
-    <Compile Include="Commands\Alter\AlterAdapter\AlterAdapterCommand.cs" />
-    <Compile Include="Commands\Alter\AlterAdapter\AlterAdapterDependencyEnumerator.cs" />
-    <Compile Include="Commands\Alter\AlterAssembly\AlterAssemblyArgumentEnumerator.cs" />
-    <Compile Include="Commands\Alter\AlterAssembly\AlterAssemblyCommand.cs" />
-    <Compile Include="Commands\Alter\AlterAssembly\AlterAssemblyDependencyEnumerator.cs" />
     <Compile Include="Commands\Alter\AlterSource\AlterSourceArgumentEnumerator.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -122,15 +117,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Commands\Alter\AlterStream\AlterStreamDependencyEnumerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Commands\Alter\AlterTrigger\AlterTriggerArgumentEnumerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Commands\Alter\AlterTrigger\AlterTriggerCommand.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Commands\Alter\AlterTrigger\AlterTriggerDependencyEnumerator.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Commands\Alter\AlterUser\AlterUserArgumentEnumerator.cs">
@@ -155,29 +141,28 @@
     <Compile Include="Commands\Base\SetCommandBase.cs" />
     <Compile Include="Commands\Base\StartStopObjectCommandBase.cs" />
     <Compile Include="Commands\Base\UserDefinedObjectCommandBase.cs" />
-    <Compile Include="Commands\Load\LoadAssemblyCommand.cs" />
     <Compile Include="Commands\Private\EngineActions\BootEngineCommand.cs" />
     <Compile Include="Commands\Private\EngineActions\BootEngineArgumentEnumerator.cs" />
     <Compile Include="Commands\Private\EngineActions\BootEngineDependencyEnumerator.cs" />
-    <Compile Include="Commands\Start\StartAdapterCommand.cs" />
+    <Compile Include="Commands\Publish\PublishArgumentEnumerator.cs" />
+    <Compile Include="Commands\Publish\PublishCommand.cs" />
+    <Compile Include="Commands\Publish\PublishDependencyEnumerator.cs" />
+    <Compile Include="Commands\Receive\ReceiveArgumentEnumerator.cs" />
+    <Compile Include="Commands\Receive\ReceiveCommand.cs" />
+    <Compile Include="Commands\Receive\ReceiveDependencyEnumerator.cs" />
     <Compile Include="Commands\Start\StartSourceCommand.cs" />
     <Compile Include="Commands\Start\StartStreamCommand.cs" />
-    <Compile Include="Commands\Start\StartTriggerCommand.cs" />
-    <Compile Include="Commands\Stop\StopAdapterCommand.cs" />
     <Compile Include="Commands\Stop\StopSourceCommand.cs" />
     <Compile Include="Commands\Stop\StopStreamCommand.cs" />
-    <Compile Include="Commands\Stop\StopTriggerCommand.cs" />
-    <Compile Include="Commands\Trace\SetTraceAdapterCommand.cs" />
     <Compile Include="Commands\Trace\SetTraceEngineCommand.cs" />
     <Compile Include="Commands\Trace\SetTraceObjectCommand.cs" />
     <Compile Include="Commands\Trace\SetTraceSourceCommand.cs" />
     <Compile Include="Commands\Trace\SetTraceStreamCommand.cs" />
-    <Compile Include="Commands\Trace\SetTraceTriggerCommand.cs" />
-    <Compile Include="Core\Actions\Commands\Alter\AlterAdapterCommandAction.cs" />
-    <Compile Include="Core\Actions\Commands\Alter\AlterAssemblyCommandAction.cs" />
+    <Compile Include="Commands\UserQueries\UserQueriesArgumentEnumerator.cs" />
+    <Compile Include="Commands\UserQueries\UserQueriesCommand.cs" />
+    <Compile Include="Commands\UserQueries\UserQueriesDependencyEnumerator.cs" />
     <Compile Include="Core\Actions\Commands\Alter\AlterSourceCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Alter\AlterStreamCommandAction.cs" />
-    <Compile Include="Core\Actions\Commands\Alter\AlterTriggerCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Alter\AlterUserCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Drop\DropRoleCommandAction.cs" />
     <Compile Include="Configuration\RuntimeCommandConfigurationElement.cs" />
@@ -195,70 +180,53 @@
     <None Include="Core\Actions\Pipeline\CommandActionResultPipeline.cs" />
     <Compile Include="Core\Actions\Commands\Create\CreateRoleCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Create\CreateUserCommandAction.cs" />
-    <Compile Include="Core\Actions\Commands\Drop\DropAdapterCommandAction.cs" />
-    <Compile Include="Core\Actions\Commands\Drop\DropAssemblyCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Drop\DropSourceCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Drop\DropStreamCommandAction.cs" />
-    <Compile Include="Core\Actions\Commands\Drop\DropTriggerCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Drop\DropUserCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Boot\BootEngineCommandAction.cs" />
-    <Compile Include="Core\Actions\Commands\Load\LoadAssemblyCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Permission\DenyPermissionCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Permission\GrantPermissionCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Permission\RevokePermissionCommandAction.cs" />
-    <Compile Include="Core\Actions\Factories\Load\LoadAssemblyCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Commands\Publish\PublishCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Queries\UserQueriesCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Receive\ReceiveCommandAction.cs" />
+    <Compile Include="Core\Actions\Factories\Publish\PublishCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Queries\UserQueriesCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Receive\ReceiveCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Results\BootCommandResult.cs" />
     <Compile Include="Core\Actions\ScriptActions.cs" />
-    <Compile Include="Core\Actions\Commands\Start\StartAdapterCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Start\StartSourceCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Start\StartStreamCommandAction.cs" />
-    <Compile Include="Core\Actions\Commands\Start\StartTriggerCommandAction.cs" />
-    <Compile Include="Core\Actions\Commands\Stop\StopAdapterCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Stop\StopSourceCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Stop\StopStreamCommandAction.cs" />
-    <Compile Include="Core\Actions\Commands\Stop\StopTriggerCommandAction.cs" />
-    <Compile Include="Core\Actions\Commands\SystemQueries\SystemQueriesCommandAction.cs" />
-    <Compile Include="Core\Actions\Commands\Trace\SetTraceAdapterCommandAction.cs" />
+    <Compile Include="Core\Actions\Commands\Queries\SystemQueriesCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Trace\SetTraceEngineCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Trace\SetTraceObjectCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Trace\SetTraceSourceCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Trace\SetTraceStreamCommandAction.cs" />
-    <Compile Include="Core\Actions\Commands\Trace\SetTraceTriggerCommandAction.cs" />
     <Compile Include="Core\Actions\DependencyActions.cs" />
-    <Compile Include="Core\Actions\Factories\Alter\AlterAdapterCommandActionFactory.cs" />
-    <Compile Include="Core\Actions\Factories\Alter\AlterAssemblyCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Alter\AlterSourceCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Alter\AlterStreamCommandActionFactory.cs" />
-    <Compile Include="Core\Actions\Factories\Alter\AlterTriggerCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Alter\AlterUserCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Create\CreateRoleCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Create\CreateUserCommandActionFactory.cs" />
-    <Compile Include="Core\Actions\Factories\Drop\DropAdapterCommandActionFactory.cs" />
-    <Compile Include="Core\Actions\Factories\Drop\DropAssemblyCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Drop\DropRoleCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Drop\DropSourceCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Drop\DropStreamCommandActionFactory.cs" />
-    <Compile Include="Core\Actions\Factories\Drop\DropTriggerCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Drop\DropUserCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Engine\BootEngineCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Permission\DenyPermissionCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Permission\GrantPermissionCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Permission\RevokePermissionCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Start\StartStreamCommandActionFactory.cs" />
-    <Compile Include="Core\Actions\Factories\Start\StartAdapterCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Start\StartSourceCommandActionFactory.cs" />
-    <Compile Include="Core\Actions\Factories\Start\StartTriggerCommandActionFactory.cs" />
-    <Compile Include="Core\Actions\Factories\Stop\StopAdapterCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Stop\StopSourceCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Stop\StopStreamCommandActionFactory.cs" />
-    <Compile Include="Core\Actions\Factories\Stop\StopTriggerCommandActionFactory.cs" />
-    <Compile Include="Core\Actions\Factories\SystemQueries\SystemQueriesCommandActionFactory.cs" />
-    <Compile Include="Core\Actions\Factories\Trace\SetTraceAdapterCommandActionFactory.cs" />
+    <Compile Include="Core\Actions\Factories\Queries\SystemQueriesCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Trace\SetTraceEngineCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Trace\SetTraceObjectCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Trace\SetTraceSourceCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Trace\SetTraceStreamCommandActionFactory.cs" />
-    <Compile Include="Core\Actions\Factories\Trace\SetTraceTriggerCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Pipeline\CommandActionResult.cs" />
     <Compile Include="Core\Actions\AuthorizationCommandActionBase.cs" />
     <Compile Include="Core\Actions\ExecutionCommandAction.cs" />
@@ -266,17 +234,11 @@
     <Compile Include="Core\Actions\Factories\BeginCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Create\CreateSourceCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Create\CreateStreamCommandActionFactory.cs" />
-    <Compile Include="Core\Actions\Factories\Create\CreateTriggerCommandActionFactory.cs" />
-    <Compile Include="Core\Actions\Factories\Create\CreateAdapterCommandActionFactory.cs" />
-    <Compile Include="Core\Actions\Factories\Create\CreateAssemblyCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\EndCommandActionFactory.cs" />
     <Compile Include="Core\Actions\BeginCommandAction.cs" />
-    <Compile Include="Core\Actions\Commands\Create\CreateAdapterCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Create\CreateSourceCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Create\CreateStreamCommandAction.cs" />
-    <Compile Include="Core\Actions\Commands\Create\CreateTriggerCommandAction.cs" />
     <Compile Include="Core\Actions\EndCommandAction.cs" />
-    <Compile Include="Core\Actions\Commands\Create\CreateAssemblyCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\AuthorizationCommandAction.cs" />
     <Compile Include="Core\Actions\Pipeline\CommandActionPipelineFactoryBuilder.cs" />
     <Compile Include="Core\Actions\Pipeline\CommandActionPipelineFactoryDependencyResolver.cs" />
@@ -395,12 +357,6 @@
     <Compile Include="Core\Security\VisionUserIdentity.cs" />
     <Compile Include="Core\TypeExtensions.cs" />
     <Compile Include="Core\Utils.cs" />
-    <Compile Include="Commands\Create\CreateAdapter\CreateAdapterArgumentEnumerator.cs" />
-    <Compile Include="Commands\Create\CreateAdapter\CreateAdapterCommand.cs" />
-    <Compile Include="Commands\Create\CreateAdapter\CreateAdapterDependencyEnumerator.cs" />
-    <Compile Include="Commands\Create\CreateAssembly\CreateAssemblyArgumentEnumerator.cs" />
-    <Compile Include="Commands\Create\CreateAssembly\CreateAssemblyCommand.cs" />
-    <Compile Include="Commands\Create\CreateAssembly\CreateAssemblyDependencyEnumerator.cs" />
     <Compile Include="Commands\Create\CreateRole\CreateRoleArgumentEnumerator.cs" />
     <Compile Include="Commands\Create\CreateRole\CreateRoleCommand.cs" />
     <Compile Include="Commands\Create\CreateRole\CreateRoleDependencyEnumerator.cs" />
@@ -410,18 +366,9 @@
     <Compile Include="Commands\Create\CreateStream\CreateStreamArgumentEnumerator.cs" />
     <Compile Include="Commands\Create\CreateStream\CreateStreamCommand.cs" />
     <Compile Include="Commands\Create\CreateStream\CreateStreamDependencyEnumerator.cs" />
-    <Compile Include="Commands\Create\CreateTrigger\CreateTriggerCommand.cs" />
-    <Compile Include="Commands\Create\CreateTrigger\CreateTriggerDependencyEnumerator.cs" />
-    <Compile Include="Commands\Create\CreateTrigger\CreateTriggerArgumentEnumerator.cs" />
     <Compile Include="Commands\Create\CreateUser\CreateUserArgumentEnumerator.cs" />
     <Compile Include="Commands\Create\CreateUser\CreateUserCommand.cs" />
     <Compile Include="Commands\Create\CreateUser\CreateUserDependencyEnumerator.cs" />
-    <Compile Include="Commands\Drop\DropAdapter\DropAdapterArgumentEnumerator.cs" />
-    <Compile Include="Commands\Drop\DropAdapter\DropAdapterCommand.cs" />
-    <Compile Include="Commands\Drop\DropAdapter\DropAdapterDependencyEnumerator.cs" />
-    <Compile Include="Commands\Drop\DropAssembly\DropAssemblyArgumentEnumerator.cs" />
-    <Compile Include="Commands\Drop\DropAssembly\DropAssemblyCommand.cs" />
-    <Compile Include="Commands\Drop\DropAssembly\DropAssemblyDependencyEnumerator.cs" />
     <Compile Include="Commands\Drop\DropRole\DropRoleArgumentEnumerator.cs" />
     <Compile Include="Commands\Drop\DropRole\DropRoleCommand.cs" />
     <Compile Include="Commands\Drop\DropRole\DropRoleDependencyEnumerator.cs" />
@@ -431,9 +378,6 @@
     <Compile Include="Commands\Drop\DropStream\DropStreamArgumentEnumerator.cs" />
     <Compile Include="Commands\Drop\DropStream\DropStreamCommand.cs" />
     <Compile Include="Commands\Drop\DropStream\DropStreamDependencyEnumerator.cs" />
-    <Compile Include="Commands\Drop\DropTrigger\DropTriggerArgumentEnumerator.cs" />
-    <Compile Include="Commands\Drop\DropTrigger\DropTriggerCommand.cs" />
-    <Compile Include="Commands\Drop\DropTrigger\DropTriggerDependencyEnumerator.cs" />
     <Compile Include="Commands\Drop\DropUser\DropUserArgumentEnumerator.cs" />
     <Compile Include="Commands\Drop\DropUser\DropUserCommand.cs" />
     <Compile Include="Commands\Drop\DropUser\DropUserDependencyEnumerator.cs" />
@@ -528,6 +472,10 @@
     <ProjectReference Include="..\Integra.Vision.Engine.Database\Integra.Vision.Engine.Database.csproj">
       <Project>{ced91b7c-fdd0-4886-8bcc-495733c3c286}</Project>
       <Name>Integra.Vision.Engine.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integra.Vision.EventObject\Integra.Vision.Event.csproj">
+      <Project>{38abf8b4-fc77-4ffc-96a2-1ee03bd22056}</Project>
+      <Name>Integra.Vision.Event</Name>
     </ProjectReference>
     <ProjectReference Include="..\Integra.Vision.Language\Integra.Vision.Language.csproj">
       <Project>{6d4d259b-281f-454f-9b47-4ce2d108ba6a}</Project>

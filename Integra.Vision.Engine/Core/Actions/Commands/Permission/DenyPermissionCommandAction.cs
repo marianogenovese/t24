@@ -19,7 +19,7 @@ namespace Integra.Vision.Engine.Core
         {
             try
             {
-                using (ViewsContext context = new ViewsContext("EngineDatabase"))
+                using (ObjectsContext context = new ObjectsContext("EngineDatabase"))
                 {
                     this.SaveArguments(context, command as DenyPermissionCommand);
                     return new OkCommandResult();
@@ -36,7 +36,7 @@ namespace Integra.Vision.Engine.Core
         /// </summary>
         /// <param name="vc">Current context</param>
         /// <param name="command">Deny command</param>
-        private void SaveArguments(ViewsContext vc, DenyPermissionCommand command)
+        private void SaveArguments(ObjectsContext vc, DenyPermissionCommand command)
         {
             // create repository
             Database.Repositories.Repository<Database.Models.UserDefinedObject> repoObject = new Database.Repositories.Repository<Database.Models.UserDefinedObject>(vc);

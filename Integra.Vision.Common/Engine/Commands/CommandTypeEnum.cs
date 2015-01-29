@@ -15,24 +15,6 @@ namespace Integra.Vision.Engine.Commands
     internal enum CommandTypeEnum : long
     {
         /// <summary>
-        /// CreateAdapter
-        /// Doc goes here
-        /// </summary>
-        CreateAdapter = CommandAccessLevelEnum.Public | CommandCategoryEnum.UserDefinedObjectType | UserDefinedObjectActionEnum.Create | ObjectTypeEnum.Adapter,
-
-        /// <summary>
-        /// AlterAdapter
-        /// Doc goes here
-        /// </summary>
-        AlterAdapter = CommandAccessLevelEnum.Public | CommandCategoryEnum.UserDefinedObjectType | UserDefinedObjectActionEnum.Alter | ObjectTypeEnum.Adapter,
-        
-        /// <summary>
-        /// DropAdapter
-        /// Doc goes here
-        /// </summary>
-        DropAdapter = CommandAccessLevelEnum.Public | CommandCategoryEnum.UserDefinedObjectType | UserDefinedObjectActionEnum.Drop | ObjectTypeEnum.Adapter,
-
-        /// <summary>
         /// CreateSource
         /// Doc goes here
         /// </summary>
@@ -67,43 +49,7 @@ namespace Integra.Vision.Engine.Commands
         /// Doc goes here
         /// </summary>
         DropStream = CommandAccessLevelEnum.Public | CommandCategoryEnum.UserDefinedObjectType | UserDefinedObjectActionEnum.Drop | ObjectTypeEnum.Stream,
-
-        /// <summary>
-        /// CreateTrigger
-        /// Doc goes here
-        /// </summary>
-        CreateTrigger = CommandAccessLevelEnum.Public | CommandCategoryEnum.UserDefinedObjectType | UserDefinedObjectActionEnum.Create | ObjectTypeEnum.Trigger,
-
-        /// <summary>
-        /// AlterTrigger
-        /// Doc goes here
-        /// </summary>
-        AlterTrigger = CommandAccessLevelEnum.Public | CommandCategoryEnum.UserDefinedObjectType | UserDefinedObjectActionEnum.Alter | ObjectTypeEnum.Trigger,
-
-        /// <summary>
-        /// DropTrigger
-        /// Doc goes here
-        /// </summary>
-        DropTrigger = CommandAccessLevelEnum.Public | CommandCategoryEnum.UserDefinedObjectType | UserDefinedObjectActionEnum.Drop | ObjectTypeEnum.Trigger,
-
-        /// <summary>
-        /// CreateAssembly
-        /// Doc goes here
-        /// </summary>
-        CreateAssembly = CommandAccessLevelEnum.Public | CommandCategoryEnum.UserDefinedObjectType | UserDefinedObjectActionEnum.Create | ObjectTypeEnum.Assembly,
-
-        /// <summary>
-        /// AlterAssembly
-        /// Doc goes here
-        /// </summary>
-        AlterAssembly = CommandAccessLevelEnum.Public | CommandCategoryEnum.UserDefinedObjectType | UserDefinedObjectActionEnum.Alter | ObjectTypeEnum.Assembly,
-
-        /// <summary>
-        /// DropAssembly
-        /// Doc goes here
-        /// </summary>
-        DropAssembly = CommandAccessLevelEnum.Public | CommandCategoryEnum.UserDefinedObjectType | UserDefinedObjectActionEnum.Drop | ObjectTypeEnum.Assembly,
-
+                
         /// <summary>
         /// CreateRole
         /// Doc goes here
@@ -135,18 +81,6 @@ namespace Integra.Vision.Engine.Commands
         DropUser = CommandAccessLevelEnum.Public | CommandCategoryEnum.UserDefinedObjectType | UserDefinedObjectActionEnum.Drop | ObjectTypeEnum.User,
 
         /// <summary>
-        /// StartAdapter
-        /// Doc goes here
-        /// </summary>
-        StartAdapter = CommandAccessLevelEnum.Public | CommandCategoryEnum.StartStopType | StartStopActionEnum.Start | ObjectTypeEnum.Adapter,
-
-        /// <summary>
-        /// StopAdapter
-        /// Doc goes here
-        /// </summary>
-        StopAdapter = CommandAccessLevelEnum.Public | CommandCategoryEnum.StartStopType | StartStopActionEnum.Stop | ObjectTypeEnum.Adapter,
-
-        /// <summary>
         /// StartSource
         /// Doc goes here
         /// </summary>
@@ -171,24 +105,6 @@ namespace Integra.Vision.Engine.Commands
         StopStream = CommandAccessLevelEnum.Public | CommandCategoryEnum.StartStopType | StartStopActionEnum.Stop | ObjectTypeEnum.Stream,
 
         /// <summary>
-        /// StartTrigger
-        /// Doc goes here
-        /// </summary>
-        StartTrigger = CommandAccessLevelEnum.Public | CommandCategoryEnum.StartStopType | StartStopActionEnum.Start | ObjectTypeEnum.Trigger,
-
-        /// <summary>
-        /// StopTrigger
-        /// Doc goes here
-        /// </summary>
-        StopTrigger = CommandAccessLevelEnum.Public | CommandCategoryEnum.StartStopType | StartStopActionEnum.Stop | ObjectTypeEnum.Trigger,
-
-        /// <summary>
-        /// SetTraceAdapter
-        /// Doc goes here
-        /// </summary>
-        SetTraceAdapter = CommandAccessLevelEnum.Public | CommandCategoryEnum.SetType | SetTypeEnum.Trace | ObjectTypeEnum.Adapter,
-
-        /// <summary>
         /// SetTraceSource
         /// Doc goes here
         /// </summary>
@@ -199,12 +115,6 @@ namespace Integra.Vision.Engine.Commands
         /// Doc goes here
         /// </summary>
         SetTraceStream = CommandAccessLevelEnum.Public | CommandCategoryEnum.SetType | SetTypeEnum.Trace | ObjectTypeEnum.Stream,
-
-        /// <summary>
-        /// SetTraceTrigger
-        /// Doc goes here
-        /// </summary>
-        SetTraceTrigger = CommandAccessLevelEnum.Public | CommandCategoryEnum.SetType | SetTypeEnum.Trace | ObjectTypeEnum.Trigger,
 
         /// <summary>
         /// SetTraceEngine
@@ -243,15 +153,27 @@ namespace Integra.Vision.Engine.Commands
         SystemQuery = CommandAccessLevelEnum.Public | CommandCategoryEnum.SystemQueriesType,
 
         /// <summary>
+        /// UserQuery
+        /// Doc goes here
+        /// </summary>
+        UserQuery = CommandAccessLevelEnum.Public | CommandCategoryEnum.UserQueriesType,
+
+        /// <summary>
         /// Boot
         /// Doc goes here
         /// </summary>
         Boot = CommandAccessLevelEnum.Private | CommandCategoryEnum.AdminType | AdminCommandTypeEnum.BootEngine,
-
+        
         /// <summary>
-        /// LoadAssembly
+        /// Publish
         /// Doc goes here
         /// </summary>
-        LoadAssembly = CommandAccessLevelEnum.Private | CommandCategoryEnum.AdminType | AdminCommandTypeEnum.LoadAssembly
+        Publish = CommandAccessLevelEnum.Public | CommandCategoryEnum.ActionType | ActionTypeEnum.Publish,
+
+        /// <summary>
+        /// Receive
+        /// Doc goes here
+        /// </summary>
+        Receive = CommandAccessLevelEnum.Public | CommandCategoryEnum.ActionType | ActionTypeEnum.Receive
     }
 }

@@ -48,6 +48,18 @@ namespace Integra.Vision.Engine.Commands
         /// AdminType
         /// Doc goes here
         /// </summary>
-        AdminType = 1 << 5 << 10
+        AdminType = 1 << 5 << 10,
+
+        /// <summary>
+        /// ActionType
+        /// Doc goes here
+        /// </summary>
+        ActionType = 1 << 6 << 10,
+
+        /// <summary>
+        /// UserQueriesType
+        /// Doc goes here
+        /// </summary>
+        UserQueriesType = 1 << 7 << 10,
     }
 }

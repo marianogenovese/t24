@@ -19,7 +19,7 @@ namespace Integra.Vision.Engine.Core
         {
             try
             {
-                using (ViewsContext context = new ViewsContext("EngineDatabase"))
+                using (ObjectsContext context = new ObjectsContext("EngineDatabase"))
                 {
                     this.UpdateObject(context, command as AlterSourceCommand);
                     return new OkCommandResult();
@@ -36,15 +36,11 @@ namespace Integra.Vision.Engine.Core
         /// </summary>
         /// <param name="vc">Current context</param>
         /// <param name="command">Alter source command</param>
-        private void UpdateObject(ViewsContext vc, AlterSourceCommand command)
+        private void UpdateObject(ObjectsContext vc, AlterSourceCommand command)
         {
-            Database.Repositories.Repository<Database.Models.Adapter> repoAdapter = new Database.Repositories.Repository<Database.Models.Adapter>(vc);
             Database.Repositories.Repository<Database.Models.Source> repoSource = new Database.Repositories.Repository<Database.Models.Source>(vc);
             Database.Repositories.Repository<Database.Models.SourceCondition> repoSourceCondition = new Database.Repositories.Repository<Database.Models.SourceCondition>(vc);
             Database.Repositories.Repository<Database.Models.Dependency> repoDependency = new Database.Repositories.Repository<Database.Models.Dependency>(vc);
-
-            // get the adapter
-            Database.Models.Adapter adapter = repoAdapter.Find(x => x.Name == command.From);
 
             // get the source            
             Database.Models.Source source = repoSource.Find(x => x.Name == command.Name);
@@ -56,7 +52,6 @@ namespace Integra.Vision.Engine.Core
             repoSourceCondition.Delete(x => x.SourceId == source.Id);
 
             // update the source arguments
-            source.AdapterId = adapter.Id;
             source.CreationDate = DateTime.Now;
             source.IsSystemObject = false;
             source.State = (int)UserDefinedObjectStateEnum.Stopped;

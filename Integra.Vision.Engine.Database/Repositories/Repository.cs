@@ -20,13 +20,13 @@ namespace Integra.Vision.Engine.Database.Repositories
         /// <summary>
         /// Context variable
         /// </summary>
-        private ViewsContext context = null;
+        private ObjectsContext context = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Repository{TObject}"/> class
         /// </summary>
         /// <param name="context">actual context</param>
-        public Repository(ViewsContext context)
+        public Repository(ObjectsContext context)
         {
             this.context = context;
         }

@@ -37,8 +37,7 @@ namespace Integra.Vision.Engine.Commands
         {
             try
             {
-                List<CommandDependency> dependencies = new List<CommandDependency>();
-                return dependencies.ToArray();
+                return new CommandDependency[] { };
             }
             catch (Exception e)
             {

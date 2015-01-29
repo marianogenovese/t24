@@ -63,19 +63,19 @@ namespace Integra.Vision.Language.ASTNodes.SystemViews
             int childrenCount = ChildrenNodes.Count;
             if (childrenCount == 4)
             {
-                this.fromWord = (string)ChildrenNodes[0].Token.Value;
-                this.fromText = (string)ChildrenNodes[1].Token.Value;
-                this.selectWord = (string)ChildrenNodes[2].Token.Value;
-                this.selectText = (string)ChildrenNodes[3].Token.Value;
+                this.fromWord = (string)ChildrenNodes[2].Token.Value;
+                this.fromText = (string)ChildrenNodes[3].Token.Value;
+                this.selectWord = (string)ChildrenNodes[0].Token.Value;
+                this.selectText = (string)ChildrenNodes[1].Token.Value;
             }
             else
             {
-                this.fromWord = (string)ChildrenNodes[0].Token.Value;
-                this.fromText = (string)ChildrenNodes[1].Token.Value;
-                this.whereWord = (string)ChildrenNodes[2].Token.Value;
-                this.whereText = (string)ChildrenNodes[3].Token.Value;
-                this.selectWord = (string)ChildrenNodes[4].Token.Value;
-                this.selectText = (string)ChildrenNodes[5].Token.Value;
+                this.fromWord = (string)ChildrenNodes[2].Token.Value;
+                this.fromText = (string)ChildrenNodes[3].Token.Value;
+                this.whereWord = (string)ChildrenNodes[4].Token.Value;
+                this.whereText = (string)ChildrenNodes[5].Token.Value;
+                this.selectWord = (string)ChildrenNodes[0].Token.Value;
+                this.selectText = (string)ChildrenNodes[1].Token.Value;
             }
 
             this.result = new PlanNode();
@@ -92,11 +92,11 @@ namespace Integra.Vision.Language.ASTNodes.SystemViews
         /// <returns>return a plan node</returns>
         protected override object DoEvaluate(ScriptThread thread)
         {
-            this.result.NodeText = this.fromWord + " " + this.fromText + "\n" + this.whereWord + " " + this.whereText + "\n" + this.selectWord + " " + this.selectText;
+            this.result.NodeText = this.selectWord + " " + this.selectText + "\n" + this.fromWord + " " + this.fromText + "\n" + this.whereWord + " " + this.whereText;
             
-            this.result.Properties.Add("from", this.fromText);
-            this.result.Properties.Add("where", this.whereText);
-            this.result.Properties.Add("select", this.selectText);
+            this.result.Properties.Add("From", this.fromText);
+            this.result.Properties.Add("Where", this.whereText);
+            this.result.Properties.Add("Select", this.selectText);
 
             return this.result;
         }

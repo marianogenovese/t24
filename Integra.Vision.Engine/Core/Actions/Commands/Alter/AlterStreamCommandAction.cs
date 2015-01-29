@@ -21,7 +21,7 @@ namespace Integra.Vision.Engine.Core
             {
                 AlterStreamCommand alterStreamCommand = command as AlterStreamCommand;
 
-                using (ViewsContext context = new ViewsContext("EngineDatabase"))
+                using (ObjectsContext context = new ObjectsContext("EngineDatabase"))
                 {
                     if (alterStreamCommand.IsSimpleStream)
                     {
@@ -46,7 +46,7 @@ namespace Integra.Vision.Engine.Core
         /// </summary>
         /// <param name="vc">Current context</param>
         /// <param name="command">Alter stream command</param>
-        private void UpdateSimpleStreamArguments(ViewsContext vc, AlterStreamCommand command)
+        private void UpdateSimpleStreamArguments(ObjectsContext vc, AlterStreamCommand command)
         {
             // initialize the repositories
             Database.Repositories.Repository<Database.Models.Stream> repoStream = new Database.Repositories.Repository<Database.Models.Stream>(vc);
@@ -117,7 +117,7 @@ namespace Integra.Vision.Engine.Core
         /// </summary>
         /// <param name="vc">Current context</param>
         /// <param name="command">Alter stream command</param>
-        private void UpdateJoinStreamArguments(ViewsContext vc, AlterStreamCommand command)
+        private void UpdateJoinStreamArguments(ObjectsContext vc, AlterStreamCommand command)
         {
             // initialize the repositories
             Database.Repositories.Repository<Database.Models.Stream> repoStream = new Database.Repositories.Repository<Database.Models.Stream>(vc);

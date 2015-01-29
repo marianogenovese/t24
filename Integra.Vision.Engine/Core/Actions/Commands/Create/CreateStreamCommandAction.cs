@@ -20,7 +20,7 @@ namespace Integra.Vision.Engine.Core
             CreateStreamCommand createStreamCommand = command as CreateStreamCommand;
             try
             {
-                using (ViewsContext context = new ViewsContext("EngineDatabase"))
+                using (ObjectsContext context = new ObjectsContext("EngineDatabase"))
                 {
                     if (createStreamCommand.IsSimpleStream)
                     {
@@ -45,7 +45,7 @@ namespace Integra.Vision.Engine.Core
         /// </summary>
         /// <param name="vc">Current context</param>
         /// <param name="command">Create stream command</param>
-        private void SaveSimpleStreamArguments(ViewsContext vc, CreateStreamCommand command)
+        private void SaveSimpleStreamArguments(ObjectsContext vc, CreateStreamCommand command)
         {
             // initialize the repositories
             Database.Repositories.Repository<Database.Models.Stream> repoStream = new Database.Repositories.Repository<Database.Models.Stream>(vc);
@@ -93,7 +93,7 @@ namespace Integra.Vision.Engine.Core
         /// </summary>
         /// <param name="vc">Current context</param>
         /// <param name="command">Create stream command</param>
-        private void SaveJoinStreamArguments(ViewsContext vc, CreateStreamCommand command)
+        private void SaveJoinStreamArguments(ObjectsContext vc, CreateStreamCommand command)
         {
             // initialize the repositories
             Database.Repositories.Repository<Database.Models.Stream> repoStream = new Database.Repositories.Repository<Database.Models.Stream>(vc);

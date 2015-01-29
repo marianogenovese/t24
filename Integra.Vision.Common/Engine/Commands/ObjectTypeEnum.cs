@@ -15,12 +15,6 @@ namespace Integra.Vision.Engine.Commands
     internal enum ObjectTypeEnum
     {
         /// <summary>
-        /// Adapter
-        /// Doc goes here
-        /// </summary>
-        Adapter = 1 << 0 << 500,
-
-        /// <summary>
         /// Source
         /// Doc goes here
         /// </summary>
@@ -31,18 +25,6 @@ namespace Integra.Vision.Engine.Commands
         /// Doc goes here
         /// </summary>
         Stream = 1 << 2 << 500,
-
-        /// <summary>
-        /// Trigger
-        /// Doc goes here
-        /// </summary>
-        Trigger = 1 << 3 << 500,
-
-        /// <summary>
-        /// Assembly
-        /// Doc goes here
-        /// </summary>
-        Assembly = 1 << 4 << 500,
 
         /// <summary>
         /// Role

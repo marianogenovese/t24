@@ -261,6 +261,9 @@
   <data name="SourceObject" xml:space="preserve">
     <value>source</value>
   </data>
+  <data name="SourceRole" xml:space="preserve">
+    <value>Source</value>
+  </data>
   <data name="StartStopNodeText" xml:space="preserve">
     <value>{0} {1} {2}</value>
   </data>

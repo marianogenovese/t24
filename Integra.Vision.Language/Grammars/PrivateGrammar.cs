@@ -48,8 +48,6 @@ namespace Integra.Vision.Language.Grammars
             /* PALABRAS RESERVADAS */
             KeyTerm terminalBoot = ToTerm("boot", "boot");
             KeyTerm terminalEngine = ToTerm("engine", "engine");
-            KeyTerm terminalLoad = ToTerm("load", "load");
-            KeyTerm terminalAssembly = ToTerm("assembly", "assembly");
 
             /* CONSTANTES E IDENTIFICADORES */
             Terminal terminalId = TerminalFactory.CreateCSharpIdentifier("identificador");
@@ -60,9 +58,6 @@ namespace Integra.Vision.Language.Grammars
             NonTerminal nt_BOOT_ENGINE = new NonTerminal("BOOT_ENGINE", typeof(EngineActionsNode));
             nt_BOOT_ENGINE.AstConfig.NodeType = null;
             nt_BOOT_ENGINE.AstConfig.DefaultNodeCreator = () => new EngineActionsNode();
-            NonTerminal nt_LOAD_ASSEMBLY = new NonTerminal("LOAD_ASSEMBLY", typeof(LoadAssemblyNode));
-            nt_LOAD_ASSEMBLY.AstConfig.NodeType = null;
-            nt_LOAD_ASSEMBLY.AstConfig.DefaultNodeCreator = () => new LoadAssemblyNode();
             NonTerminal nt_COMMAND_NODE = new NonTerminal("COMMAND_NODE", typeof(CommandNode));
             nt_COMMAND_NODE.AstConfig.NodeType = null;
             nt_COMMAND_NODE.AstConfig.DefaultNodeCreator = () => new CommandNode();
@@ -73,13 +68,8 @@ namespace Integra.Vision.Language.Grammars
             /* BOOT ENGINE */
             nt_BOOT_ENGINE.Rule = terminalBoot + terminalEngine;
             /* **************************** */
-            /* LOAD ASSEMBLY */
-            nt_LOAD_ASSEMBLY.Rule = terminalLoad + terminalAssembly + terminalId;
-            /* **************************** */
-
             /* COMANDOS */
-            nt_COMMAND_NODE.Rule = nt_BOOT_ENGINE
-                                    | nt_LOAD_ASSEMBLY;
+            nt_COMMAND_NODE.Rule = nt_BOOT_ENGINE;
             /* **************************** */
             /* LISTA DE COMANDOS */
             nt_COMMAND_LIST.Rule = nt_COMMAND_LIST + nt_COMMAND_NODE

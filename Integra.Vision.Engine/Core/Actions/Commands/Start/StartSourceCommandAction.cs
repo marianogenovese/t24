@@ -23,7 +23,7 @@ namespace Integra.Vision.Engine.Core
         {
             try
             {
-                using (ViewsContext context = new ViewsContext("EngineDatabase"))
+                using (ObjectsContext context = new ObjectsContext("EngineDatabase"))
                 {
                     this.StartObject(context, command as StartSourceCommand);
                     return new OkCommandResult();
@@ -40,7 +40,7 @@ namespace Integra.Vision.Engine.Core
         /// </summary>
         /// <param name="vc">Current context</param>
         /// <param name="command">Start source command</param>
-        private void StartObject(ViewsContext vc, StartSourceCommand command)
+        private void StartObject(ObjectsContext vc, StartSourceCommand command)
         {
             // create repository
             Repository<Database.Models.UserDefinedObject> repoUserDefinedObject = new Repository<Database.Models.UserDefinedObject>(vc);

@@ -19,7 +19,7 @@ namespace Integra.Vision.Engine.Core
         {
             try
             {
-                using (ViewsContext context = new ViewsContext("EngineDatabase"))
+                using (ObjectsContext context = new ObjectsContext("EngineDatabase"))
                 {
                     this.SaveArguments(context, command as CreateRoleCommand);
                     return new OkCommandResult();
@@ -36,7 +36,7 @@ namespace Integra.Vision.Engine.Core
         /// </summary>
         /// <param name="vc">Current context</param>
         /// <param name="command">Create role command</param>
-        private void SaveArguments(ViewsContext vc, CreateRoleCommand command)
+        private void SaveArguments(ObjectsContext vc, CreateRoleCommand command)
         {
             // create repository
             Database.Repositories.Repository<Database.Models.Role> repoRole = new Database.Repositories.Repository<Database.Models.Role>(vc);

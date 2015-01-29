@@ -24,7 +24,7 @@ namespace Integra.Vision.Engine.Core
         {
             try
             {
-                using (ViewsContext context = new ViewsContext("EngineDatabase"))
+                using (ObjectsContext context = new ObjectsContext("EngineDatabase"))
                 {
                     this.StartObject(context, command as StartStreamCommand);
                     return new OkCommandResult();
@@ -41,17 +41,17 @@ namespace Integra.Vision.Engine.Core
         /// </summary>
         /// <param name="vc">Current context</param>
         /// <param name="command">Start stream command</param>
-        private void StartObject(ViewsContext vc, StartStreamCommand command)
+        private void StartObject(ObjectsContext vc, StartStreamCommand command)
         {
             // create repository
             Repository<Database.Models.UserDefinedObject> repoUserDefinedObject = new Repository<Database.Models.UserDefinedObject>(vc);
             Repository<Database.Models.PList> repoProjection = new Repository<Database.Models.PList>(vc);
             Repository<Database.Models.StreamCondition> repoStreamConditions = new Repository<Database.Models.StreamCondition>(vc);
 
-            // get the adapter
+            // get the stream
             Database.Models.UserDefinedObject stream = repoUserDefinedObject.Find(x => x.Name == command.Name);
 
-            // update the adapter
+            // update the stream
             stream.State = (int)UserDefinedObjectStateEnum.Started;
 
             // get the stream projection

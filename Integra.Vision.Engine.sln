@@ -41,9 +41,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integra.Vision.Diagnostics"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integra.Vision.DRL", "Integra.Vision.DRL\Integra.Vision.DRL.csproj", "{4FB82C24-396E-407E-9A57-EFC60DDA48CE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integra.Vision.Event", "Integra.Vision.EventObject\Integra.Vision.Event.csproj", "{38ABF8B4-FC77-4FFC-96A2-1EE03BD22056}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 12
+		SccNumberOfProjects = 13
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://iid.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -91,6 +93,10 @@ Global
 		SccProjectTopLevelParentUniqueName11 = Integra.Vision.Engine.sln
 		SccProjectName11 = Integra.Vision.DRL
 		SccLocalPath11 = Integra.Vision.DRL
+		SccProjectUniqueName12 = Integra.Vision.EventObject\\Integra.Vision.Event.csproj
+		SccProjectTopLevelParentUniqueName12 = Integra.Vision.Engine.sln
+		SccProjectName12 = Integra.Vision.EventObject
+		SccLocalPath12 = Integra.Vision.EventObject
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -137,6 +143,10 @@ Global
 		{4FB82C24-396E-407E-9A57-EFC60DDA48CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FB82C24-396E-407E-9A57-EFC60DDA48CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FB82C24-396E-407E-9A57-EFC60DDA48CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38ABF8B4-FC77-4FFC-96A2-1EE03BD22056}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38ABF8B4-FC77-4FFC-96A2-1EE03BD22056}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38ABF8B4-FC77-4FFC-96A2-1EE03BD22056}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38ABF8B4-FC77-4FFC-96A2-1EE03BD22056}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -153,5 +163,6 @@ Global
 		{9D078A51-8CE3-4A74-9F9E-53CB882BEFAF} = {5F9164B3-2246-4136-9E56-67213982D10E}
 		{FC4545B2-690C-40C9-B111-8E4EF4724BE7} = {5F9164B3-2246-4136-9E56-67213982D10E}
 		{4FB82C24-396E-407E-9A57-EFC60DDA48CE} = {5F9164B3-2246-4136-9E56-67213982D10E}
+		{38ABF8B4-FC77-4FFC-96A2-1EE03BD22056} = {5F9164B3-2246-4136-9E56-67213982D10E}
 	EndGlobalSection
 EndGlobal

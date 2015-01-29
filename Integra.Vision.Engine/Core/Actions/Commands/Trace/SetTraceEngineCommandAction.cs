@@ -41,22 +41,20 @@ namespace Integra.Vision.Engine.Core
         private void SetTrace()
         {
             // initialize context
-            Integra.Vision.Engine.Database.Contexts.ViewsContext vc = new Integra.Vision.Engine.Database.Contexts.ViewsContext("EngineDatabase");
-            Integra.Vision.Engine.Database.Contexts.ViewsContext vc2 = new Integra.Vision.Engine.Database.Contexts.ViewsContext("EngineDatabase");
+            Integra.Vision.Engine.Database.Contexts.ObjectsContext vc = new Integra.Vision.Engine.Database.Contexts.ObjectsContext("EngineDatabase");
+            Integra.Vision.Engine.Database.Contexts.ObjectsContext vc2 = new Integra.Vision.Engine.Database.Contexts.ObjectsContext("EngineDatabase");
 
             // create repository
             Database.Repositories.Repository<Database.Models.SetTrace> repoSetTrace = new Database.Repositories.Repository<Database.Models.SetTrace>(vc);
             Database.Repositories.Repository<Database.Models.UserDefinedObject> repoObject = new Database.Repositories.Repository<Database.Models.UserDefinedObject>(vc2);
 
             int level = this.command.Level;
-            string type1 = ObjectTypeEnum.Adapter.ToString();
             string type2 = ObjectTypeEnum.Source.ToString();
             string type3 = ObjectTypeEnum.Stream.ToString();
-            string type4 = ObjectTypeEnum.Trigger.ToString();
             Database.Models.SetTrace setTrace = null;
 
             // get the objects
-            var objects = repoObject.Filter(x => x.Type == type1 || x.Type == type2 || x.Type == type3 || x.Type == type4);
+            var objects = repoObject.Filter(x => x.Type == type2 || x.Type == type3);
 
             foreach (Database.Models.UserDefinedObject userDefinedObject in objects)
             {

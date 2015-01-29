@@ -39,18 +39,18 @@ namespace Integra.Vision.Engine.Commands
 
             try
             {
-                arguments.Add(new CommandArgument("From", this.node.Properties["from"].ToString()));
+                arguments.Add(new CommandArgument("From", this.node.Properties["From"].ToString()));
 
-                if (this.node.Properties["where"] != null)
+                if (this.node.Properties["Where"] != null)
                 {
-                    arguments.Add(new CommandArgument("Where", this.node.Properties["where"].ToString()));
+                    arguments.Add(new CommandArgument("Where", this.node.Properties["Where"].ToString()));
                 }
                 else
                 {
                     arguments.Add(new CommandArgument("Where", string.Empty));
                 }
 
-                arguments.Add(new CommandArgument("Select", this.node.Properties["select"].ToString()));
+                arguments.Add(new CommandArgument("Select", this.node.Properties["Select"].ToString()));
         
                 return arguments.ToArray();
             }

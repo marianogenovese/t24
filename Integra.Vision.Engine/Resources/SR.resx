@@ -180,4 +180,7 @@
   <data name="BootResponseNull" xml:space="preserve">
     <value>Boot fail, because the response is null.</value>
   </data>
+  <data name="SourceHttpType" xml:space="preserve">
+    <value>httpSource</value>
+  </data>
 </root>

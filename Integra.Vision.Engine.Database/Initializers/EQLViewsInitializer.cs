@@ -14,13 +14,13 @@ namespace Integra.Vision.Engine.Database.Initializers
     /// <summary>
     /// EQLDatabaseInitializer class
     /// </summary>
-    internal sealed class EQLViewsInitializer : System.Data.Entity.CreateDatabaseIfNotExists<ViewsContext>
+    internal sealed class EQLViewsInitializer : System.Data.Entity.CreateDatabaseIfNotExists<ObjectsContext>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EQLViewsInitializer"/> class
         /// </summary>
         /// <param name="context">doc goes here</param>
-        protected override void Seed(ViewsContext context)
+        protected override void Seed(ObjectsContext context)
         {
             var sqlFiles = System.IO.Directory.GetFiles(@"..\..\..\Integra.Vision.Engine.Database\bin\Debug\Scripts\Views", "*.sql");
             foreach (string file in sqlFiles)

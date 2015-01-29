@@ -37,9 +37,7 @@ namespace Integra.Vision.Engine.Commands
         {
             try
             {
-                List<CommandDependency> dependencies = new List<CommandDependency>();
-                dependencies.Add(new CommandDependency(this.node.Children[3].Properties["Value"].ToString(), ObjectTypeEnum.Assembly));
-                return dependencies.ToArray();
+                return new CommandDependency[] { };
             }
             catch (Exception e)
             {

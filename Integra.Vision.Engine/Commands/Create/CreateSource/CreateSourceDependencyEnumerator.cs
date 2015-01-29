@@ -8,7 +8,7 @@ namespace Integra.Vision.Engine.Commands
     using System;
     using System.Collections.Generic;
     using Integra.Vision.Language;
-    
+
     /// <summary>
     /// Contains dependency enumerator logic for Create Source command
     /// </summary>
@@ -37,9 +37,7 @@ namespace Integra.Vision.Engine.Commands
         {
             try
             {
-                List<CommandDependency> dependencies = new List<CommandDependency>();
-                dependencies.Add(new CommandDependency(this.node.Children[1].Children[0].Properties["Value"].ToString(), ObjectTypeEnum.Adapter));
-                return dependencies.ToArray();
+                return new CommandDependency[] { };
             }
             catch (Exception e)
             {

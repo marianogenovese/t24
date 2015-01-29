@@ -40,12 +40,9 @@ namespace Integra.Vision.Engine.Core
 
             BootCommandResult bootResult = bootContext.Response.Results[0] as BootCommandResult;
 
-            // se corren los scripts en el siguiente orden: assemblies->adapters->sources->streams->triggers
-            this.RunScripts(bootResult.Scripts.Where(x => x.Item2 == ObjectTypeEnum.Assembly).ToArray());
-            this.RunScripts(bootResult.Scripts.Where(x => x.Item2 == ObjectTypeEnum.Adapter).ToArray());
+            // se corren los scripts en el siguiente orden: sources->streams
             this.RunScripts(bootResult.Scripts.Where(x => x.Item2 == ObjectTypeEnum.Source).ToArray());
             this.RunScripts(bootResult.Scripts.Where(x => x.Item2 == ObjectTypeEnum.Stream).ToArray());
-            this.RunScripts(bootResult.Scripts.Where(x => x.Item2 == ObjectTypeEnum.Trigger).ToArray());
         }
 
         /// <summary>
@@ -67,7 +64,7 @@ namespace Integra.Vision.Engine.Core
         /// </summary>
         protected override void OnStart()
         {
-            using (ViewsContext context = new ViewsContext())
+            using (ObjectsContext context = new ObjectsContext())
             {
                 context.Database.Initialize(true);
                 using (SystemViewsContext systemcontext = new SystemViewsContext())
@@ -80,7 +77,7 @@ namespace Integra.Vision.Engine.Core
         }
 
         /// <summary>
-        /// Runs the scripts to boot the engine objects: assemblies, adapters, sources, streams and triggers
+        /// Runs the scripts to boot the engine objects: sources and streams
         /// </summary>
         /// <param name="objects">Objects to boot</param>
         private void RunScripts(Tuple<string, ObjectTypeEnum>[] objects)
@@ -94,27 +91,19 @@ namespace Integra.Vision.Engine.Core
             // script de comandos
             string script = string.Empty;
 
-            // indica si el objeto es un assembly o no
+            // indica si corresponde a la ejecucion de un comando privado o no
             bool isPrivateCommand = false;
 
             // se crea el script a ejecutar
             foreach (Tuple<string, ObjectTypeEnum> tuple in objects)
             {
-                if (tuple.Item2.Equals(ObjectTypeEnum.Assembly))
-                {
-                    script += "load assembly " + tuple.Item1 + " ";
-                    isPrivateCommand = true;
-                }
-                else
-                {
-                    script += "start " + tuple.Item2.ToString() + " " + tuple.Item1 + " ";
-                }
+                script += "start " + tuple.Item2.ToString() + " " + tuple.Item1 + " ";
             }
 
             // se crea el contexto
             OperationContext context = new OperationContextWrapper(Thread.CurrentPrincipal, new OperationRequest(script, string.Empty));
 
-            // se establece si el comando es publico o privado, load assembly es un comando privado
+            // se establece si el comando es publico o privado
             context.Data.Add("IsPrivateCommand", isPrivateCommand);
 
             // se calendariza la ejecución del comando

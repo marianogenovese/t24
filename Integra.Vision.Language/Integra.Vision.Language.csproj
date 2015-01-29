@@ -58,22 +58,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ASTNodes\Base\AstNodeBase.cs" />
-    <Compile Include="ASTNodes\Commands\Create\CreateAssembly.cs" />
     <Compile Include="ASTNodes\Commands\Create\CreateRole.cs" />
-    <Compile Include="ASTNodes\Commands\Create\CreateTriggerNode.cs" />
     <Compile Include="ASTNodes\Commands\Create\CreateUser.cs" />
     <Compile Include="ASTNodes\Commands\Drop\DropUserDefinedObjectNode.cs" />
     <Compile Include="ASTNodes\Commands\Private\EngineActionsNode.cs" />
-    <Compile Include="ASTNodes\Commands\General\AdapterTypeNode.cs" />
-    <Compile Include="ASTNodes\Commands\Create\CreateAdapterNode.cs" />
     <Compile Include="ASTNodes\Commands\Create\CreateSourceNode.cs" />
     <Compile Include="ASTNodes\Commands\Create\CreateStreamNode.cs" />
-    <Compile Include="ASTNodes\Commands\General\IfNode.cs" />
     <Compile Include="ASTNodes\Commands\General\ParameterNode.cs" />
-    <Compile Include="ASTNodes\Commands\General\SendNode.cs" />
     <Compile Include="ASTNodes\Commands\General\UserDefinedObjectsNode.cs" />
     <Compile Include="ASTNodes\Commands\General\ConstantStringValueNode.cs" />
-    <Compile Include="ASTNodes\Commands\Private\LoadAssemblyNode.cs" />
+    <Compile Include="ASTNodes\Commands\Publish\PublishNode.cs" />
+    <Compile Include="ASTNodes\Commands\Receive\ReceiveNode.cs" />
     <Compile Include="ASTNodes\Commands\StartStop\ObjectToStartOrStopNode.cs" />
     <Compile Include="ASTNodes\Commands\StartStop\StartStopNode.cs" />
     <Compile Include="ASTNodes\Commands\Trace\SetTraceNode.cs" />
@@ -111,8 +106,11 @@
     <Compile Include="ASTNodes\QuerySections\WithNode.cs" />
     <Compile Include="ASTNodes\Root\CommandNode.cs" />
     <Compile Include="ASTNodes\SystemViews\SystemViewNode.cs" />
+    <Compile Include="ASTNodes\UserQuery\UserQueryNode.cs" />
     <Compile Include="Errors\ErrorNode.cs" />
     <Compile Include="Errors\Errors.cs" />
+    <Compile Include="Exceptions\CompilationException.cs" />
+    <Compile Include="Exceptions\ParsingException.cs" />
     <Compile Include="Grammars\Common\InterpretedLanguageGrammarExtensions.cs" />
     <Compile Include="Grammars\ProjectionGrammar.cs" />
     <Compile Include="Grammars\ProjectionLanguageRuntime.cs" />
@@ -134,7 +132,6 @@
     <Compile Include="Grammars\PrivateLanguageRuntime.cs" />
     <Compile Include="Parsers\ProjectionParser.cs" />
     <Compile Include="Parsers\PublicParser.cs" />
-    <Compile Include="ExecutionPlan\Plan.cs" />
     <Compile Include="ExecutionPlan\PlanNode.cs" />
     <Compile Include="ExecutionPlan\PlanNodeTypeEnum.cs" />
     <Compile Include="Parsers\PrivateParser.cs" />

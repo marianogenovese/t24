@@ -378,6 +378,12 @@ namespace Integra.Vision.Language.Resources
 	
 		/// <summary>
 		/// Looks up a localized string similar to: 
+		///	Source
+		/// </summary>
+		public static string SourceRole { get { return global::Integra.Vision.Language.SR.SourceRole; } }
+	
+		/// <summary>
+		/// Looks up a localized string similar to: 
 		///	{0} {1} {2}
 		/// </summary>
 		public static string StartStopNodeText(object arg0, object arg1, object arg2)

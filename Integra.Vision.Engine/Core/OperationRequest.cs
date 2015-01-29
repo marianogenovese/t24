@@ -7,6 +7,7 @@ namespace Integra.Vision.Engine.Core
 {
     using System.Diagnostics.Contracts;
     using System.Runtime.Serialization;
+    using Integra.Vision.Event;
     
     /// <summary>
     /// Contains information related to the request used for the proper execution of the operation.
@@ -24,6 +25,11 @@ namespace Integra.Vision.Engine.Core
         private readonly string clientAddress;
 
         /// <summary>
+        /// The event received from the remote client
+        /// </summary>
+        private readonly EventObject @event;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="OperationRequest"/> class.
         /// </summary>
         /// <param name="script">The text of the script.</param>
@@ -32,6 +38,19 @@ namespace Integra.Vision.Engine.Core
         {
             this.script = script;
             this.clientAddress = clientAddress;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OperationRequest"/> class.
+        /// </summary>
+        /// <param name="script">The text of the script.</param>
+        /// <param name="eventObject">The event to be processed.</param>
+        /// <param name="clientAddress">The address of the remote client.</param>
+        public OperationRequest(string script, EventObject eventObject, string clientAddress)
+        {
+            this.script = script;
+            this.clientAddress = clientAddress;
+            this.@event = eventObject;
         }
 
         /// <summary>
@@ -53,6 +72,17 @@ namespace Integra.Vision.Engine.Core
             get
             {
                 return this.clientAddress;
+            }
+        }
+
+        /// <summary>
+        /// Gets the receive from the remote client
+        /// </summary>
+        public EventObject Event
+        {
+            get
+            {
+                return this.@event;
             }
         }
     }

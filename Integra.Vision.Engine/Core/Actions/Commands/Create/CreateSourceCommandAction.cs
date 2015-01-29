@@ -19,7 +19,7 @@ namespace Integra.Vision.Engine.Core
         {
             try
             {
-                using (ViewsContext context = new ViewsContext("EngineDatabase"))
+                using (ObjectsContext context = new ObjectsContext("EngineDatabase"))
                 {
                     this.SaveArguments(context, command as CreateSourceCommand);
                     return new OkCommandResult();
@@ -36,20 +36,11 @@ namespace Integra.Vision.Engine.Core
         /// </summary>
         /// <param name="vc">Current context</param>
         /// <param name="command">Create source command</param>
-        private void SaveArguments(ViewsContext vc, CreateSourceCommand command)
+        private void SaveArguments(ObjectsContext vc, CreateSourceCommand command)
         {
-            // get the adapter
-            Database.Repositories.Repository<Database.Models.Adapter> repoAdapter = new Database.Repositories.Repository<Database.Models.Adapter>(vc);
-            Database.Models.Adapter adapter = repoAdapter.Find(x => x.Name == command.From);
-
-            if (adapter == null)
-            {
-                throw new Integra.Vision.Engine.Exceptions.NonExistentObjectException("The adapter '" + command.From + "' does not exist");
-            }
-
             // create the source
             Database.Repositories.Repository<Database.Models.Source> repoSource = new Database.Repositories.Repository<Database.Models.Source>(vc);
-            Database.Models.Source source = new Database.Models.Source() { AdapterId = adapter.Id, CreationDate = DateTime.Now, IsSystemObject = false, Name = command.Name, State = (int)UserDefinedObjectStateEnum.Stopped, Type = ObjectTypeEnum.Source.ToString() };
+            Database.Models.Source source = new Database.Models.Source() { CreationDate = DateTime.Now, IsSystemObject = false, Name = command.Name, State = (int)UserDefinedObjectStateEnum.Stopped, Type = ObjectTypeEnum.Source.ToString() };
             repoSource.Create(source);
 
             // create the conditions

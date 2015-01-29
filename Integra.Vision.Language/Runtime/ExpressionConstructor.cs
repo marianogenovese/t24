@@ -10,7 +10,7 @@ namespace Integra.Vision.Language.Runtime
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
-
+    using Integra.Vision.Language.Exceptions;
     using Integra.Vision.Language.General;
 
     /// <summary>
@@ -65,6 +65,8 @@ namespace Integra.Vision.Language.Runtime
         /// <returns>Dictionary of functions</returns>
         public IDictionary<string, object> GetSelectValues(PlanNode plan)
         {
+            this.parameterList = new List<ParameterExpression>();
+
             Expression result = this.GenerateSelectExpression(plan);
             return result.CompileExpression<Func<IDictionary<string, object>>>(this.parameterList)();
         }
@@ -77,6 +79,8 @@ namespace Integra.Vision.Language.Runtime
         /// <returns>compiled function</returns>
         public Func<EventObject, IDictionary<string, object>> CompileSelect(PlanNode plan)
         {
+            this.parameterList = new List<ParameterExpression>();
+
             Expression result = this.GenerateSelectExpression(plan);
 
             if (this.parameterList.Count < 1)
@@ -95,6 +99,8 @@ namespace Integra.Vision.Language.Runtime
         /// <returns>compiled function</returns>
         public Func<EventObject, EventObject, IDictionary<string, object>> CompileJoinSelect(PlanNode plan)
         {
+            this.parameterList = new List<ParameterExpression>();
+
             Expression result = this.GenerateSelectExpression(plan);
 
             if (this.parameterList.Count < 1)
@@ -118,6 +124,8 @@ namespace Integra.Vision.Language.Runtime
         /// <returns>Result of the where condition</returns>
         public bool GetWhereValues(PlanNode plan)
         {
+            this.parameterList = new List<ParameterExpression>();
+
             Expression resultExp = this.GenerateExpressionTree(plan);
             return resultExp.CompileExpression<Func<bool>>(this.parameterList)();
         }
@@ -130,6 +138,8 @@ namespace Integra.Vision.Language.Runtime
         /// <returns>Compiled function</returns>
         public Func<EventObject, bool> CompileWhere(PlanNode plan)
         {
+            this.parameterList = new List<ParameterExpression>();
+
             Expression resultExp = this.GenerateExpressionTree(plan);
 
             if (this.parameterList.Count < 1)
@@ -148,6 +158,8 @@ namespace Integra.Vision.Language.Runtime
         /// <returns>Compiled function</returns>
         public Func<EventObject, EventObject, bool> CompileJoinWhere(PlanNode plan)
         {
+            this.parameterList = new List<ParameterExpression>();
+
             Expression resultExp = this.GenerateExpressionTree(plan);
 
             if (this.parameterList.Count < 1)
@@ -507,7 +519,7 @@ namespace Integra.Vision.Language.Runtime
             }
             catch (Exception e)
             {
-                return Expression.Constant(null);
+                throw new CompilationException("Error al compilar la propiedad", e);
             }
         }
 
@@ -645,7 +657,7 @@ namespace Integra.Vision.Language.Runtime
                 }
                 catch (Exception e)
                 {
-                    return Expression.Constant(null);
+                    throw new CompilationException("Error al compilar la expresiones aritmetica de resta", e);
                 }
             }
         }
@@ -702,7 +714,7 @@ namespace Integra.Vision.Language.Runtime
             }
             catch (Exception e)
             {
-                return Expression.Constant(null);
+                throw new CompilationException("Error al compilar la expresion unaria de negacion", e);
             }
         }
 
@@ -735,7 +747,7 @@ namespace Integra.Vision.Language.Runtime
                                     Expression.Throw(
                                         Expression.New(
                                             typeof(Exception).GetConstructor(new Type[] { typeof(string) }),
-                                        Expression.Constant("Error con la expresion booleana 'or' en la linea: " + actualNode.Line + " columna: " + actualNode.Column + " con " + actualNode.NodeText)))
+                                        Expression.Constant("Error con la expresion booleana 'and' en la linea: " + actualNode.Line + " columna: " + actualNode.Column + " con " + actualNode.NodeText)))
                                 )
                             )
                         ),
@@ -746,7 +758,7 @@ namespace Integra.Vision.Language.Runtime
             }
             catch (Exception e)
             {
-                return Expression.Constant(null);
+                throw new CompilationException("Error al compilar la expresion logica 'and'", e);
             }
         }
 
@@ -790,7 +802,7 @@ namespace Integra.Vision.Language.Runtime
             }
             catch (Exception e)
             {
-                return Expression.Constant(null);
+                throw new CompilationException("Error al compilar la expresion logica 'or'", e);
             }
         }
 
@@ -834,7 +846,7 @@ namespace Integra.Vision.Language.Runtime
             }
             catch (Exception e)
             {
-                return Expression.Constant(null);
+                throw new CompilationException("Error al compilar, no fue posible obtener el valor del mensaje", e);
             }
         }
 
@@ -862,7 +874,7 @@ namespace Integra.Vision.Language.Runtime
             }
             catch (Exception e)
             {
-                return Expression.Constant(new Integra.Messaging.MessagePart(-1, "There is no object"));
+                throw new CompilationException("Error al compilar, no fue posible obtener el mensaje del evento", e);
             }
         }
 
@@ -905,7 +917,7 @@ namespace Integra.Vision.Language.Runtime
             }
             catch (Exception e)
             {
-                return Expression.Constant(new Integra.Messaging.MessageField(-1, "There is no object") { Value = null });
+                throw new CompilationException("Error al compilar, no fue posible obtener el valor del subcampo", e);
             }
 
             return methodCall;
@@ -949,7 +961,7 @@ namespace Integra.Vision.Language.Runtime
             }
             catch (Exception e)
             {
-                return Expression.Constant(new Integra.Messaging.MessageField(-1, "There is no object") { Value = null });
+                throw new CompilationException("Error al compilar, no fue posible obtener el campo del mensaje", e);
             }
 
             return methodCall;
@@ -1004,7 +1016,7 @@ namespace Integra.Vision.Language.Runtime
             }
             catch (Exception e)
             {
-                return Expression.Constant(new Integra.Messaging.MessagePart(-1, "There is no object"));
+                throw new CompilationException("Error al compilar, no fue posible obtener la seccion del mensaje", e);
             }
         }
 
@@ -1136,7 +1148,7 @@ namespace Integra.Vision.Language.Runtime
             }
             catch (Exception e)
             {
-                return Expression.Constant(null);
+                throw new CompilationException("Error al compilar, no fue posible compilar la expresion 'like'", e);
             }
         }
 
@@ -1179,7 +1191,7 @@ namespace Integra.Vision.Language.Runtime
             }
             catch (Exception e)
             {
-                return Expression.Constant(null);
+                throw new CompilationException("Error al compilar, no fue compilar la expresion 'not'", e);
             }
         }
 
@@ -1223,7 +1235,7 @@ namespace Integra.Vision.Language.Runtime
             }
             catch (Exception e)
             {
-                return Expression.Constant(null);
+                throw new CompilationException("Error al compilar, no fue posible compilar la expresion '>='", e);
             }
         }
 
@@ -1267,7 +1279,7 @@ namespace Integra.Vision.Language.Runtime
             }
             catch (Exception e)
             {
-                return Expression.Constant(null);
+                throw new CompilationException("Error al compilar, no fue posible compilar la expresion '>'", e);
             }
         }
 
@@ -1311,7 +1323,7 @@ namespace Integra.Vision.Language.Runtime
             }
             catch (Exception e)
             {
-                return Expression.Constant(null);
+                throw new CompilationException("Error al compilar, no fue posible compilar la expresion '<='", e);
             }
         }
 
@@ -1355,7 +1367,7 @@ namespace Integra.Vision.Language.Runtime
             }
             catch (Exception e)
             {
-                return Expression.Constant(null);
+                throw new CompilationException("Error al compilar, no fue posible compilar la expresion '<'", e);
             }
         }
 
@@ -1399,7 +1411,7 @@ namespace Integra.Vision.Language.Runtime
             }
             catch (Exception e)
             {
-                return Expression.Constant(null);
+                throw new CompilationException("Error al compilar, no fue posible compilar la expresion '!='", e);
             }
         }
 
@@ -1443,7 +1455,7 @@ namespace Integra.Vision.Language.Runtime
             }
             catch (Exception e)
             {
-                return Expression.Constant(null);
+                throw new CompilationException("Error al compilar, no fue posible compilar la expresion '=='", e);
             }
         }
 

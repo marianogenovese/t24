@@ -19,7 +19,7 @@ namespace Integra.Vision.Engine.Core
         {
             try
             {
-                using (ViewsContext context = new ViewsContext("EngineDatabase"))
+                using (ObjectsContext context = new ObjectsContext("EngineDatabase"))
                 {
                     this.DeleteObject(context, command as DropUserCommand);
                     return new OkCommandResult();
@@ -36,7 +36,7 @@ namespace Integra.Vision.Engine.Core
         /// </summary>
         /// <param name="vc">Current context</param>
         /// <param name="command">Drop user command</param>
-        private void DeleteObject(ViewsContext vc, DropUserCommand command)
+        private void DeleteObject(ObjectsContext vc, DropUserCommand command)
         {
             // create repository
             Database.Repositories.Repository<Database.Models.User> repo = new Database.Repositories.Repository<Database.Models.User>(vc);

@@ -9,7 +9,6 @@ namespace Integra.Vision.Language.ASTNodes.Operations
     using System.Collections.Generic;
     using Integra.Vision.Language.ASTNodes.Base;
     using Integra.Vision.Language.Errors;
-    
     using Integra.Vision.Language.General.Validations;
     using Irony.Ast;
     using Irony.Interpreter;

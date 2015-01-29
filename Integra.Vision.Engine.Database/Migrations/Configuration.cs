@@ -5,14 +5,14 @@ namespace Integra.Vision.Engine.Database.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Integra.Vision.Engine.Database.Contexts.ViewsContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<Integra.Vision.Engine.Database.Contexts.ObjectsContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
         }
 
-        protected override void Seed(Integra.Vision.Engine.Database.Contexts.ViewsContext context)
+        protected override void Seed(Integra.Vision.Engine.Database.Contexts.ObjectsContext context)
         {
             //  This method will be called after migrating to the latest version.
 

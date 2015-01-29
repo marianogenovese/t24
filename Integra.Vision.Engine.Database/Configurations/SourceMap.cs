@@ -19,10 +19,6 @@ namespace Integra.Vision.Engine.Database.Configurations
         public SourceMap()
         {
             this.ToTable("Sources");
-            this.Property(x => x.AdapterId).IsRequired();
-            this.HasRequired(x => x.Adapter)
-                .WithMany(x => x.Sources)
-                .HasForeignKey(x => x.AdapterId);
         }
     }
 }
