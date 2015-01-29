@@ -10,6 +10,7 @@ namespace Integra.Vision.Language.Runtime
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
+    using Integra.Vision.Event;
     using Integra.Vision.Language.Exceptions;
     using Integra.Vision.Language.General;
 
@@ -826,7 +827,7 @@ namespace Integra.Vision.Language.Runtime
                         Expression.TryCatch(
                             Expression.Block(
                                 Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Se obtendra el valor del objeto " + actualNode.NodeText)),
-                                Expression.Assign(param, Expression.Call(objeto, typeof(Integra.Messaging.MessageField).GetMethod("get_Value"))),
+                                Expression.Assign(param, Expression.Call(objeto, typeof(MessageSubsection).GetMethod("get_Value"))),
                                 Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("Write", new Type[] { typeof(object) }), Expression.Constant("**El valor del objeto " + actualNode.NodeText + " es: ")),
                                 Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), param),
                                 Expression.Empty()
@@ -858,7 +859,7 @@ namespace Integra.Vision.Language.Runtime
         /// <returns>expression tree of actual plan</returns>
         private Expression GenerateObjectMessage(PlanNode actualNode, ParameterExpression eventNode)
         {
-            ParameterExpression param = Expression.Variable(typeof(Messaging.Message), "message");
+            ParameterExpression param = Expression.Variable(typeof(EventMessage), "message");
             try
             {
                 Expression mensaje =
@@ -888,7 +889,7 @@ namespace Integra.Vision.Language.Runtime
         private Expression GenerateObjectFieldFromField(PlanNode actualNode, Expression field, Expression subFieldId)
         {
             Expression methodCall = Expression.Constant(null);
-            ParameterExpression v = Expression.Variable(typeof(Integra.Messaging.MessageField), "bloque");
+            ParameterExpression v = Expression.Variable(typeof(MessageSubsection), "bloque");
             ConstantExpression auxSubField = (ConstantExpression)subFieldId;
             Type tipo = auxSubField.Type;
 
@@ -899,12 +900,12 @@ namespace Integra.Vision.Language.Runtime
                     Expression.IfThenElse(
                         Expression.Call(
                         field,
-                        typeof(Integra.Messaging.MessageField).GetMethod("Contains", new Type[] { tipo }),
+                        typeof(MessageSubsection).GetMethod("Contains", new Type[] { tipo }),
                         auxSubField
                         ),
                         Expression.Block(
                             Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Obteniendo el subcampo: " + auxSubField.Value)),
-                            Expression.Assign(v, Expression.Call(field, typeof(Integra.Messaging.MessageField).GetMethod("get_Item", new Type[] { tipo }), auxSubField)),
+                            Expression.Assign(v, Expression.Call(field, typeof(MessageSubsection).GetMethod("get_Item", new Type[] { tipo }), auxSubField)),
                             Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("**Se obtuvo el subcampo: " + auxSubField.Value))
                         ),
                         Expression.Throw(
@@ -933,7 +934,7 @@ namespace Integra.Vision.Language.Runtime
         private Expression GenerateObjectFieldFromPart(PlanNode actualNode, Expression part, Expression fieldId)
         {
             Expression methodCall = Expression.Constant(null);
-            ParameterExpression v = Expression.Variable(typeof(Integra.Messaging.MessageField), "campoDeParte");
+            ParameterExpression v = Expression.Variable(typeof(MessageSubsection), "campoDeParte");
             ConstantExpression auxField = (ConstantExpression)fieldId;
             Type tipo = auxField.Type;
 
@@ -944,12 +945,12 @@ namespace Integra.Vision.Language.Runtime
                     Expression.IfThenElse(
                         Expression.Call(
                             part,
-                            typeof(Integra.Messaging.MessagePart).GetMethod("Contains", new Type[] { tipo }),
+                            typeof(MessageSection).GetMethod("Contains", new Type[] { tipo }),
                             auxField
                         ),
                         Expression.Block(
                             Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Obteniendo el campo: " + auxField.Value)),
-                            Expression.Assign(v, Expression.Call(part, typeof(Integra.Messaging.MessagePart).GetMethod("get_Item", new Type[] { tipo }), auxField)),
+                            Expression.Assign(v, Expression.Call(part, typeof(MessageSection).GetMethod("get_Item", new Type[] { tipo }), auxField)),
                             Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("**Se obtuvo el campo: " + auxField.Value))
                         ),
                         Expression.Throw(
@@ -977,7 +978,7 @@ namespace Integra.Vision.Language.Runtime
         private Expression GenerateObjectPart(PlanNode actualNode, Expression mensaje, Expression partId)
         {
             Expression parte = Expression.Constant(null);
-            ParameterExpression v = Expression.Variable(typeof(Integra.Messaging.MessagePart), "bloque");
+            ParameterExpression v = Expression.Variable(typeof(MessageSection), "bloque");
             ConstantExpression auxPart = (ConstantExpression)partId;
             Type tipo = auxPart.Type;
 
@@ -989,12 +990,12 @@ namespace Integra.Vision.Language.Runtime
                         Expression.IfThenElse(
                             Expression.Call(
                                 mensaje,
-                                typeof(Integra.Messaging.Message).GetMethod("Contains", new Type[] { tipo }),
+                                typeof(EventMessage).GetMethod("Contains", new Type[] { tipo }),
                                 auxPart
                             ),
                             Expression.Block(
                                 Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Obteniendo la parte: " + auxPart.Value)),
-                                Expression.Assign(v, Expression.Call(mensaje, typeof(Integra.Messaging.Message).GetMethod("get_Item", new Type[] { tipo }), auxPart)),
+                                Expression.Assign(v, Expression.Call(mensaje, typeof(EventMessage).GetMethod("get_Item", new Type[] { tipo }), auxPart)),
                                 Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("**Se obtuvo la parte: " + auxPart.Value))
                             ),
                                     Expression.Throw(

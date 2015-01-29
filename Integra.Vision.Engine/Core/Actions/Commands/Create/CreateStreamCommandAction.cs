@@ -30,9 +30,9 @@ namespace Integra.Vision.Engine.Core
                     {
                         this.SaveJoinStreamArguments(context, createStreamCommand);
                     }
-
-                    return new OkCommandResult();
                 }
+
+                return new OkCommandResult();
             }
             catch (Exception e)
             {

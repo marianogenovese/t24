@@ -52,7 +52,7 @@ namespace Integra.Vision.Engine.Commands
         /// <summary>
         /// Gets the source name from which events are received
         /// </summary>
-        public string SourceName
+        public string StreamName
         {
             get
             {

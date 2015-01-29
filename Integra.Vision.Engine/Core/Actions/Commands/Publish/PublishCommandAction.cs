@@ -26,8 +26,9 @@ namespace Integra.Vision.Engine.Core
                 using (ObjectsContext context = new ObjectsContext("EngineDatabase"))
                 {
                     this.SendEventToSource(context, command as PublishCommand);
-                    return new OkCommandResult();
                 }
+
+                return new OkCommandResult();
             }
             catch (Exception e)
             {

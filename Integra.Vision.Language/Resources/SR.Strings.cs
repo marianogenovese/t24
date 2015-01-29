@@ -355,18 +355,15 @@ namespace Integra.Vision.Language.Resources
 	
 		/// <summary>
 		/// Looks up a localized string similar to: 
-		///	{0} {1} {2} {3} {4} {5}
+		///	{0} {1} {2}
 		/// </summary>
-		public static string SourceNodeText(object arg0, object arg1, object arg2, object arg3, object arg4, object arg5)
+		public static string SourceNodeText(object arg0, object arg1, object arg2)
 		{
 			return string.Format(global::Integra.Vision.Language.SR.SourceNodeText, new object[]
 			{
 				arg0,
 				arg1,
 				arg2,
-				arg3,
-				arg4,
-				arg5,
 			});
 		}
 	

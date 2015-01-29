@@ -22,8 +22,9 @@ namespace Integra.Vision.Engine.Core
                 using (ObjectsContext context = new ObjectsContext("EngineDatabase"))
                 {
                     this.DeleteObject(context, command as DropSourceCommand);
-                    return new OkCommandResult();
                 }
+
+                return new OkCommandResult();
             }
             catch (Exception e)
             {
@@ -40,14 +41,10 @@ namespace Integra.Vision.Engine.Core
         {
             // create repository
             Database.Repositories.Repository<Database.Models.Source> repoSource = new Database.Repositories.Repository<Database.Models.Source>(vc);
-            Database.Repositories.Repository<Database.Models.SourceCondition> repoSourceCondition = new Database.Repositories.Repository<Database.Models.SourceCondition>(vc);
             Database.Repositories.Repository<Database.Models.Dependency> repoDependency = new Database.Repositories.Repository<Database.Models.Dependency>(vc);
 
             // get the stream
             Database.Models.Source source = repoSource.Find(x => x.Name == command.Name);
-
-            // detele the conditions
-            repoSourceCondition.Delete(x => x.SourceId == source.Id);
 
             // delete the dependencies
             repoDependency.Delete(x => x.PrincipalObjectId == source.Id);

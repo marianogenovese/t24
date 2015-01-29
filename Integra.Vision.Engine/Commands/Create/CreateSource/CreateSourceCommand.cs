@@ -48,28 +48,6 @@ namespace Integra.Vision.Engine.Commands
         }
 
         /// <summary>
-        /// Gets the adapter name
-        /// </summary>
-        public string From
-        {
-            get
-            {
-                return this.Arguments["From"].Value.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Gets the source conditions
-        /// </summary>
-        public string Where
-        {
-            get
-            {
-                return this.Arguments["Where"].Value.ToString();
-            }
-        }
-
-        /// <summary>
         /// Gets command dependency enumerator
         /// </summary>
         protected override IDependencyEnumerator DependencyEnumerator

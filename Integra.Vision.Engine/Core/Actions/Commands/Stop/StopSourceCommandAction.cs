@@ -22,8 +22,9 @@ namespace Integra.Vision.Engine.Core
                 using (ObjectsContext context = new ObjectsContext("EngineDatabase"))
                 {
                     this.StopObject(context, command as StopSourceCommand);
-                    return new OkCommandResult();
                 }
+
+                return new OkCommandResult();
             }
             catch (Exception e)
             {

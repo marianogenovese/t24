@@ -60,11 +60,6 @@ namespace Integra.Vision.Engine.Database.Contexts
         public DbSet<StreamCondition> StreamCondition { get; set; }
 
         /// <summary>
-        /// Gets or sets the Source Condition
-        /// </summary>
-        public DbSet<SourceCondition> SourceCondition { get; set; }
-
-        /// <summary>
         /// Gets or sets the projection list
         /// </summary>
         public DbSet<PList> PList { get; set; }
@@ -111,7 +106,6 @@ namespace Integra.Vision.Engine.Database.Contexts
             modelBuilder.Configurations.Add(new SourceMap());
             modelBuilder.Configurations.Add(new StreamMap());
             modelBuilder.Configurations.Add(new StreamConditionMap());
-            modelBuilder.Configurations.Add(new SourceConditionMap());
             modelBuilder.Configurations.Add(new PListMap());
             modelBuilder.Configurations.Add(new UserMap());
             modelBuilder.Configurations.Add(new RoleMap());

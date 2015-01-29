@@ -256,7 +256,7 @@
     <value>Send</value>
   </data>
   <data name="SourceNodeText" xml:space="preserve">
-    <value>{0} {1} {2} {3} {4} {5}</value>
+    <value>{0} {1} {2}</value>
   </data>
   <data name="SourceObject" xml:space="preserve">
     <value>source</value>

@@ -92,7 +92,7 @@ namespace Integra.Vision.Engine.Commands
             {
                 if (this.argumentEnumerator == null)
                 {
-                    this.argumentEnumerator = new SystemQueriesArgumentEnumerator(this.node);
+                    this.argumentEnumerator = new UserQueriesArgumentEnumerator(this.node);
                 }
 
                 return this.argumentEnumerator;
@@ -108,7 +108,7 @@ namespace Integra.Vision.Engine.Commands
             {
                 if (this.dependencyEnumerator == null)
                 {
-                    this.dependencyEnumerator = new SystemQueriesDependencyEnumerator(this.node);
+                    this.dependencyEnumerator = new UserQueriesDependencyEnumerator(this.node);
                 }
 
                 return this.dependencyEnumerator;

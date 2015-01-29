@@ -50,7 +50,7 @@ namespace Integra.Vision.Language.Grammars
             KeyTerm terminalEngine = ToTerm("engine", "engine");
 
             /* CONSTANTES E IDENTIFICADORES */
-            Terminal terminalId = TerminalFactory.CreateCSharpIdentifier("identificador");
+            RegexBasedTerminal terminalId = new RegexBasedTerminal("[a-zA-Z]+([a-zA-Z]|[0-9]|[_])*");
             terminalId.AstConfig.NodeType = null;
             terminalId.AstConfig.DefaultNodeCreator = () => new IdentifierNode();
 

@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="CreateSourceNode.cs" company="ARITEC">
+// <copyright file="AddSourceNode.cs" company="ARITEC">
 //     Integra Vision. All rights reserved.
 // </copyright>
 // <author>Oscar Canek</author>
@@ -18,15 +18,15 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
     /// CreateSourceNode
     /// Doc go here
     /// </summary>
-    internal sealed class CreateSourceNode : AstNodeBase
+    internal sealed class AddSourceNode : AstNodeBase
     {
         /// <summary>
-        /// reserved word
+        /// reserved word 'add'
         /// </summary>
-        private string createOrAlterWord;
+        private string terminalAdd;
 
         /// <summary>
-        /// reserved word
+        /// reserved word 'source'
         /// </summary>
         private string sourceWord;
 
@@ -34,22 +34,7 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
         /// name of the source
         /// </summary>
         private AstNodeBase idSource;
-
-        /// <summary>
-        /// reserved word
-        /// </summary>
-        private string asWord;
-
-        /// <summary>
-        /// from node
-        /// </summary>
-        private AstNodeBase from;
-
-        /// <summary>
-        /// where node
-        /// </summary>
-        private AstNodeBase where;
-
+                
         /// <summary>
         /// result plan
         /// </summary>
@@ -63,25 +48,14 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
         public override void Init(AstContext context, ParseTreeNode treeNode)
         {
             base.Init(context, treeNode);
-            this.createOrAlterWord = (string)ChildrenNodes[0].Token.Value;
+            this.terminalAdd = (string)ChildrenNodes[0].Token.Value;
             this.sourceWord = (string)ChildrenNodes[1].Token.Value;
             this.idSource = AddChild(NodeUseType.Parameter, SR.UserDefinedObjectRole, ChildrenNodes[2]) as AstNodeBase;
-            this.asWord = (string)ChildrenNodes[3].Token.Value;
-            this.from = AddChild(NodeUseType.Parameter, SR.FromRole, ChildrenNodes[4]) as AstNodeBase;
-            this.where = AddChild(NodeUseType.Parameter, SR.WhereRole, ChildrenNodes[5]) as AstNodeBase;
 
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[1].Token.Location.Line;
-
-            if (this.createOrAlterWord.Equals("create", System.StringComparison.InvariantCultureIgnoreCase))
-            {
-                this.result.NodeType = PlanNodeTypeEnum.CreateSource;
-            }
-            else if (this.createOrAlterWord.Equals("alter", System.StringComparison.InvariantCultureIgnoreCase))
-            {
-                this.result.NodeType = PlanNodeTypeEnum.AlterSource;
-            }
+            this.result.NodeType = PlanNodeTypeEnum.CreateSource;
         }
 
         /// <summary>
@@ -94,16 +68,12 @@ namespace Integra.Vision.Language.ASTNodes.Commands.Create
         {
             this.BeginEvaluate(thread);
             PlanNode idSourceAux = (PlanNode)this.idSource.Evaluate(thread);
-            PlanNode fromAux = (PlanNode)this.from.Evaluate(thread);
-            PlanNode whereAux = (PlanNode)this.where.Evaluate(thread);
             this.EndEvaluate(thread);
 
-            this.result.NodeText = SR.SourceNodeText(this.createOrAlterWord, this.sourceWord, idSourceAux.NodeText, this.asWord, fromAux.NodeText, whereAux.NodeText);
+            this.result.NodeText = SR.SourceNodeText(this.terminalAdd, this.sourceWord, idSourceAux.NodeText);
 
             this.result.Children = new System.Collections.Generic.List<PlanNode>();
             this.result.Children.Add(idSourceAux);
-            this.result.Children.Add(fromAux);
-            this.result.Children.Add(whereAux);
 
             return this.result;
         }

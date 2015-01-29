@@ -24,8 +24,9 @@ namespace Integra.Vision.Engine.Core
                 using (ObjectsContext context = new ObjectsContext("EngineDatabase"))
                 {
                     this.SaveArguments(context, command as CreateUserCommand);
-                    return new OkCommandResult();
                 }
+
+                return new OkCommandResult();
             }
             catch (Exception e)
             {

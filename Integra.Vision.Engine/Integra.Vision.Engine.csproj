@@ -101,15 +101,6 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\Alter\AlterSource\AlterSourceArgumentEnumerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Commands\Alter\AlterSource\AlterSourceCommand.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Commands\Alter\AlterSource\AlterSourceDependencyEnumerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Commands\Alter\AlterStream\AlterStreamArgumentEnumerator.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -161,7 +152,6 @@
     <Compile Include="Commands\UserQueries\UserQueriesArgumentEnumerator.cs" />
     <Compile Include="Commands\UserQueries\UserQueriesCommand.cs" />
     <Compile Include="Commands\UserQueries\UserQueriesDependencyEnumerator.cs" />
-    <Compile Include="Core\Actions\Commands\Alter\AlterSourceCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Alter\AlterStreamCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Alter\AlterUserCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Drop\DropRoleCommandAction.cs" />
@@ -205,7 +195,6 @@
     <Compile Include="Core\Actions\Commands\Trace\SetTraceSourceCommandAction.cs" />
     <Compile Include="Core\Actions\Commands\Trace\SetTraceStreamCommandAction.cs" />
     <Compile Include="Core\Actions\DependencyActions.cs" />
-    <Compile Include="Core\Actions\Factories\Alter\AlterSourceCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Alter\AlterStreamCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Alter\AlterUserCommandActionFactory.cs" />
     <Compile Include="Core\Actions\Factories\Create\CreateRoleCommandActionFactory.cs" />

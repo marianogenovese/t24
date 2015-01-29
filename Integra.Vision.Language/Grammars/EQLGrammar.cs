@@ -103,6 +103,7 @@ namespace Integra.Vision.Language.Grammars
             KeyTerm terminalSet = ToTerm("set", "set");
             KeyTerm terminalLevel = ToTerm("level", "level");
             KeyTerm terminalEngine = ToTerm("engine", "engine");
+            KeyTerm terminalAdd = ToTerm("add", "add");
 
             /* FUNCIONES */
             KeyTerm terminalHour = ToTerm("hour", "hour");
@@ -241,9 +242,9 @@ namespace Integra.Vision.Language.Grammars
             NonTerminal nt_CREATE_STREAM = new NonTerminal("CREATE_STREAM", typeof(CreateStreamNode));
             nt_CREATE_STREAM.AstConfig.NodeType = null;
             nt_CREATE_STREAM.AstConfig.DefaultNodeCreator = () => new CreateStreamNode();
-            NonTerminal nt_CREATE_SOURCE = new NonTerminal("CREATE_SOURCE", typeof(CreateSourceNode));
+            NonTerminal nt_CREATE_SOURCE = new NonTerminal("CREATE_SOURCE", typeof(AddSourceNode));
             nt_CREATE_SOURCE.AstConfig.NodeType = null;
-            nt_CREATE_SOURCE.AstConfig.DefaultNodeCreator = () => new CreateSourceNode();
+            nt_CREATE_SOURCE.AstConfig.DefaultNodeCreator = () => new AddSourceNode();
             NonTerminal nt_CREATE_ROLE = new NonTerminal("CREATE_ROLE", typeof(CreateRole));
             nt_CREATE_ROLE.AstConfig.NodeType = null;
             nt_CREATE_ROLE.AstConfig.DefaultNodeCreator = () => new CreateRole();
@@ -366,7 +367,7 @@ namespace Integra.Vision.Language.Grammars
             nt_PARAMETER.Rule = terminalId + terminalArroba + terminalId + terminalIgual + nt_PARAMETER_VALUES;
             /* **************************** */
             /* CREAR FUENTE */
-            nt_CREATE_SOURCE.Rule = terminalCreateAlter + terminalSource + terminalId + terminalAs + nt_FROM + nt_WHERE;
+            nt_CREATE_SOURCE.Rule = terminalAdd + terminalSource + terminalId;
             /* **************************** */
             /* CREAR FLUJO */
             nt_CREATE_STREAM.Rule = terminalCreateAlter + terminalStream + terminalId + terminalAs + nt_FROM + nt_WHERE + nt_SELECT

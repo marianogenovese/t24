@@ -7,6 +7,7 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Event
 {
     using System;
     using System.Collections.Generic;
+    using Integra.Vision.Event;
     using Integra.Vision.Language.ASTNodes.Base;
     using Integra.Vision.Language.General;
     using Integra.Vision.Language.Resources;
@@ -79,15 +80,15 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Event
             }
             else if (this.property.ToLower() == SR.AdapterProperty)
             {
-                this.result.Properties.Add(SR.DataTypeProperty, typeof(Adapter).ToString());
+                this.result.Properties.Add(SR.DataTypeProperty, typeof(EventAdapter).ToString());
             }
             else if (this.property.ToLower() == SR.AgentProperty)
             {
-                this.result.Properties.Add(SR.DataTypeProperty, typeof(Agent).ToString());
+                this.result.Properties.Add(SR.DataTypeProperty, typeof(EventAgent).ToString());
             }
             else if (this.property.ToLower() == SR.MessageProperty)
             {
-                this.result.Properties.Add(SR.DataTypeProperty, typeof(Integra.Messaging.Message).ToString());
+                this.result.Properties.Add(SR.DataTypeProperty, typeof(EventMessage).ToString());
                 this.result.NodeType = PlanNodeTypeEnum.ObjectMessage;
             }
             else

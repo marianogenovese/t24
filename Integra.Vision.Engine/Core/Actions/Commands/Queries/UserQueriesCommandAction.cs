@@ -7,11 +7,12 @@ namespace Integra.Vision.Engine.Core
 {
     using System;
     using System.Collections;
+    using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Runtime.Serialization.Formatters.Binary;
     using Integra.Vision.Engine.Commands;
-    using Integra.Vision.Engine.Database.Contexts;
-    using Integra.Vision.Engine.Database.Models.SystemViews;
-    using Integra.Vision.Engine.Database.Repositories;
+    using Integra.Vision.Event;
     using Integra.Vision.Language.Runtime;
 
     /// <summary>
@@ -39,11 +40,43 @@ namespace Integra.Vision.Engine.Core
         /// <returns>Array of objects.</returns>
         private IEnumerable GetObjects(UserQueriesCommand command)
         {
-            ExpressionConstructor constructor = new ExpressionConstructor();
-            var select = constructor.CompileSelect(command.Select);
-            var where = constructor.CompileWhere(command.Where);
+            // obtenemos la fuente de eventos
+            string from = command.From;
 
-            return null;
+            if (from.Equals(SR.SourceHttpType, StringComparison.InvariantCultureIgnoreCase))
+            {
+                List<EventObject> listOfEvents = new List<EventObject>();
+                using (System.Messaging.MessageQueue colaHttp = new System.Messaging.MessageQueue(@".\Private$\HttpSource"))
+                {
+                    foreach (System.Messaging.Message message in colaHttp.GetAllMessages())
+                    {
+                        message.Formatter = new System.Messaging.BinaryMessageFormatter();
+                        byte[] body = (byte[])message.Body;
+                        using (MemoryStream ms = new MemoryStream(body))
+                        {
+                            BinaryFormatter formatter = new BinaryFormatter();
+                            ms.Seek(0, SeekOrigin.Begin);
+                            EventObject eve = (EventObject)formatter.Deserialize(ms);
+                            listOfEvents.Add(eve);
+                        }
+                    }
+                }
+
+                ExpressionConstructor constructor = new ExpressionConstructor();
+                Func<EventObject, IDictionary<string, object>> select = constructor.CompileSelect(command.Select);
+                Func<EventObject, bool> where = constructor.CompileWhere(command.Where);
+
+                IDictionary<string, object> dic = listOfEvents.Where(where).Select(select).First();
+
+                foreach (var tuple in dic)
+                {
+                    yield return new { Llave = tuple.Key, Valor = tuple.Value };
+                }
+            }
+            else
+            {
+                yield break;
+            }
         }
     }
 }

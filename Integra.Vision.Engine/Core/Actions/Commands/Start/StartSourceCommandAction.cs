@@ -26,8 +26,9 @@ namespace Integra.Vision.Engine.Core
                 using (ObjectsContext context = new ObjectsContext("EngineDatabase"))
                 {
                     this.StartObject(context, command as StartSourceCommand);
-                    return new OkCommandResult();
                 }
+
+                return new OkCommandResult();
             }
             catch (Exception e)
             {
@@ -44,19 +45,12 @@ namespace Integra.Vision.Engine.Core
         {
             // create repository
             Repository<Database.Models.UserDefinedObject> repoUserDefinedObject = new Repository<Database.Models.UserDefinedObject>(vc);
-            Repository<Database.Models.SourceCondition> repoConditions = new Repository<Database.Models.SourceCondition>(vc);
 
             // get the adapter
             Database.Models.UserDefinedObject source = repoUserDefinedObject.Find(x => x.Name == command.Name);
 
             // update the adapter
             source.State = (int)UserDefinedObjectStateEnum.Started;
-
-            // get the source conditions
-            Database.Models.SourceCondition conditions = repoConditions.Find(x => x.SourceId == source.Id);
-            
-            // load object
-            this.LoadObject(conditions.Expression);
 
             // save changes
             vc.SaveChanges();

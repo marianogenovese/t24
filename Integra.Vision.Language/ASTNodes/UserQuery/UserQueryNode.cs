@@ -59,8 +59,6 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
             }
 
             this.result = new PlanNode();
-            this.result.Column = ChildrenNodes[0].Token.Location.Column;
-            this.result.Line = ChildrenNodes[0].Token.Location.Line;
             this.result.NodeType = PlanNodeTypeEnum.UserQuery;
         }
 
@@ -88,6 +86,9 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
                 this.result.Children.Add(fromAux);
                 this.result.Children.Add(whereAux);
                 this.result.Children.Add(selectAux);
+
+                this.result.Column = fromAux.Column;
+                this.result.Line = fromAux.Line;
             }
             else if (childrenCount == 2)
             {
@@ -98,10 +99,13 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
 
                 this.result.Children.Add(fromAux);
                 this.result.Children.Add(selectAux);
+
+                this.result.Column = fromAux.Column;
+                this.result.Line = fromAux.Line;
             }
 
             this.EndEvaluate(thread);
-
+            
             return this.result;
         }
     }

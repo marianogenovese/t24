@@ -40,8 +40,8 @@
     <Reference Include="Integra.Common">
       <HintPath>Message\Integra.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Integra.Messaging">
-      <HintPath>Message\Integra.Messaging.dll</HintPath>
+    <Reference Include="Integra.Vision.EventObject">
+      <HintPath>..\Integra.Vision.EventObject\bin\Debug\Integra.Vision.EventObject.dll</HintPath>
     </Reference>
     <Reference Include="Irony">
       <HintPath>..\packages\Irony.0.9.0\lib\net45\Irony.dll</HintPath>
@@ -62,7 +62,7 @@
     <Compile Include="ASTNodes\Commands\Create\CreateUser.cs" />
     <Compile Include="ASTNodes\Commands\Drop\DropUserDefinedObjectNode.cs" />
     <Compile Include="ASTNodes\Commands\Private\EngineActionsNode.cs" />
-    <Compile Include="ASTNodes\Commands\Create\CreateSourceNode.cs" />
+    <Compile Include="ASTNodes\Commands\Create\AddSourceNode.cs" />
     <Compile Include="ASTNodes\Commands\Create\CreateStreamNode.cs" />
     <Compile Include="ASTNodes\Commands\General\ParameterNode.cs" />
     <Compile Include="ASTNodes\Commands\General\UserDefinedObjectsNode.cs" />
@@ -117,9 +117,6 @@
     <Compile Include="Grammars\ValuesGrammar.cs" />
     <Compile Include="Grammars\ValuesLanguageRuntime.cs" />
     <Compile Include="Parsers\ExpressionParser.cs" />
-    <Compile Include="General\Adapter.cs" />
-    <Compile Include="General\Agent.cs" />
-    <Compile Include="General\EventObject.cs" />
     <Compile Include="General\ObjectUtils\JsonObjectUtils.cs" />
     <Compile Include="General\ObjectUtils\XmlObjectUtils.cs" />
     <Compile Include="General\Validations\CastValidation.cs" />

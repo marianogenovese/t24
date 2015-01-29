@@ -67,9 +67,6 @@ namespace Integra.Vision.Engine.Core
                         break;
 
                     // ALTER
-                    case PlanNodeTypeEnum.AlterSource:
-                        command = new AlterSourceCommand(node);
-                        break;
                     case PlanNodeTypeEnum.AlterStream:
                         command = new AlterStreamCommand(node);
                         break;

@@ -13,11 +13,6 @@ namespace Integra.Vision.Engine.Database.Models
     internal sealed class Source : UserDefinedObject
     {
         /// <summary>
-        /// Gets or sets the source conditions
-        /// </summary>
-        public ICollection<SourceCondition> Conditions { get; set; }
-
-        /// <summary>
         /// Gets or sets the assigned streams
         /// </summary>
         public ICollection<SourceAssignedToStream> AsignedStreams { get; set; }

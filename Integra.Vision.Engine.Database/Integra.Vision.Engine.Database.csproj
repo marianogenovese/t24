@@ -55,7 +55,6 @@
     <Compile Include="Configurations\DependencyMap.cs" />
     <Compile Include="Configurations\ScriptMap.cs" />
     <Compile Include="Configurations\SourceAssignedToStreamMap.cs" />
-    <Compile Include="Configurations\SourceConditionMap.cs" />
     <Compile Include="Configurations\StreamConditionMap.cs" />
     <Compile Include="Configurations\PermissionRoleMap.cs" />
     <Compile Include="Configurations\PermissionUserMap.cs" />
@@ -87,17 +86,11 @@
     <Compile Include="Configurations\UserMap.cs" />
     <Compile Include="Contexts\SystemViewsContext.cs" />
     <Compile Include="Contexts\ObjectsContext.cs" />
-    <Compile Include="Migrations\201501131623082_u.cs">
+    <Compile Include="Migrations\201501291714076_updatedDB.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="Migrations\201501131623082_u.Designer.cs">
-      <DependentUpon>201501131623082_u.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201501262112151_updatedDB.cs">
-      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Migrations\201501262112151_updatedDB.Designer.cs">
-      <DependentUpon>201501262112151_updatedDB.cs</DependentUpon>
+    <Compile Include="Migrations\201501291714076_updatedDB.Designer.cs">
+      <DependentUpon>201501291714076_updatedDB.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Script.cs" />
     <Compile Include="Repositories\UnitOfWorkForObjects.cs" />
@@ -112,7 +105,6 @@
     </Compile>
     <Compile Include="Models\Dependency.cs" />
     <Compile Include="Models\SourceAssignedToStream.cs" />
-    <Compile Include="Models\SourceCondition.cs" />
     <Compile Include="Models\StreamCondition.cs" />
     <Compile Include="Models\PermissionRole.cs" />
     <Compile Include="Models\PermissionUser.cs" />
@@ -193,11 +185,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201501131623082_u.resx">
-      <DependentUpon>201501131623082_u.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201501262112151_updatedDB.resx">
-      <DependentUpon>201501262112151_updatedDB.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201501291714076_updatedDB.resx">
+      <DependentUpon>201501291714076_updatedDB.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

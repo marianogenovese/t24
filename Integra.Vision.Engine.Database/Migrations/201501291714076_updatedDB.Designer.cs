@@ -13,7 +13,7 @@ namespace Integra.Vision.Engine.Database.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201501262112151_updatedDB"; }
+            get { return "201501291714076_updatedDB"; }
         }
         
         string IMigrationMetadata.Source

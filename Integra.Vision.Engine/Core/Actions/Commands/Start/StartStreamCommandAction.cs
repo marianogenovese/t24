@@ -27,8 +27,9 @@ namespace Integra.Vision.Engine.Core
                 using (ObjectsContext context = new ObjectsContext("EngineDatabase"))
                 {
                     this.StartObject(context, command as StartStreamCommand);
-                    return new OkCommandResult();
                 }
+
+                return new OkCommandResult();
             }
             catch (Exception e)
             {
@@ -86,9 +87,6 @@ namespace Integra.Vision.Engine.Core
 
             // save changes
             vc.SaveChanges();
-
-            // close connection
-            vc.Dispose();
         }
 
         /// <summary>

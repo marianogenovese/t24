@@ -7,6 +7,7 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Object
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Integra.Vision.Event;
     using Integra.Vision.Language.ASTNodes.Base;
     using Integra.Vision.Language.Resources;
     using Irony.Ast;
@@ -81,7 +82,7 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Object
 
                 PlanNode auxMessage = new PlanNode();
                 auxMessage.Column = ChildrenNodes[2].Token.Location.Column;
-                auxMessage.Properties.Add(SR.DataTypeProperty, typeof(Integra.Messaging.Message).ToString());
+                auxMessage.Properties.Add(SR.DataTypeProperty, typeof(EventMessage).ToString());
                 auxMessage.Line = ChildrenNodes[2].Token.Location.Line;
                 auxMessage.NodeText = eventObject.NodeText + ".Message";
                 auxMessage.NodeType = PlanNodeTypeEnum.ObjectMessage;
@@ -90,7 +91,7 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Object
 
                 PlanNode auxPart = new PlanNode();
                 auxPart.Column = idPartOrFieldObject.Column;
-                auxPart.Properties.Add(SR.DataTypeProperty, typeof(Integra.Messaging.MessagePart).ToString());
+                auxPart.Properties.Add(SR.DataTypeProperty, typeof(MessageSection).ToString());
                 auxPart.Line = idPartOrFieldObject.Line;
                 auxPart.NodeText = auxMessage.NodeText + "." + idPartOrFieldObject.NodeText;
                 auxPart.NodeType = PlanNodeTypeEnum.ObjectPart;
@@ -100,7 +101,7 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Object
 
                 PlanNode auxField = new PlanNode();
                 auxField.Column = idFieldObject.Column;
-                auxField.Properties.Add(SR.DataTypeProperty, typeof(Integra.Messaging.MessageField).ToString());
+                auxField.Properties.Add(SR.DataTypeProperty, typeof(MessageSubsection).ToString());
                 auxField.Line = idFieldObject.Line;
                 auxField.NodeText = auxPart.NodeText + "." + idFieldObject.NodeText;
                 auxField.NodeType = PlanNodeTypeEnum.ObjectField;
@@ -120,7 +121,7 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Object
 
                 PlanNode auxField = new PlanNode();
                 auxField.Column = idFieldObject.Column;
-                auxField.Properties.Add(SR.DataTypeProperty, typeof(Integra.Messaging.MessageField).ToString());
+                auxField.Properties.Add(SR.DataTypeProperty, typeof(MessageSubsection).ToString());
                 auxField.Line = idFieldObject.Line;
                 auxField.NodeText = idPartOrFieldObject.NodeText + "." + idFieldObject.NodeText;
                 auxField.NodeType = PlanNodeTypeEnum.ObjectField;
