@@ -154,6 +154,13 @@ namespace Integra.Vision.Language.Grammars
             NonTerminal nt_VALUES = new NonTerminal("VALUES", typeof(ConstantValueNode));
             nt_VALUES.AstConfig.NodeType = null;
             nt_VALUES.AstConfig.DefaultNodeCreator = () => new ConstantValueNode();
+            NonTerminal nt_NUMERIC_VALUES = new NonTerminal("VALUES", typeof(ConstantValueNode));
+            nt_NUMERIC_VALUES.AstConfig.NodeType = null;
+            nt_NUMERIC_VALUES.AstConfig.DefaultNodeCreator = () => new ConstantValueNode();
+            NonTerminal nt_NON_CONSTANT_VALUES = new NonTerminal("VALUES", typeof(ConstantValueNode));
+            nt_NON_CONSTANT_VALUES.AstConfig.NodeType = null;
+            nt_NON_CONSTANT_VALUES.AstConfig.DefaultNodeCreator = () => new ConstantValueNode();
+
             NonTerminal nt_PARAMETER_VALUES = new NonTerminal("PARAMETER_VALUES", typeof(ConstantValueNode));
             nt_PARAMETER_VALUES.AstConfig.NodeType = null;
             nt_PARAMETER_VALUES.AstConfig.DefaultNodeCreator = () => new ConstantValueNode();
@@ -204,20 +211,19 @@ namespace Integra.Vision.Language.Grammars
                                     | nt_COMPARATIVE_EXPRESSION;
             /* **************************** */
             /* EXPRESIONES COMPARATIVAS */
-            nt_COMPARATIVE_EXPRESSION.Rule = nt_COMPARATIVE_EXPRESSION + terminalIgualIgual + nt_COMPARATIVE_EXPRESSION
-                                            | nt_COMPARATIVE_EXPRESSION + terminalNoIgual + nt_COMPARATIVE_EXPRESSION
-                                            | nt_COMPARATIVE_EXPRESSION + terminalMayorIgual + nt_COMPARATIVE_EXPRESSION
-                                            | nt_COMPARATIVE_EXPRESSION + terminalMayorQue + nt_COMPARATIVE_EXPRESSION
-                                            | nt_COMPARATIVE_EXPRESSION + terminalMenorIgual + nt_COMPARATIVE_EXPRESSION
-                                            | nt_COMPARATIVE_EXPRESSION + terminalMenorQue + nt_COMPARATIVE_EXPRESSION
-                                            | nt_COMPARATIVE_EXPRESSION + terminalLike + terminalCadena
+            nt_COMPARATIVE_EXPRESSION.Rule = nt_VALUES + terminalIgualIgual + nt_VALUES
+                                            | nt_VALUES + terminalNoIgual + nt_VALUES
+                                            | nt_VALUES + terminalMayorIgual + nt_VALUES
+                                            | nt_VALUES + terminalMayorQue + nt_VALUES
+                                            | nt_VALUES + terminalMenorIgual + nt_VALUES
+                                            | nt_VALUES + terminalMenorQue + nt_VALUES
+                                            | nt_VALUES + terminalLike + terminalCadena
                                             | terminalParentesisIz + nt_COMPARATIVE_EXPRESSION + terminalParentesisDer
-                                            | terminalNot + nt_COMPARATIVE_EXPRESSION
-                                            | nt_ARITHMETIC_EXPRESSION;
+                                            | terminalNot + nt_COMPARATIVE_EXPRESSION;
             /* **************************** */
             /* EXPRESIONES ARITMETICAS */
             nt_ARITHMETIC_EXPRESSION.Rule = nt_ARITHMETIC_EXPRESSION + terminalMenos + nt_ARITHMETIC_EXPRESSION
-                                            | nt_VALUES;
+                                            | nt_NUMERIC_VALUES;
             /* **************************** */
             /* VALORES PERMITIDOS PARA LOS PARAMETROS DE UN ADAPTADOR */
             nt_PARAMETER_VALUES.Rule = terminalDateTimeValue
@@ -227,16 +233,21 @@ namespace Integra.Vision.Language.Grammars
                                         | terminalCadena;
             /* **************************** */
             /* CONSTANTES */
-            nt_VALUES.Rule = terminalDateTimeValue
-                            | terminalBool
-                            | terminalNull
-                            | terminalNumero
-                            | terminalCadena
-                            | nt_EVENT_PROPERTIES
-                            | nt_UNARY_ARITHMETIC_EXPRESSION
-                            | nt_EVENT_WITH_SOURCE
-                            | nt_OBJECT_VALUE
-                            | nt_DATE_FUNCTIONS;
+            nt_VALUES.Rule = terminalBool
+                                | terminalNull
+                                | terminalCadena
+                                | nt_NON_CONSTANT_VALUES
+                                | nt_ARITHMETIC_EXPRESSION;
+
+            nt_NON_CONSTANT_VALUES.Rule = nt_EVENT_PROPERTIES
+                                            | nt_EVENT_WITH_SOURCE
+                                            | nt_OBJECT_VALUE;
+
+            nt_NUMERIC_VALUES.Rule = terminalDateTimeValue
+                                        | terminalNumero
+                                        | nt_DATE_FUNCTIONS
+                                        | nt_UNARY_ARITHMETIC_EXPRESSION;
+
             /* **************************** */
             /* FUNCIONES DE FECHAS */
             nt_DATE_FUNCTIONS.Rule = terminalHour + terminalParentesisIz + terminalDateTimeValue + terminalParentesisDer
