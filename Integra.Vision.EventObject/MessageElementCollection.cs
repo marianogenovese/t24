@@ -98,6 +98,26 @@ namespace Integra.Vision.Event
             return this.messageElementList.Contains(item);
         }
 
+        /// <summary>
+        /// Doc goes here
+        /// </summary>
+        /// <param name="sectionName">Name of the section</param>
+        /// <returns>Whether the section exists or not</returns>
+        public bool Contains(string sectionName)
+        {
+            return this.messageElementList.Exists(x => x.Name == sectionName);
+        }
+
+        /// <summary>
+        /// Doc goes here
+        /// </summary>
+        /// <param name="sectionIdentifier">Identifier of the section</param>
+        /// <returns>Whether the section exists or not</returns>
+        public bool Contains(int sectionIdentifier)
+        {
+            return this.messageElementList.Exists(x => x.Identifier == sectionIdentifier);
+        }
+
         /// <inheritdoc />
         public void CopyTo(TElement[] array, int arrayIndex)
         {

@@ -64,7 +64,16 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Object
             if (cantHijos == 1)
             {
                 result = (PlanNode)this.value.Evaluate(thread);
-                result.NodeText = "[" + this.text + "]";
+
+                if (result.Properties["DataType"].Equals(typeof(string).ToString()))
+                {
+                    result.NodeText = "[" + this.text + "]";
+                }
+                else if (result.Properties["DataType"].Equals(typeof(object).ToString()))
+                {
+                    result.NodeText = this.text;
+                }
+
                 result.Properties["DataType"] = typeof(string).ToString();
             }
             else

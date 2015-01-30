@@ -3,12 +3,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Integra.Vision.Language;
 using System.Collections.Generic;
 using System.Linq;
+using Integra.Messaging;
 
 namespace Integra.Vision.LanguageUnitTests
 {
     [TestClass]
     public class LangugeTests
     {
+
         [TestMethod]
         public void CountCommandsTest()
         {

@@ -41,6 +41,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Integra.Messaging, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Integra.Vision.Language\Message\Integra.Messaging.dll</HintPath>
+    </Reference>
     <Reference Include="Integra.Vision.Language">
       <HintPath>..\Integra.Vision.Language\bin\Debug\Integra.Vision.Language.dll</HintPath>
     </Reference>
@@ -51,6 +55,9 @@
       <HintPath>..\packages\Irony.Interpreter.0.9.0\lib\net45\Irony.Interpreter.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -65,25 +72,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Constants\BooleanNodeTests.cs" />
-    <Compile Include="Constants\DateFunctionNodeTests.cs" />
-    <Compile Include="Constants\DateTimeNodeTests.cs" />
-    <Compile Include="Constants\Event\EventValuesNodeTests.cs" />
-    <Compile Include="Constants\IdentifierNodeTests.cs" />
-    <Compile Include="Constants\NullValueNodeTests.cs" />
-    <Compile Include="Constants\NumberNodeTests.cs" />
-    <Compile Include="Constants\ExpressionParserTests.cs" />
-    <Compile Include="Constants\Object\ObjectWithSuffixTests.cs" />
-    <Compile Include="Constants\ParserTest.cs" />
-    <Compile Include="Constants\StringNodeTests.cs" />
-    <Compile Include="LangugeTests.cs" />
-    <Compile Include="Operations\ArithmeticExpressionNodeTests.cs" />
-    <Compile Include="Operations\ComparativeExpressionNodeTests.cs" />
-    <Compile Include="Operations\LogicExpressionNodeTests.cs" />
-    <Compile Include="Operations\UnaryArithmeticExpressionNodeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QuerySections\FromNodeTests.cs" />
-    <Compile Include="QuerySections\SelectNodeTests.cs" />
+    <Compile Include="UnitTest1.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Integra.Vision.Common\Integra.Vision.Common.csproj">

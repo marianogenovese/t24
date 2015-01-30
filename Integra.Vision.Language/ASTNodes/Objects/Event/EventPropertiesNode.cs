@@ -9,7 +9,6 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Event
     using System.Collections.Generic;
     using Integra.Vision.Event;
     using Integra.Vision.Language.ASTNodes.Base;
-    using Integra.Vision.Language.General;
     using Integra.Vision.Language.Resources;
     using Irony.Ast;
     using Irony.Interpreter;

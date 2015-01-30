@@ -39,8 +39,14 @@ namespace Integra.Vision.Language.Errors
         {
             if (this.Thread != null)
             {
-                Binding b = this.Thread.Bind("errorList", BindingRequestFlags.Read);
+                Binding b = this.Thread.Bind("errorList", BindingRequestFlags.Write | BindingRequestFlags.ExistingOrNew);
                 List<ErrorNode> errorList = (List<ErrorNode>)b.GetValueRef(this.Thread);
+
+                if (errorList == null)
+                {
+                    b.SetValueRef(this.Thread, new List<ErrorNode>());
+                }
+
                 errorList.Add(error);
             }
         }

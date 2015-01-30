@@ -57,7 +57,7 @@ namespace Integra.Vision.Engine.Core
                             BinaryFormatter formatter = new BinaryFormatter();
                             ms.Seek(0, SeekOrigin.Begin);
                             EventObject eve = (EventObject)formatter.Deserialize(ms);
-                            listOfEvents.Add(eve);
+                            listOfEvents.Add(new EventObject());
                         }
                     }
                 }

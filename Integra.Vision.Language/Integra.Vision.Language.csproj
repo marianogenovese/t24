@@ -37,9 +37,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Integra.Common">
-      <HintPath>Message\Integra.Common.dll</HintPath>
-    </Reference>
     <Reference Include="Integra.Vision.EventObject">
       <HintPath>..\Integra.Vision.EventObject\bin\Debug\Integra.Vision.EventObject.dll</HintPath>
     </Reference>
@@ -194,14 +191,6 @@
       <Project>{9d078a51-8ce3-4a74-9f9e-53cb882befaf}</Project>
       <Name>Integra.Vision.Common</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Integra.Common.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Integra.Messaging.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

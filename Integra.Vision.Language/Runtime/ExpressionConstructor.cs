@@ -12,7 +12,6 @@ namespace Integra.Vision.Language.Runtime
     using System.Linq.Expressions;
     using Integra.Vision.Event;
     using Integra.Vision.Language.Exceptions;
-    using Integra.Vision.Language.General;
 
     /// <summary>
     /// ExpressionConstructor class
@@ -977,14 +976,13 @@ namespace Integra.Vision.Language.Runtime
         /// <returns>expression tree of actual plan</returns>
         private Expression GenerateObjectPart(PlanNode actualNode, Expression mensaje, Expression partId)
         {
-            Expression parte = Expression.Constant(null);
-            ParameterExpression v = Expression.Variable(typeof(MessageSection), "bloque");
+            ParameterExpression v = Expression.Parameter(typeof(Event.MessageSection), "bloque");
             ConstantExpression auxPart = (ConstantExpression)partId;
             Type tipo = auxPart.Type;
 
             try
             {
-                parte = Expression.Block(
+                Expression parte = Expression.Block(
                     new ParameterExpression[] { v },
                     Expression.TryCatch(
                         Expression.IfThenElse(

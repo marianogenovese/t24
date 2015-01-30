@@ -61,7 +61,7 @@ namespace Integra.Vision.Event
         {
             get
             {
-                return this.Name;
+                return this.name;
             }
         }
 
