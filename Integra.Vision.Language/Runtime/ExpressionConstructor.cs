@@ -486,7 +486,7 @@ namespace Integra.Vision.Language.Runtime
         {
             Type tipo = Type.GetType(actualNode.Properties["DataType"].ToString());
             string propiedad = actualNode.Properties["Property"].ToString();
-
+            
             try
             {
                 ParameterExpression param = Expression.Variable(tipo, "variable");
@@ -494,20 +494,23 @@ namespace Integra.Vision.Language.Runtime
                 Expression tryCatchExpr =
                     Expression.Block(
                         new[] { param },
-                        Expression.TryCatch(
-                            Expression.Block(
-                                Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Se obtendrá la siguiente propiedad: " + propiedad)),
-                                Expression.Assign(param, Expression.Property(leftNode, propiedad)),
-                                Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Se obtuvo la siguiente propiedad: " + propiedad)),
-                                Expression.Empty()
-                            ),
-                            Expression.Catch(
-                                typeof(Exception),
+                        Expression.IfThen(
+                            Expression.Equal(Expression.Property(leftNode, typeof(EventObject).GetProperty(propiedad)), Expression.Constant(null)),
+                            Expression.TryCatch(
                                 Expression.Block(
-                                    Expression.Throw(
-                                        Expression.New(
-                                            typeof(Exception).GetConstructor(new Type[] { typeof(string) }),
-                                            Expression.Constant("No fue posible obtener la propiedad " + propiedad + ", error en la linea: " + actualNode.Line + " columna: " + actualNode.Column + " con " + actualNode.NodeText)
+                                    Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Se obtendrá la siguiente propiedad: " + propiedad)),
+                                    Expression.Assign(param, Expression.Property(leftNode, propiedad)),
+                                    Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Se obtuvo la siguiente propiedad: " + propiedad)),
+                                    Expression.Empty()
+                                ),
+                                Expression.Catch(
+                                    typeof(Exception),
+                                    Expression.Block(
+                                        Expression.Throw(
+                                            Expression.New(
+                                                typeof(Exception).GetConstructor(new Type[] { typeof(string) }),
+                                                Expression.Constant("No fue posible obtener la propiedad " + propiedad + ", error en la linea: " + actualNode.Line + " columna: " + actualNode.Column + " con " + actualNode.NodeText)
+                                            )
                                         )
                                     )
                                 )
@@ -781,9 +784,9 @@ namespace Integra.Vision.Language.Runtime
                         Expression.TryCatch(
                             Expression.Block(
                                     Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Inicio de la expresion logica 'Or' entre los siguientes valores: ")),
-                                Expression.Assign(param, Expression.OrElse(leftNode, rightNode)),
-                                Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Fin de la expresion logica 'Or'")),
-                                Expression.Empty()
+                                    Expression.Assign(param, Expression.OrElse(leftNode, rightNode)),
+                                    Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Fin de la expresion logica 'Or'")),
+                                    Expression.Empty()
                                 ),
                             Expression.Catch(
                                 typeof(Exception),
@@ -814,8 +817,6 @@ namespace Integra.Vision.Language.Runtime
         /// <returns>expression tree of actual plan</returns>
         private Expression GenerateValueOfObject(PlanNode actualNode, Expression objeto)
         {
-            Expression valor = Expression.Constant(null);
-
             try
             {
                 ParameterExpression param = Expression.Variable(typeof(object), "variable");
@@ -823,20 +824,24 @@ namespace Integra.Vision.Language.Runtime
                 Expression tryCatchExpr =
                     Expression.Block(
                         new[] { param },
-                        Expression.TryCatch(
-                            Expression.Block(
-                                Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Se obtendra el valor del objeto " + actualNode.NodeText)),
-                                Expression.Assign(param, Expression.Call(objeto, typeof(MessageSubsection).GetMethod("get_Value"))),
-                                Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("Write", new Type[] { typeof(object) }), Expression.Constant("**El valor del objeto " + actualNode.NodeText + " es: ")),
-                                Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), param),
-                                Expression.Empty()
-                                ),
-                            Expression.Catch(
-                                typeof(Exception),
-                                    Expression.Throw(
-                                        Expression.New(
-                                            typeof(Exception).GetConstructor(new Type[] { typeof(string) }),
-                                            Expression.Constant("No fue posible obtener el valor del campo del mensaje, error en la linea: " + actualNode.Line + " columna: " + actualNode.Column + " con " + actualNode.NodeText)))
+                        Expression.IfThenElse(
+                            Expression.Equal(objeto, Expression.Constant(null)),
+                            Expression.Assign(param, Expression.Constant(null)),
+                            Expression.TryCatch(
+                                Expression.Block(
+                                    Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Se obtendra el valor del objeto " + actualNode.NodeText)),
+                                    Expression.Assign(param, Expression.Call(objeto, typeof(MessageSubsection).GetMethod("get_Value"))),
+                                    Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("Write", new Type[] { typeof(object) }), Expression.Constant("**El valor del objeto " + actualNode.NodeText + " es: ")),
+                                    Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), param),
+                                    Expression.Empty()
+                                    ),
+                                Expression.Catch(
+                                    typeof(Exception),
+                                        Expression.Throw(
+                                            Expression.New(
+                                                typeof(Exception).GetConstructor(new Type[] { typeof(string) }),
+                                                Expression.Constant("No fue posible obtener el valor del campo del mensaje, error en la linea: " + actualNode.Line + " columna: " + actualNode.Column + " con " + actualNode.NodeText)))
+                                )
                             )
                         ),
                         param
@@ -859,14 +864,28 @@ namespace Integra.Vision.Language.Runtime
         private Expression GenerateObjectMessage(PlanNode actualNode, ParameterExpression eventNode)
         {
             ParameterExpression param = Expression.Variable(typeof(EventMessage), "message");
+
             try
             {
                 Expression mensaje =
                         Expression.Block(
                             new ParameterExpression[] { param },
-                            Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Obteniendo el mensaje")),
-                            Expression.Assign(param, Expression.Property(eventNode, "Message")),
-                            Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("**Se obtuvo el mensaje")),
+                            Expression.TryCatch(
+                                Expression.Block(
+                                    Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Obteniendo el mensaje")),
+                                    Expression.Assign(param, Expression.Property(eventNode, "Message")),
+                                    Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("**Se obtuvo el mensaje"))
+                                ),
+                                Expression.Catch(
+                                    typeof(Exception),
+                                    Expression.Throw(
+                                        Expression.New(
+                                            typeof(Exception).GetConstructor(new Type[] { typeof(string) }),
+                                            Expression.Constant("No fue posible obtener la propiedad 'Message' del evento, error en la linea: " + actualNode.Line + " columna: " + actualNode.Column + " con " + actualNode.NodeText)
+                                        )
+                                    )
+                                )
+                            ),
                             param
                             );
 
@@ -896,28 +915,34 @@ namespace Integra.Vision.Language.Runtime
             {
                 methodCall = Expression.Block(
                     new ParameterExpression[] { v },
-                    Expression.IfThenElse(
+                    Expression.IfThen(
                         Expression.Call(
-                        field,
-                        typeof(MessageSubsection).GetMethod("Contains", new Type[] { tipo }),
-                        auxSubField
+                            field,
+                            typeof(MessageSubsection).GetMethod("Contains", new Type[] { tipo }),
+                            auxSubField
                         ),
-                        Expression.Block(
-                            Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Obteniendo el subcampo: " + auxSubField.Value)),
-                            Expression.Assign(v, Expression.Call(field, typeof(MessageSubsection).GetMethod("get_Item", new Type[] { tipo }), auxSubField)),
-                            Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("**Se obtuvo el subcampo: " + auxSubField.Value))
-                        ),
-                        Expression.Throw(
-                            Expression.New(
-                                typeof(Exception).GetConstructor(new Type[] { typeof(string) }),
-                                Expression.Constant("El subcampo no existe")
+                        Expression.TryCatch(
+                            Expression.Block(
+                                Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Obteniendo el subcampo: " + auxSubField.Value)),
+                                Expression.Assign(v, Expression.Call(field, typeof(MessageSubsection).GetMethod("get_Item", new Type[] { tipo }), auxSubField)),
+                                Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("**Se obtuvo el subcampo: " + auxSubField.Value))
+                            ),
+                            Expression.Catch(
+                                typeof(Exception),
+                                Expression.Throw(
+                                    Expression.New(
+                                        typeof(Exception).GetConstructor(new Type[] { typeof(string) }),
+                                        Expression.Constant("No fue posible obtener la subsección de la subsección del objeto, error en la linea: " + actualNode.Line + " columna: " + actualNode.Column + " con " + actualNode.NodeText)
+                                    )
+                                )
                             )
-                        )),
+                        )
+                        ),
                     v);
             }
             catch (Exception e)
             {
-                throw new CompilationException("Error al compilar, no fue posible obtener el valor del subcampo", e);
+                throw new CompilationException("Error al compilar, no fue posible obtener la subsección de la subsección del mensaje", e);
             }
 
             return methodCall;
@@ -932,39 +957,45 @@ namespace Integra.Vision.Language.Runtime
         /// <returns>expression tree of actual plan</returns>
         private Expression GenerateObjectFieldFromPart(PlanNode actualNode, Expression part, Expression fieldId)
         {
-            Expression methodCall = Expression.Constant(null);
             ParameterExpression v = Expression.Variable(typeof(MessageSubsection), "campoDeParte");
             ConstantExpression auxField = (ConstantExpression)fieldId;
             Type tipo = auxField.Type;
 
             try
             {
-                methodCall = Expression.Block(
+                Expression methodCall = Expression.Block(
                     new ParameterExpression[] { v },
-                    Expression.IfThenElse(
+                    Expression.IfThen(
                         Expression.Call(
                             part,
                             typeof(MessageSection).GetMethod("Contains", new Type[] { tipo }),
                             auxField
                         ),
-                        Expression.Block(
-                            Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Obteniendo el campo: " + auxField.Value)),
-                            Expression.Assign(v, Expression.Call(part, typeof(MessageSection).GetMethod("get_Item", new Type[] { tipo }), auxField)),
-                            Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("**Se obtuvo el campo: " + auxField.Value))
+                        Expression.TryCatch(
+                            Expression.Block(
+                                Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Obteniendo el campo: " + auxField.Value)),
+                                Expression.Assign(v, Expression.Call(part, typeof(MessageSection).GetMethod("get_Item", new Type[] { tipo }), auxField)),
+                                Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("**Se obtuvo el campo: " + auxField.Value))
+                            ),
+                            Expression.Catch(
+                                typeof(Exception),
+                                Expression.Throw(
+                                    Expression.New(
+                                        typeof(Exception).GetConstructor(new Type[] { typeof(string) }),
+                                        Expression.Constant("No fue posible obtener la subsección de la sección del objeto, error en la linea: " + actualNode.Line + " columna: " + actualNode.Column + " con " + actualNode.NodeText)
+                                    )
+                                )
+                            )
+                        )
                         ),
-                        Expression.Throw(
-                            Expression.New(
-                                typeof(Exception).GetConstructor(new Type[] { typeof(string) }),
-                                Expression.Constant("El campo no existe no existe"))
-                        )),
                      v);
+
+                return methodCall;
             }
             catch (Exception e)
             {
-                throw new CompilationException("Error al compilar, no fue posible obtener el campo del mensaje", e);
+                throw new CompilationException("Error al compilar, no fue posible obtener la subsección de la sección del mensaje", e);
             }
-
-            return methodCall;
         }
 
         /// <summary>
@@ -985,7 +1016,7 @@ namespace Integra.Vision.Language.Runtime
                 Expression parte = Expression.Block(
                     new ParameterExpression[] { v },
                     Expression.TryCatch(
-                        Expression.IfThenElse(
+                        Expression.IfThen(
                             Expression.Call(
                                 mensaje,
                                 typeof(EventMessage).GetMethod("Contains", new Type[] { tipo }),
@@ -995,18 +1026,14 @@ namespace Integra.Vision.Language.Runtime
                                 Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Obteniendo la parte: " + auxPart.Value)),
                                 Expression.Assign(v, Expression.Call(mensaje, typeof(EventMessage).GetMethod("get_Item", new Type[] { tipo }), auxPart)),
                                 Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("**Se obtuvo la parte: " + auxPart.Value))
-                            ),
-                                    Expression.Throw(
-                                        Expression.New(
-                                            typeof(Exception).GetConstructor(new Type[] { typeof(string) }),
-                                            Expression.Constant("No obtener la parte del objeto, error en la linea: " + actualNode.Line + " columna: " + actualNode.Column + " con " + actualNode.NodeText)))
+                            )
                         ),
                         Expression.Catch(
                                 typeof(Exception),
                                     Expression.Throw(
                                         Expression.New(
                                             typeof(Exception).GetConstructor(new Type[] { typeof(string) }),
-                                            Expression.Constant("No fue posible obtener la parte del objeto, error en la linea: " + actualNode.Line + " columna: " + actualNode.Column + " con " + actualNode.NodeText)))
+                                            Expression.Constant("No fue posible obtener la sección del objeto, error en la linea: " + actualNode.Line + " columna: " + actualNode.Column + " con " + actualNode.NodeText)))
                             )
                         ),
                         v);
@@ -1015,7 +1042,7 @@ namespace Integra.Vision.Language.Runtime
             }
             catch (Exception e)
             {
-                throw new CompilationException("Error al compilar, no fue posible obtener la seccion del mensaje", e);
+                throw new CompilationException("Error al compilar, no fue posible obtener la sección del mensaje", e);
             }
         }
 
