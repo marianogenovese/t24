@@ -5,6 +5,12 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Engine.Core
 {
+    using System.Security.Cryptography;
+    using Integra.Vision.Engine.Database.Contexts;
+    using Integra.Vision.Engine.Database.Models;
+    using Integra.Vision.Engine.Database.Repositories;
+    using Integra.Vision.Engine.Extensions;
+
     /// <summary>
     /// Implements a user authenticator which use the register users in a database.
     /// </summary>
@@ -13,13 +19,23 @@ namespace Integra.Vision.Engine.Core
         /// <inheritdoc />
         public bool Validate(string user, string password)
         {
-            if (string.Equals(user, "mariano", System.StringComparison.OrdinalIgnoreCase))
+            using (ObjectsContext context = new ObjectsContext("EngineDatabase"))
             {
-                return true;
+                MD5 md5Hash = MD5.Create();
+                string hash = md5Hash.GetMd5Hash(password);
+
+                Repository<User> repoUser = new Repository<User>(context);
+                bool exists = repoUser.Exists(x => x.Name == user && x.Password == hash);
+
+                if (exists)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            
-            /*Hacer la lógica para ir a la db.*/
-            return false;
         }
     }
 }

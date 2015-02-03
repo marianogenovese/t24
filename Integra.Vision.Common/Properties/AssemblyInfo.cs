@@ -40,6 +40,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: InternalsVisibleTo("Integra.Vision.Engine")]
+[assembly: InternalsVisibleTo("Integra.Vision.Engine.Database")]
 [assembly: InternalsVisibleTo("Integra.Vision.EngineUnitTests")]
 [assembly: InternalsVisibleTo("Integra.Vision.Language")]
 [assembly: InternalsVisibleTo("Integra.Vision.Common.Tests")]

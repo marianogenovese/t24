@@ -10,6 +10,7 @@ namespace Integra.Vision.Engine.Core
     using System.Text;
     using Integra.Vision.Engine.Commands;
     using Integra.Vision.Engine.Database.Contexts;
+    using Integra.Vision.Engine.Extensions;
 
     /// <summary>
     /// Implements all the process of create a new user.
@@ -45,7 +46,7 @@ namespace Integra.Vision.Engine.Core
 
             // get the hash string
             MD5 md5Hash = MD5.Create();
-            string hash = this.GetMd5Hash(md5Hash, command.Password);
+            string hash = md5Hash.GetMd5Hash(command.Password);
             
             // get the user
             Database.Models.User user = repoUser.Find(x => x.Name == command.Name);
@@ -70,32 +71,6 @@ namespace Integra.Vision.Engine.Core
 
             // close connections
             vc.Dispose();
-        }
-
-        /// <summary>
-        /// Get hash code from password
-        /// </summary>
-        /// <param name="md5Hash">Doc1 goes here</param>
-        /// <param name="input">Doc2 goes here</param>
-        /// <returns>Doc3 goes here</returns>
-        private string GetMd5Hash(MD5 md5Hash, string input)
-        {
-            // Convert the input string to a byte array and compute the hash.
-            byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
-
-            // Create a new Stringbuilder to collect the bytes
-            // and create a string.
-            StringBuilder stringBuilder = new StringBuilder();
-
-            // Loop through each byte of the hashed data 
-            // and format each one as a hexadecimal string.
-            for (int i = 0; i < data.Length; i++)
-            {
-                stringBuilder.Append(data[i].ToString("x2"));
-            }
-
-            // Return the hexadecimal string.
-            return stringBuilder.ToString();
         }
     }
 }

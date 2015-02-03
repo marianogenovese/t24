@@ -60,6 +60,7 @@
     <Compile Include="Engine\Component.cs" />
     <Compile Include="Engine\ComponentException.cs" />
     <Compile Include="Engine\ComponentFaultedException.cs" />
+    <Compile Include="Engine\Extensions\HashCreator.cs" />
     <Compile Include="INamedElement.cs" />
     <Compile Include="IReadOnlyNamedElementCollection.cs" />
     <Compile Include="Engine\IComponent.cs" />
