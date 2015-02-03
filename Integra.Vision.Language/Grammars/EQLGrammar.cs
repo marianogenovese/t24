@@ -6,6 +6,7 @@
 namespace Integra.Vision.Language.Grammars
 {
     using System;
+    using System.Linq;
     using Integra.Vision.Language.ASTNodes.Commands.Create;
     using Integra.Vision.Language.ASTNodes.Commands.Drop;
     using Integra.Vision.Language.ASTNodes.Commands.General;
@@ -76,9 +77,6 @@ namespace Integra.Vision.Language.Grammars
             KeyTerm terminalSelect = ToTerm("select", "select");
             KeyTerm terminalFrom = ToTerm("from", "from");
             KeyTerm terminalWhere = ToTerm("where", "where");
-            KeyTerm terminalNot = ToTerm("not", "not");
-            KeyTerm terminalIn = ToTerm("in", "in");
-            KeyTerm terminalLike = ToTerm("like", "like");
             KeyTerm terminalAs = ToTerm("as", "as");
             KeyTerm terminalStream = ToTerm("stream", "stream");
             KeyTerm terminalSource = ToTerm("source", "source");
@@ -105,48 +103,18 @@ namespace Integra.Vision.Language.Grammars
             KeyTerm terminalEngine = ToTerm("engine", "engine");
             KeyTerm terminalAdd = ToTerm("add", "add");
 
-            /* FUNCIONES */
-            KeyTerm terminalHour = ToTerm("hour", "hour");
-            KeyTerm terminalMinute = ToTerm("minute", "minute");
-            KeyTerm terminalSecond = ToTerm("second", "second");
-
             /* EVENTOS */
             KeyTerm terminalEvent = ToTerm("event", "event");
-            KeyTerm terminalMessage = ToTerm("Message", "Message");
-            KeyTerm terminalTimestamp = ToTerm("Timestamp", "Timestamp");
-            KeyTerm terminalAgent = ToTerm("Agent", "Agent");
-            KeyTerm terminalAdapter = ToTerm("Adapter", "Adapter");
-            KeyTerm terminalName = ToTerm("Name", "Name");
-
-            /* OPERADORES ARITMETICOS */
-            KeyTerm terminalMenos = ToTerm("-", "menos");
-            KeyTerm terminalMas = ToTerm("+", "mas");
-
-            /* OPERADORES COMPARATIVOS */
-            KeyTerm terminalIgualIgual = ToTerm("==", "igualIgual");
-            KeyTerm terminalNoIgual = ToTerm("!=", "noIgual");
-            KeyTerm terminalMayorIgual = ToTerm(">=", "mayorIgual");
-            KeyTerm terminalMenorIgual = ToTerm("<=", "menorIgual");
-            KeyTerm terminalMayorQue = ToTerm(">", "mayorQue");
-            KeyTerm terminalMenorQue = ToTerm("<", "menorQue");
 
             /* OPERADORES LOGICOS */
             KeyTerm terminalAnd = ToTerm("and", "and");
             KeyTerm terminalOr = ToTerm("or", "or");
 
+            // Marcamos los terminales, definidos hasta el momento, como palabras reservadas
+            this.MarkReservedWords(this.KeyTerms.Keys.ToArray());
+
             /* SIMBOLOS */
-            KeyTerm terminalParentesisIz = ToTerm("(", "parentesisIz");
-            KeyTerm terminalParentesisDer = ToTerm(")", "parentesisDer");
-            KeyTerm terminalCorcheteIz = ToTerm("[", "corcheteIz");
-            KeyTerm terminalCorcheteDer = ToTerm("]", "corcheteDer");
-            KeyTerm terminalLlaveIz = ToTerm("{", "llaveIz");
-            KeyTerm terminalLlaveDer = ToTerm("}", "llaveDer");
-            KeyTerm terminalPunto = ToTerm(".", "punto");
-            KeyTerm terminalPorcentaje = ToTerm("%", "porcentaje");
-            KeyTerm terminalNumeral = ToTerm("#", "numeral");
-            KeyTerm terminalComillaSimple = ToTerm("'", "comillaSimple");
             KeyTerm terminalComa = ToTerm(",", "coma");
-            KeyTerm terminalArroba = ToTerm("@", "arroba");
             KeyTerm terminalIgual = ToTerm("=", "igual");
 
             /* CONSTANTES E IDENTIFICADORES */
@@ -187,30 +155,14 @@ namespace Integra.Vision.Language.Grammars
             RegexBasedTerminal terminalUnidadDeTexto = new RegexBasedTerminal("texto", @"((?!where)|(?!from)|(?!select)).+");
             terminalUnidadDeTexto.AstConfig.NodeType = null;
             terminalUnidadDeTexto.AstConfig.DefaultNodeCreator = () => new StringNode();
-
-            /* PRECEDENCIA Y ASOCIATIVIDAD */
-            this.RegisterBracePair("(", ")");
-            this.RegisterBracePair("[", "]");
-            this.RegisterBracePair("{", "}");
-            this.RegisterOperators(40, Associativity.Right, terminalParentesisIz, terminalParentesisDer);
-            this.RegisterOperators(35, Associativity.Right, terminalMenos);
-            this.RegisterOperators(30, Associativity.Right, terminalIgualIgual, terminalNoIgual, terminalMayorIgual, terminalMayorQue, terminalMenorIgual, terminalMenorQue, terminalLike, terminalIn);
-            this.RegisterOperators(20, Associativity.Right, terminalAnd);
-            this.RegisterOperators(10, Associativity.Right, terminalOr);
-            this.RegisterOperators(5, Associativity.Right, terminalNot);
-            this.MarkPunctuation(terminalParentesisIz, terminalParentesisDer, terminalCorcheteIz, terminalCorcheteDer, terminalLlaveIz, terminalLlaveDer);
-
+            
             /* COMENTARIOS */
             CommentTerminal comentarioLinea = new CommentTerminal("comentario_linea", "//", "\n", "\r\n");
             CommentTerminal comentarioBloque = new CommentTerminal("comentario_bloque", "/*", "*/");
             NonGrammarTerminals.Add(comentarioLinea);
             NonGrammarTerminals.Add(comentarioBloque);
 
-            /* NO TERMINALES */
-            NonTerminal nt_PARAMETER_VALUES = new NonTerminal("PARAMETER_VALUES", typeof(ConstantValueNode));
-            nt_PARAMETER_VALUES.AstConfig.NodeType = null;
-            nt_PARAMETER_VALUES.AstConfig.DefaultNodeCreator = () => new ConstantValueNode();
-            
+            /* NO TERMINALES */            
             NonTerminal nt_LOGIC_EXPRESSION = this.expressionGrammar.LogicExpression;
             NonTerminal nt_SELECT = this.projectionGrammar.ProjectionList;
 
@@ -358,13 +310,6 @@ namespace Integra.Vision.Language.Grammars
             /* **************************** */
             /* CREAR USUARIO */
             nt_CREATE_USER.Rule = terminalCreateAlter + terminalUser + terminalId + terminalWith + terminalPassword + terminalIgual + terminalCadena + terminalComa + terminalStatus + terminalIgual + terminalUserStatus;
-            /* **************************** */
-            /* LISTA DE PARAMETROS */
-            nt_PARAMETER_LIST.Rule = nt_PARAMETER_LIST + nt_PARAMETER
-                                        | nt_PARAMETER;
-            /* **************************** */
-            /* PARAMETER */
-            nt_PARAMETER.Rule = terminalId + terminalArroba + terminalId + terminalIgual + nt_PARAMETER_VALUES;
             /* **************************** */
             /* CREAR FUENTE */
             nt_CREATE_SOURCE.Rule = terminalAdd + terminalSource + terminalId;

@@ -66,7 +66,12 @@ namespace Integra.Vision.Engine.Core
                 Func<EventObject, IDictionary<string, object>> select = constructor.CompileSelect(command.Select);
                 Func<EventObject, bool> where = constructor.CompileWhere(command.Where);
 
-                IDictionary<string, object> dic = listOfEvents.Where(where).Select(select).First();
+                IDictionary<string, object> dic = listOfEvents.Where(where).Select(select).FirstOrDefault();
+
+                if (dic == null)
+                {
+                    yield break;
+                }
 
                 foreach (var tuple in dic)
                 {

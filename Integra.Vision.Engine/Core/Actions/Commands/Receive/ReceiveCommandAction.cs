@@ -80,6 +80,11 @@ namespace Integra.Vision.Engine.Core
             if (onCondition.Equals(string.Empty))
             {
                 IDictionary<string, object> dic = this.LoadObject("httpSource", whereCondition, projectionScript);
+                if (dic == null)
+                {
+                    yield break;
+                }
+
                 foreach (var tuple in dic)
                 {
                     yield return new { Llave = tuple.Key, Valor = tuple.Value };
@@ -88,6 +93,11 @@ namespace Integra.Vision.Engine.Core
             else
             {
                 IDictionary<string, object> dic = this.LoadObject("httpSource", "httpSource", onCondition, whereCondition, projectionScript);
+                if (dic == null)
+                {
+                    yield break;
+                }
+
                 foreach (var tuple in dic)
                 {
                     yield return new { Llave = tuple.Key, Valor = tuple.Value };
@@ -189,7 +199,7 @@ namespace Integra.Vision.Engine.Core
                 Func<EventObject, IDictionary<string, object>> select = constructor.CompileSelect(projectionNode);
                 Func<EventObject, bool> where = constructor.CompileWhere(whereConditionNode);
 
-                return listOfEvents.Where(where).Select(select).First();
+                return listOfEvents.Where(where).Select(select).FirstOrDefault();
             }
             else
             {

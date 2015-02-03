@@ -41,8 +41,8 @@ namespace Integra.Vision.Language.ASTNodes.Constants
         public override void Init(AstContext context, ParseTreeNode treeNode)
         {
             base.Init(context, treeNode);
-            this.date = AddChild(NodeUseType.Parameter, "DateTimeNode", ChildrenNodes[1]) as AstNodeBase;
             this.function = (string)ChildrenNodes[0].Token.Value;
+            this.date = AddChild(NodeUseType.Parameter, "DateTimeNode", ChildrenNodes[1]) as AstNodeBase;
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[0].Token.Location.Line;
@@ -64,7 +64,7 @@ namespace Integra.Vision.Language.ASTNodes.Constants
             this.result.Children.Add(auxDate);
             this.result.NodeText = this.function + "(" + auxDate.NodeText + ")";
             this.result.Properties.Add("DataType", typeof(int));
-            this.result.NodeType = PlanNodeTypeEnum.Property;
+            this.result.NodeType = PlanNodeTypeEnum.DateTimeFunction;
 
             switch (this.function)
             {

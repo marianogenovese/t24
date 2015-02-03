@@ -14,6 +14,11 @@ namespace Integra.Vision.Language
         /// Constant type
         /// </summary>
         Constant = 10,
+        
+        /// <summary>
+        /// DateTimeFunction type
+        /// </summary>
+        DateTimeFunction = 11,
 
         /// <summary>
         /// Cast type
@@ -129,6 +134,11 @@ namespace Integra.Vision.Language
         /// Object prefix type
         /// </summary>
         ObjectPrefix = 76,
+
+        /// <summary>
+        /// Object property value type
+        /// </summary>
+        ObjectPropertyValue = 77,
 
         /// <summary>
         /// Negate type

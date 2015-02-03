@@ -6,6 +6,7 @@
 namespace Integra.Vision.Language.Grammars
 {
     using System;
+    using System.Linq;
     using Integra.Vision.Language.ASTNodes.Constants;
     using Integra.Vision.Language.ASTNodes.Lists;
     using Integra.Vision.Language.ASTNodes.Objects.Event;
@@ -21,9 +22,24 @@ namespace Integra.Vision.Language.Grammars
     internal sealed class ValuesGrammar : InterpretedLanguageGrammar
     {
         /// <summary>
-        /// Expression grammar
+        /// All values
         /// </summary>
         private NonTerminal values;
+
+        /// <summary>
+        /// Other values: string, boolean, null
+        /// </summary>
+        private NonTerminal otherValues;
+
+        /// <summary>
+        /// Numeric values
+        /// </summary>
+        private NonTerminal numericValues;
+
+        /// <summary>
+        /// Non constant values: objects
+        /// </summary>
+        private NonTerminal nonConstantValues;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ValuesGrammar"/> class
@@ -35,13 +51,46 @@ namespace Integra.Vision.Language.Grammars
         }
 
         /// <summary>
-        /// Gets the nonterminal for expression conditions
+        /// Gets the nonterminal for all values
         /// </summary>
         public NonTerminal Values
         {
             get
             {
                 return this.values;
+            }
+        }
+
+        /// <summary>
+        /// Gets the nonterminal for numeric values
+        /// </summary>
+        public NonTerminal NumericValues
+        {
+            get
+            {
+                return this.numericValues;
+            }
+        }
+
+        /// <summary>
+        /// Gets the nonterminal for non constant values
+        /// </summary>
+        public NonTerminal NonConstantValues
+        {
+            get
+            {
+                return this.nonConstantValues;
+            }
+        }
+
+        /// <summary>
+        /// Gets the nonterminal for other values
+        /// </summary>
+        public NonTerminal OtherValues
+        {
+            get
+            {
+                return this.otherValues;
             }
         }
 
@@ -63,6 +112,9 @@ namespace Integra.Vision.Language.Grammars
             KeyTerm terminalAdapter = ToTerm("Adapter", "Adapter");
             KeyTerm terminalName = ToTerm("Name", "Name");
 
+            // Marcamos los terminales, definidos hasta el momento, como palabras reservadas
+            this.MarkReservedWords(this.KeyTerms.Keys.ToArray());
+
             /* OPERADORES ARITMETICOS */
             KeyTerm terminalMenos = ToTerm("-", "menos");
             KeyTerm terminalMas = ToTerm("+", "mas");
@@ -81,6 +133,12 @@ namespace Integra.Vision.Language.Grammars
             KeyTerm terminalComa = ToTerm(",", "coma");
             KeyTerm terminalArroba = ToTerm("@", "arroba");
             KeyTerm terminalIgual = ToTerm("=", "igual");
+
+            /* COMENTARIOS */
+            CommentTerminal comentarioLinea = new CommentTerminal("comentario_linea", "//", "\n", "\r\n");
+            CommentTerminal comentarioBloque = new CommentTerminal("comentario_bloque", "/*", "*/");
+            NonGrammarTerminals.Add(comentarioLinea);
+            NonGrammarTerminals.Add(comentarioBloque);
 
             /* CONSTANTES E IDENTIFICADORES */
             Terminal terminalNumero = TerminalFactory.CreateCSharpNumber("numero");
@@ -114,6 +172,19 @@ namespace Integra.Vision.Language.Grammars
             this.values = new NonTerminal("VALUES", typeof(ConstantValueNode));
             this.values.AstConfig.NodeType = null;
             this.values.AstConfig.DefaultNodeCreator = () => new ConstantValueNode();
+            this.numericValues = new NonTerminal("NUMERIC_VALUES", typeof(ConstantValueNode));
+            this.numericValues.AstConfig.NodeType = null;
+            this.numericValues.AstConfig.DefaultNodeCreator = () => new ConstantValueNode();
+            this.nonConstantValues = new NonTerminal("NON_CONSTANT_VALUES", typeof(ConstantValueNode));
+            this.nonConstantValues.AstConfig.NodeType = null;
+            this.nonConstantValues.AstConfig.DefaultNodeCreator = () => new ConstantValueNode();
+            this.otherValues = new NonTerminal("OTHER_VALUES", typeof(ConstantValueNode));
+            this.otherValues.AstConfig.NodeType = null;
+            this.otherValues.AstConfig.DefaultNodeCreator = () => new ConstantValueNode();
+            NonTerminal nt_DATETIME_TIMESPAN_VALUES = new NonTerminal("DATETIME_TIMESPAN_VALUES", typeof(ConstantValueNode));
+            nt_DATETIME_TIMESPAN_VALUES.AstConfig.NodeType = null;
+            nt_DATETIME_TIMESPAN_VALUES.AstConfig.DefaultNodeCreator = () => new ConstantValueNode();
+
             NonTerminal nt_PARAMETER_VALUES = new NonTerminal("PARAMETER_VALUES", typeof(ConstantValueNode));
             nt_PARAMETER_VALUES.AstConfig.NodeType = null;
             nt_PARAMETER_VALUES.AstConfig.DefaultNodeCreator = () => new ConstantValueNode();
@@ -147,29 +218,47 @@ namespace Integra.Vision.Language.Grammars
             NonTerminal nt_UNARY_ARITHMETIC_EXPRESSION = new NonTerminal("UNARY_ARITHMETIC_EXPRESSION", typeof(UnaryArithmeticExpressionNode));
             nt_UNARY_ARITHMETIC_EXPRESSION.AstConfig.NodeType = null;
             nt_UNARY_ARITHMETIC_EXPRESSION.AstConfig.DefaultNodeCreator = () => new UnaryArithmeticExpressionNode();
+            NonTerminal nt_ARITHMETIC_EXPRESSION = new NonTerminal("ARITHMETIC_EXPRESSION", typeof(ArithmeticExpressionNode));
+            nt_ARITHMETIC_EXPRESSION.AstConfig.NodeType = null;
+            nt_ARITHMETIC_EXPRESSION.AstConfig.DefaultNodeCreator = () => new ArithmeticExpressionNode();
 
             /* CONSTANTES */
-            this.values.Rule = terminalDateTimeValue
-                            | terminalBool
-                            | terminalNull
-                            | terminalNumero
-                            | terminalCadena
-                            | nt_EVENT_PROPERTIES
-                            | nt_UNARY_ARITHMETIC_EXPRESSION
-                            | nt_EVENT_WITH_SOURCE
-                            | nt_OBJECT_VALUE
-                            | nt_DATE_FUNCTIONS;
+            this.values.Rule = this.numericValues
+                                | this.nonConstantValues
+                                | this.otherValues;
+
+            this.nonConstantValues.Rule = nt_EVENT_WITH_SOURCE
+                                            | nt_OBJECT_VALUE
+                                            | nt_EVENT_PROPERTIES;
+
+            this.numericValues.Rule = terminalDateTimeValue
+                                        | terminalNumero
+                                        | nt_DATE_FUNCTIONS
+                                        | nt_ARITHMETIC_EXPRESSION
+                                        | nt_UNARY_ARITHMETIC_EXPRESSION;
+            
+            this.otherValues.Rule = terminalBool
+                                | terminalNull
+                                | terminalCadena;
+
+            nt_DATETIME_TIMESPAN_VALUES.Rule = this.nonConstantValues
+                                            | terminalDateTimeValue;
+
             /* **************************** */
             /* FUNCIONES DE FECHAS */
-            nt_DATE_FUNCTIONS.Rule = terminalHour + terminalParentesisIz + terminalDateTimeValue + terminalParentesisDer
-                                    | terminalMinute + terminalParentesisIz + terminalDateTimeValue + terminalParentesisDer
-                                    | terminalSecond + terminalParentesisIz + terminalDateTimeValue + terminalParentesisDer;
+            nt_DATE_FUNCTIONS.Rule = terminalHour + terminalParentesisIz + nt_DATETIME_TIMESPAN_VALUES + terminalParentesisDer
+                                    | terminalMinute + terminalParentesisIz + nt_DATETIME_TIMESPAN_VALUES + terminalParentesisDer
+                                    | terminalSecond + terminalParentesisIz + nt_DATETIME_TIMESPAN_VALUES + terminalParentesisDer;
+            /* **************************** */
+            /* EXPRESIONES ARITMETICAS */
+            nt_ARITHMETIC_EXPRESSION.Rule = nt_ARITHMETIC_EXPRESSION + terminalMenos + nt_ARITHMETIC_EXPRESSION
+                                            | this.numericValues;
             /* **************************** */
             /* OPERACION ARITMETICA UNARIA */
             nt_UNARY_ARITHMETIC_EXPRESSION.Rule = terminalMenos + terminalNumero
                                                     | terminalMas + terminalNumero;
             /* **************************** */
-            /* OBJETOS CON/SIN ALIAS */
+            /* VALORES DE LOS OBJETOS */
             nt_OBJECT_VALUE.Rule = nt_OBJECT;
             /* **************************** */
             /* OBJETOS */
@@ -191,7 +280,7 @@ namespace Integra.Vision.Language.Grammars
             /* **************************** */
             /* EVENTO CON FUENTE */
             nt_EVENT_WITH_SOURCE.Rule = terminalId + terminalPunto + nt_OBJECT_VALUE
-                                        | terminalId + terminalPunto + nt_EVENT_PROPERTIES;
+                                            | terminalId + terminalPunto + nt_EVENT_PROPERTIES;
             /* **************************** */
 
             this.Root = this.values;

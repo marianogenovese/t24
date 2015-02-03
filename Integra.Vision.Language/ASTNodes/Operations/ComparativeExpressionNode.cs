@@ -74,7 +74,7 @@ namespace Integra.Vision.Language.ASTNodes.Operations
                 this.leftNode = AddChild(NodeUseType.Parameter, "leftNode", ChildrenNodes[0]) as AstNodeBase;
             }
         }
-        
+
         /// <summary>
         /// selects the operations to execute
         /// </summary>
@@ -164,31 +164,42 @@ namespace Integra.Vision.Language.ASTNodes.Operations
 
             if (selectedType != null)
             {
+                PlanNode casteoLeft = null;
                 if (validate.ConvertLeftNode)
                 {
-                    PlanNode casteo = new PlanNode();
-                    casteo.Column = leftNode.Column;
-                    casteo.Line = leftNode.Line;
-                    casteo.NodeText = leftNode.NodeText;
-                    casteo.NodeType = PlanNodeTypeEnum.Cast;
-                    casteo.Properties.Add("DataType", selectedType.ToString());
-                    casteo.Children = new List<PlanNode>();
-                    casteo.Children.Add(leftNode);
-                    this.result.Children.Add(casteo);
-                    this.result.Children.Add(rightNode);
+                    casteoLeft = new PlanNode();
+                    casteoLeft.Column = leftNode.Column;
+                    casteoLeft.Line = leftNode.Line;
+                    casteoLeft.NodeText = leftNode.NodeText;
+                    casteoLeft.NodeType = PlanNodeTypeEnum.Cast;
+                    casteoLeft.Properties.Add("DataType", selectedType.ToString());
+                    casteoLeft.Children = new List<PlanNode>();
+                    casteoLeft.Children.Add(leftNode);
+                    this.result.Children.Add(casteoLeft);
                 }
-                else if (validate.ConvertRightNode)
+
+                PlanNode casteoRight = null;
+                if (validate.ConvertRightNode)
                 {
-                    PlanNode casteo = new PlanNode();
-                    casteo.Column = rightNode.Column;
-                    casteo.Line = rightNode.Line;
-                    casteo.NodeText = rightNode.NodeText;
-                    casteo.NodeType = PlanNodeTypeEnum.Cast;
-                    casteo.Properties.Add("DataType", selectedType.ToString());
-                    casteo.Children = new List<PlanNode>();
-                    casteo.Children.Add(rightNode);
+                    casteoRight = new PlanNode();
+                    casteoRight.Column = rightNode.Column;
+                    casteoRight.Line = rightNode.Line;
+                    casteoRight.NodeText = rightNode.NodeText;
+                    casteoRight.NodeType = PlanNodeTypeEnum.Cast;
+                    casteoRight.Properties.Add("DataType", selectedType.ToString());
+                    casteoRight.Children = new List<PlanNode>();
+                    casteoRight.Children.Add(rightNode);
+                    this.result.Children.Add(casteoRight);
+                }
+
+                if (casteoLeft == null)
+                {
                     this.result.Children.Add(leftNode);
-                    this.result.Children.Add(casteo);
+                }
+
+                if (casteoRight == null)
+                {
+                    this.result.Children.Add(rightNode);
                 }
             }
             else
@@ -251,9 +262,9 @@ namespace Integra.Vision.Language.ASTNodes.Operations
         /// <returns>true if is numeric type</returns>
         public bool IsNumericType(Type type)
         {
-            if (type == null) 
-            { 
-                return false; 
+            if (type == null)
+            {
+                return false;
             }
 
             switch (Type.GetTypeCode(type))

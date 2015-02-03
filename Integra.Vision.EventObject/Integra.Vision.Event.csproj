@@ -50,6 +50,7 @@
     <Compile Include="EventAgent.cs" />
     <Compile Include="EventObject.cs" />
     <Compile Include="EventMessage.cs" />
+    <Compile Include="EventPropertiesEnum.cs" />
     <Compile Include="MessageElement.cs" />
     <Compile Include="MessageElementCollection.cs" />
     <Compile Include="MessageElementNode.cs" />

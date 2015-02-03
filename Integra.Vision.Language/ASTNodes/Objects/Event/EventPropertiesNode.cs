@@ -64,35 +64,45 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Event
             this.EndEvaluate(thread);
 
             this.result.NodeType = PlanNodeTypeEnum.Property;
-            this.result.NodeText = auxEvent.NodeText + "." + this.property;
             this.result.Children = new List<PlanNode>();
             this.result.Children.Add(auxEvent);
-            this.result.Properties.Add(SR.PrpoertyProperty, this.property);
 
             if (this.property.ToLower() == SR.TimestampProperty)
             {
-                this.result.Properties.Add(SR.DataTypeProperty, typeof(DateTime).ToString());
+                this.result.Properties.Add(SR.PrpoertyProperty, EventPropertiesEnum.Timestamp.ToString());
+                this.result.Properties.Add(SR.DataTypeProperty, typeof(DateTime));
+                this.result.NodeText = auxEvent.NodeText + "." + EventPropertiesEnum.Timestamp.ToString();
             }
             else if (this.property.ToLower() == SR.NameProperty)
             {
-                this.result.Properties.Add(SR.DataTypeProperty, typeof(string).ToString());
+                this.result.Properties.Add(SR.PrpoertyProperty, EventPropertiesEnum.Name.ToString());
+                this.result.Properties.Add(SR.DataTypeProperty, typeof(string));
+                this.result.NodeText = auxEvent.NodeText + "." + EventPropertiesEnum.Name.ToString();
             }
             else if (this.property.ToLower() == SR.AdapterProperty)
             {
-                this.result.Properties.Add(SR.DataTypeProperty, typeof(EventAdapter).ToString());
+                this.result.Properties.Add(SR.PrpoertyProperty, EventPropertiesEnum.Adapter.ToString());
+                this.result.Properties.Add(SR.DataTypeProperty, typeof(EventAdapter));
+                this.result.NodeText = auxEvent.NodeText + "." + EventPropertiesEnum.Adapter.ToString();
             }
             else if (this.property.ToLower() == SR.AgentProperty)
             {
-                this.result.Properties.Add(SR.DataTypeProperty, typeof(EventAgent).ToString());
+                this.result.Properties.Add(SR.PrpoertyProperty, EventPropertiesEnum.Agent.ToString());
+                this.result.Properties.Add(SR.DataTypeProperty, typeof(EventAgent));
+                this.result.NodeText = auxEvent.NodeText + "." + EventPropertiesEnum.Agent.ToString();
             }
             else if (this.property.ToLower() == SR.MessageProperty)
             {
-                this.result.Properties.Add(SR.DataTypeProperty, typeof(EventMessage).ToString());
+                this.result.Properties.Add(SR.PrpoertyProperty, EventPropertiesEnum.Message.ToString());
+                this.result.Properties.Add(SR.DataTypeProperty, typeof(EventMessage));
+                this.result.NodeText = auxEvent.NodeText + "." + EventPropertiesEnum.Message.ToString();
                 this.result.NodeType = PlanNodeTypeEnum.ObjectMessage;
             }
             else
             {
-                this.result.Properties.Add(SR.DataTypeProperty, typeof(string).ToString());
+                this.result.Properties.Add(SR.PrpoertyProperty, this.property);
+                this.result.Properties.Add(SR.DataTypeProperty, typeof(string));
+                this.result.NodeText = auxEvent.NodeText + "." + this.property;
             }
 
             return this.result;

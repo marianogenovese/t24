@@ -6,6 +6,7 @@
 namespace Integra.Vision.Language.Grammars
 {
     using System;
+    using System.Linq;
     using Integra.Vision.Language.ASTNodes.Constants;
     using Integra.Vision.Language.ASTNodes.Lists;
     using Integra.Vision.Language.ASTNodes.Objects.Event;
@@ -24,6 +25,11 @@ namespace Integra.Vision.Language.Grammars
         /// Grammar to add the expression rules
         /// </summary>
         private NonTerminal logicExpression;
+
+        /// <summary>
+        /// Values grammar
+        /// </summary>
+        private ValuesGrammar valuesGrammar;
                 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionGrammar"/> class
@@ -31,6 +37,7 @@ namespace Integra.Vision.Language.Grammars
         public ExpressionGrammar()
             : base(false)
         {
+            this.valuesGrammar = new ValuesGrammar();
             this.Grammar(false);
         }
 
@@ -41,6 +48,7 @@ namespace Integra.Vision.Language.Grammars
         public ExpressionGrammar(bool prueba)
             : base(false)
         {
+            this.valuesGrammar = new ValuesGrammar();
             this.Grammar(prueba);
         }
 
@@ -79,6 +87,13 @@ namespace Integra.Vision.Language.Grammars
             KeyTerm terminalAdapter = ToTerm("Adapter", "Adapter");
             KeyTerm terminalName = ToTerm("Name", "Name");
 
+            /* OPERADORES LOGICOS */
+            KeyTerm terminalAnd = ToTerm("and", "and");
+            KeyTerm terminalOr = ToTerm("or", "or");
+
+            // Marcamos los terminales, definidos hasta el momento, como palabras reservadas
+            this.MarkReservedWords(this.KeyTerms.Keys.ToArray());
+
             /* OPERADORES ARITMETICOS */
             KeyTerm terminalMenos = ToTerm("-", "menos");
             KeyTerm terminalMas = ToTerm("+", "mas");
@@ -90,11 +105,7 @@ namespace Integra.Vision.Language.Grammars
             KeyTerm terminalMenorIgual = ToTerm("<=", "menorIgual");
             KeyTerm terminalMayorQue = ToTerm(">", "mayorQue");
             KeyTerm terminalMenorQue = ToTerm("<", "menorQue");
-
-            /* OPERADORES LOGICOS */
-            KeyTerm terminalAnd = ToTerm("and", "and");
-            KeyTerm terminalOr = ToTerm("or", "or");
-            
+                                    
             /* SIMBOLOS */
             KeyTerm terminalParentesisIz = ToTerm("(", "parentesisIz");
             KeyTerm terminalParentesisDer = ToTerm(")", "parentesisDer");
@@ -109,7 +120,13 @@ namespace Integra.Vision.Language.Grammars
             KeyTerm terminalComa = ToTerm(",", "coma");
             KeyTerm terminalArroba = ToTerm("@", "arroba");
             KeyTerm terminalIgual = ToTerm("=", "igual");
-            
+
+            /* COMENTARIOS */
+            CommentTerminal comentarioLinea = new CommentTerminal("comentario_linea", "//", "\n", "\r\n");
+            CommentTerminal comentarioBloque = new CommentTerminal("comentario_bloque", "/*", "*/");
+            NonGrammarTerminals.Add(comentarioLinea);
+            NonGrammarTerminals.Add(comentarioBloque);
+
             /* CONSTANTES E IDENTIFICADORES */
             Terminal terminalNumero = TerminalFactory.CreateCSharpNumber("numero");
             terminalNumero.AstConfig.NodeType = null;
@@ -129,10 +146,6 @@ namespace Integra.Vision.Language.Grammars
             terminalNull.Add("null", null);
             terminalNull.AstConfig.NodeType = null;
             terminalNull.AstConfig.DefaultNodeCreator = () => new NullValueNode();
-            
-            /*Terminal terminalId = TerminalFactory.CreateCSharpIdentifier("identificador");
-            terminalId.AstConfig.NodeType = null;
-            terminalId.AstConfig.DefaultNodeCreator = () => new IdentifierNode();*/
 
             RegexBasedTerminal terminalId = new RegexBasedTerminal("[a-zA-Z]+([a-zA-Z]|[0-9]|[_])*");
             terminalId.AstConfig.NodeType = null;
@@ -151,15 +164,9 @@ namespace Integra.Vision.Language.Grammars
             this.MarkPunctuation(terminalParentesisIz, terminalParentesisDer, terminalCorcheteIz, terminalCorcheteDer, terminalLlaveIz, terminalLlaveDer);
 
             /* NO TERMINALES */
-            NonTerminal nt_VALUES = new NonTerminal("VALUES", typeof(ConstantValueNode));
-            nt_VALUES.AstConfig.NodeType = null;
-            nt_VALUES.AstConfig.DefaultNodeCreator = () => new ConstantValueNode();
-            NonTerminal nt_NUMERIC_VALUES = new NonTerminal("VALUES", typeof(ConstantValueNode));
-            nt_NUMERIC_VALUES.AstConfig.NodeType = null;
-            nt_NUMERIC_VALUES.AstConfig.DefaultNodeCreator = () => new ConstantValueNode();
-            NonTerminal nt_NON_CONSTANT_VALUES = new NonTerminal("VALUES", typeof(ConstantValueNode));
-            nt_NON_CONSTANT_VALUES.AstConfig.NodeType = null;
-            nt_NON_CONSTANT_VALUES.AstConfig.DefaultNodeCreator = () => new ConstantValueNode();
+            NonTerminal nt_EXPRESSION_VALUES = new NonTerminal("EXPRESSION_VALUES", typeof(ConstantValueNode));
+            nt_EXPRESSION_VALUES.AstConfig.NodeType = null;
+            nt_EXPRESSION_VALUES.AstConfig.DefaultNodeCreator = () => new ConstantValueNode();
 
             NonTerminal nt_PARAMETER_VALUES = new NonTerminal("PARAMETER_VALUES", typeof(ConstantValueNode));
             nt_PARAMETER_VALUES.AstConfig.NodeType = null;
@@ -194,9 +201,6 @@ namespace Integra.Vision.Language.Grammars
             NonTerminal nt_UNARY_ARITHMETIC_EXPRESSION = new NonTerminal("UNARY_ARITHMETIC_EXPRESSION", typeof(UnaryArithmeticExpressionNode));
             nt_UNARY_ARITHMETIC_EXPRESSION.AstConfig.NodeType = null;
             nt_UNARY_ARITHMETIC_EXPRESSION.AstConfig.DefaultNodeCreator = () => new UnaryArithmeticExpressionNode();
-            NonTerminal nt_ARITHMETIC_EXPRESSION = new NonTerminal("ARITHMETIC_EXPRESSION", typeof(ArithmeticExpressionNode));
-            nt_ARITHMETIC_EXPRESSION.AstConfig.NodeType = null;
-            nt_ARITHMETIC_EXPRESSION.AstConfig.DefaultNodeCreator = () => new ArithmeticExpressionNode();
             NonTerminal nt_COMPARATIVE_EXPRESSION = new NonTerminal("COMPARATIVE_EXPRESSION", typeof(ComparativeExpressionNode));
             nt_COMPARATIVE_EXPRESSION.AstConfig.NodeType = null;
             nt_COMPARATIVE_EXPRESSION.AstConfig.DefaultNodeCreator = () => new ComparativeExpressionNode();
@@ -204,6 +208,7 @@ namespace Integra.Vision.Language.Grammars
             this.logicExpression.AstConfig.NodeType = null;
             this.logicExpression.AstConfig.DefaultNodeCreator = () => new LogicExpressionNode();
 
+            /* EXPRESIONES LÓGICAS */
             this.logicExpression.Rule = this.logicExpression + terminalAnd + this.logicExpression
                                     | this.logicExpression + terminalOr + this.logicExpression
                                     | terminalParentesisIz + this.logicExpression + terminalParentesisDer
@@ -211,77 +216,21 @@ namespace Integra.Vision.Language.Grammars
                                     | nt_COMPARATIVE_EXPRESSION;
             /* **************************** */
             /* EXPRESIONES COMPARATIVAS */
-            nt_COMPARATIVE_EXPRESSION.Rule = nt_VALUES + terminalIgualIgual + nt_VALUES
-                                            | nt_VALUES + terminalNoIgual + nt_VALUES
-                                            | nt_VALUES + terminalMayorIgual + nt_VALUES
-                                            | nt_VALUES + terminalMayorQue + nt_VALUES
-                                            | nt_VALUES + terminalMenorIgual + nt_VALUES
-                                            | nt_VALUES + terminalMenorQue + nt_VALUES
-                                            | nt_VALUES + terminalLike + terminalCadena
+            nt_COMPARATIVE_EXPRESSION.Rule = nt_EXPRESSION_VALUES + terminalIgualIgual + nt_EXPRESSION_VALUES
+                                            | nt_EXPRESSION_VALUES + terminalNoIgual + nt_EXPRESSION_VALUES
+                                            | nt_EXPRESSION_VALUES + terminalMayorIgual + nt_EXPRESSION_VALUES
+                                            | nt_EXPRESSION_VALUES + terminalMayorQue + nt_EXPRESSION_VALUES
+                                            | nt_EXPRESSION_VALUES + terminalMenorIgual + nt_EXPRESSION_VALUES
+                                            | nt_EXPRESSION_VALUES + terminalMenorQue + nt_EXPRESSION_VALUES
+                                            | nt_EXPRESSION_VALUES + terminalLike + terminalCadena
                                             | terminalParentesisIz + nt_COMPARATIVE_EXPRESSION + terminalParentesisDer
                                             | terminalNot + nt_COMPARATIVE_EXPRESSION;
             /* **************************** */
-            /* EXPRESIONES ARITMETICAS */
-            nt_ARITHMETIC_EXPRESSION.Rule = nt_ARITHMETIC_EXPRESSION + terminalMenos + nt_ARITHMETIC_EXPRESSION
-                                            | nt_NUMERIC_VALUES;
-            /* **************************** */
-            /* VALORES PERMITIDOS PARA LOS PARAMETROS DE UN ADAPTADOR */
-            nt_PARAMETER_VALUES.Rule = terminalDateTimeValue
-                                        | terminalBool
-                                        | terminalNull
-                                        | terminalNumero
-                                        | terminalCadena;
-            /* **************************** */
+            
             /* CONSTANTES */
-            nt_VALUES.Rule = terminalBool
-                                | terminalNull
-                                | terminalCadena
-                                | nt_NON_CONSTANT_VALUES
-                                | nt_ARITHMETIC_EXPRESSION;
-
-            nt_NON_CONSTANT_VALUES.Rule = nt_EVENT_PROPERTIES
-                                            | nt_EVENT_WITH_SOURCE
-                                            | nt_OBJECT_VALUE;
-
-            nt_NUMERIC_VALUES.Rule = terminalDateTimeValue
-                                        | terminalNumero
-                                        | nt_DATE_FUNCTIONS
-                                        | nt_UNARY_ARITHMETIC_EXPRESSION;
-
-            /* **************************** */
-            /* FUNCIONES DE FECHAS */
-            nt_DATE_FUNCTIONS.Rule = terminalHour + terminalParentesisIz + terminalDateTimeValue + terminalParentesisDer
-                                    | terminalMinute + terminalParentesisIz + terminalDateTimeValue + terminalParentesisDer
-                                    | terminalSecond + terminalParentesisIz + terminalDateTimeValue + terminalParentesisDer;
-            /* **************************** */
-            /* OPERACION ARITMETICA UNARIA */
-            nt_UNARY_ARITHMETIC_EXPRESSION.Rule = terminalMenos + terminalNumero
-                                                    | terminalMas + terminalNumero;
-            /* **************************** */
-            /* OBJETOS CON/SIN ALIAS */
-            nt_OBJECT_VALUE.Rule = nt_OBJECT;
-            /* **************************** */
-            /* OBJETOS */
-            nt_OBJECT.Rule = nt_OBJECT + terminalPunto + nt_OBJECT_ID_OR_NUMBER
-                                | nt_EVENT + terminalPunto + terminalMessage + terminalPunto + nt_OBJECT_ID_OR_NUMBER + terminalPunto + nt_OBJECT_ID_OR_NUMBER;
-            /* **************************** */
-            /* IDENTIFICADORES DE PARTES Y CAMPOS DE OBJETOS */
-            nt_OBJECT_ID_OR_NUMBER.Rule = terminalNumeral + terminalNumero
-                                        | terminalId
-                                        | terminalCorcheteIz + terminalCadena + terminalCorcheteDer;
-            /* **************************** */
-            /* VALORES DEL EVENTO */
-            nt_EVENT_PROPERTIES.Rule = nt_EVENT_PROPERTIES + terminalPunto + terminalId
-                                        | nt_EVENT + terminalPunto + terminalAdapter
-                                        | nt_EVENT + terminalPunto + terminalAgent;
-            /* **************************** */
-            /* EVENTO */
-            nt_EVENT.Rule = terminalArroba + terminalEvent;
-            /* **************************** */
-            /* EVENTO CON FUENTE */
-            nt_EVENT_WITH_SOURCE.Rule = terminalId + terminalPunto + nt_OBJECT_VALUE
-                                        | terminalId + terminalPunto + nt_EVENT_PROPERTIES;
-            /* **************************** */
+            nt_EXPRESSION_VALUES.Rule = this.valuesGrammar.OtherValues
+                                        | this.valuesGrammar.NonConstantValues
+                                        | this.valuesGrammar.NumericValues;
 
             this.Root = this.logicExpression;
 

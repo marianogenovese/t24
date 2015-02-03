@@ -273,6 +273,8 @@ namespace Integra.Vision.Language.Runtime
                     return this.GenerateEvent(actualNode);
                 case PlanNodeTypeEnum.ObjectPrefix:
                     return this.GenerateObjectPrefix(actualNode);
+                case PlanNodeTypeEnum.DateTimeFunction:
+                    return this.GenerateDateFunction(actualNode, leftNode);
                 default:
                     return Expression.Constant(null);
             }
@@ -474,56 +476,6 @@ namespace Integra.Vision.Language.Runtime
         private Expression GenerateFrom(PlanNode actualNode, Expression leftNode)
         {
             return leftNode;
-        }
-
-        /// <summary>
-        /// Create a expression tree
-        /// </summary>
-        /// <param name="actualNode">actual plan</param>
-        /// <param name="leftNode">left child expression</param>
-        /// <returns>expression tree of actual plan</returns>
-        private Expression GenerateProperty(PlanNode actualNode, Expression leftNode)
-        {
-            Type tipo = Type.GetType(actualNode.Properties["DataType"].ToString());
-            string propiedad = actualNode.Properties["Property"].ToString();
-            
-            try
-            {
-                ParameterExpression param = Expression.Variable(tipo, "variable");
-
-                Expression tryCatchExpr =
-                    Expression.Block(
-                        new[] { param },
-                        Expression.IfThen(
-                            Expression.Equal(Expression.Property(leftNode, typeof(EventObject).GetProperty(propiedad)), Expression.Constant(null)),
-                            Expression.TryCatch(
-                                Expression.Block(
-                                    Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Se obtendrá la siguiente propiedad: " + propiedad)),
-                                    Expression.Assign(param, Expression.Property(leftNode, propiedad)),
-                                    Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Se obtuvo la siguiente propiedad: " + propiedad)),
-                                    Expression.Empty()
-                                ),
-                                Expression.Catch(
-                                    typeof(Exception),
-                                    Expression.Block(
-                                        Expression.Throw(
-                                            Expression.New(
-                                                typeof(Exception).GetConstructor(new Type[] { typeof(string) }),
-                                                Expression.Constant("No fue posible obtener la propiedad " + propiedad + ", error en la linea: " + actualNode.Line + " columna: " + actualNode.Column + " con " + actualNode.NodeText)
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        ),
-                        param);
-
-                return tryCatchExpr;
-            }
-            catch (Exception e)
-            {
-                throw new CompilationException("Error al compilar la propiedad", e);
-            }
         }
 
         /// <summary>
@@ -806,6 +758,113 @@ namespace Integra.Vision.Language.Runtime
             catch (Exception e)
             {
                 throw new CompilationException("Error al compilar la expresion logica 'or'", e);
+            }
+        }
+
+        /// <summary>
+        /// Create a expression tree
+        /// </summary>
+        /// <param name="actualNode">actual plan</param>
+        /// <param name="leftNode">left child expression</param>
+        /// <returns>expression tree of actual plan</returns>
+        private Expression GenerateDateFunction(PlanNode actualNode, Expression leftNode)
+        {
+            Type tipo = (Type)actualNode.Properties["DataType"];
+            string propiedad = actualNode.Properties["Property"].ToString();
+
+            ParameterExpression param = Expression.Variable(tipo, "variable");
+
+            if (leftNode.Type.GetProperty(propiedad) != null)
+            {
+                Expression tryCatchExpr =
+                    Expression.Block(
+                        new[] { param },
+                        Expression.IfThenElse(
+                            Expression.Equal(Expression.Constant(leftNode.Type.GetProperty(propiedad)), Expression.Constant(null)),
+                            Expression.Assign(param, Expression.Default(tipo)),
+                            Expression.TryCatch(
+                                Expression.Block(
+                                    Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Se obtendrá la siguiente propiedad: " + propiedad)),
+                                    Expression.Assign(param, Expression.Call(leftNode, leftNode.Type.GetProperty(propiedad).GetMethod)),
+                                    Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Se obtuvo la siguiente propiedad: " + propiedad)),
+                                    Expression.Empty()
+                                ),
+                                Expression.Catch(
+                                    typeof(Exception),
+                                    Expression.Block(
+                                        Expression.Throw(
+                                            Expression.New(
+                                                typeof(Exception).GetConstructor(new Type[] { typeof(string) }),
+                                                Expression.Constant("Error al compilar la funcion '" + propiedad + "', no es posible obtener el valor solicitado. Error en la linea: " + actualNode.Line + " columna: " + actualNode.Column + " con " + actualNode.NodeText)
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        ),
+                        param);
+
+                return tryCatchExpr;
+            }
+            else
+            {
+                throw new CompilationException("Error al compilar la funcion '" + propiedad + "', no es posible obtener el valor solicitado. Error en la linea: " + actualNode.Line + " columna: " + actualNode.Column + " con " + actualNode.NodeText);
+            }
+        }
+
+        /// <summary>
+        /// Create a expression tree
+        /// </summary>
+        /// <param name="actualNode">actual plan</param>
+        /// <param name="leftNode">left child expression</param>
+        /// <returns>expression tree of actual plan</returns>
+        private Expression GenerateProperty(PlanNode actualNode, Expression leftNode)
+        {
+            Type tipo = (Type)actualNode.Properties["DataType"];
+            string propiedad = actualNode.Properties["Property"].ToString();
+
+            try
+            {
+                ParameterExpression param = Expression.Variable(tipo, "variable");
+
+                if (leftNode.Type.GetProperty(propiedad) != null)
+                {
+                    Expression tryCatchExpr =
+                        Expression.Block(
+                            new[] { param },
+                            Expression.IfThenElse(
+                                Expression.Equal(Expression.Constant(leftNode.Type.GetProperty(propiedad)), Expression.Constant(null)),
+                                Expression.Assign(param, Expression.Default(tipo)),
+                                Expression.TryCatch(
+                                    Expression.Block(
+                                        Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Se obtendrá la siguiente propiedad: " + propiedad)),
+                                        Expression.Assign(param, Expression.Call(leftNode, leftNode.Type.GetProperty(propiedad).GetMethod)),
+                                        Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Se obtuvo la siguiente propiedad: " + propiedad)),
+                                        Expression.Empty()
+                                    ),
+                                    Expression.Catch(
+                                        typeof(Exception),
+                                        Expression.Block(
+                                            Expression.Throw(
+                                                Expression.New(
+                                                    typeof(Exception).GetConstructor(new Type[] { typeof(string) }),
+                                                    Expression.Constant("No fue posible obtener la propiedad " + propiedad + ", error en la linea: " + actualNode.Line + " columna: " + actualNode.Column + " con " + actualNode.NodeText)
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            ),
+                            param);
+
+                    return tryCatchExpr;
+                }
+
+                return Expression.Constant(null);
+            }
+            catch (Exception e)
+            {
+                throw new CompilationException("Error al compilar la propiedad", e);
             }
         }
 

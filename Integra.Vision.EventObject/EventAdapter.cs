@@ -17,7 +17,7 @@ namespace Integra.Vision.Event
         /// timestamp
         /// Doc go here
         /// </summary>
-        private DateTime timestamp;
+        private DateTime timestamp = DateTime.Now;
 
         /// <summary>
         /// name
@@ -49,11 +49,6 @@ namespace Integra.Vision.Event
         {
             get
             {
-                if (this.timestamp == null)
-                {
-                    this.timestamp = DateTime.Now;
-                }
-
                 return this.timestamp;
             }
         }
