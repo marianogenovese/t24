@@ -463,6 +463,86 @@ namespace Integra.Vision.Language
         /// <summary>
         /// User query type
         /// </summary>
-        UserQuery = 250
+        UserQuery = 250,
+
+        /// <summary>
+        /// From observable type
+        /// </summary>
+        ObservableFrom = 500,
+
+        /// <summary>
+        /// From for lambda expression
+        /// </summary>
+        ObservableFromForLambda = 501,
+
+        /// <summary>
+        /// Where observable type
+        /// </summary>
+        ObservableWhere = 502,
+
+        /// <summary>
+        /// Window observable type
+        /// </summary>
+        ObservableWindow = 503,
+
+        /// <summary>
+        /// Group by observable type
+        /// </summary>
+        ObservableGroupBy = 504,
+
+        /// <summary>
+        /// Select Observable type
+        /// </summary>
+        ObservableSelect = 505,
+
+        /// <summary>
+        /// Select many observable type
+        /// </summary>
+        ObservableSelectManyForWindow = 506,
+
+        /// <summary>
+        /// Select many for groupby observable type
+        /// </summary>
+        ObservableSelectManyForGroupBy = 507,
+
+        /// <summary>
+        /// Count observable type
+        /// </summary>
+        ObservableCount = 508,
+
+        /// <summary>
+        /// Select for group by observable type
+        /// </summary>
+        ObservableSelectForGroupBy = 509,
+
+        /// <summary>
+        /// Select for buffer observable type
+        /// </summary>
+        ObservableSelectForBuffer = 510,
+
+        /// <summary>
+        /// Buffer observable type
+        /// </summary>
+        ObservableBuffer = 511,
+        
+        /// <summary>
+        /// Projection type
+        /// </summary>
+        Projection = 512,
+                
+        /// <summary>
+        /// Enumerable count type
+        /// </summary>
+        EnumerableCount = 613,
+
+        /// <summary>
+        /// Sum observable type
+        /// </summary>
+        EnumerableSum = 614,
+
+        /// <summary>
+        /// New Scope type
+        /// </summary>
+        NewScope = 700
     }
 }

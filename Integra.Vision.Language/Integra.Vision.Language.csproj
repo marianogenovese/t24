@@ -94,6 +94,7 @@
     <Compile Include="ASTNodes\Permissions\PermissionsBodyNode.cs" />
     <Compile Include="ASTNodes\Permissions\PermissionsNode.cs" />
     <Compile Include="ASTNodes\Permissions\SecureObjectsNode.cs" />
+    <Compile Include="ASTNodes\Permissions\SecureObjectsTypeNode.cs" />
     <Compile Include="ASTNodes\QuerySections\ApplyWindowNode.cs" />
     <Compile Include="ASTNodes\QuerySections\FromNode.cs" />
     <Compile Include="ASTNodes\QuerySections\JoinNode.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="ExecutionPlan\PlanNode.cs" />
     <Compile Include="ExecutionPlan\PlanNodeTypeEnum.cs" />
     <Compile Include="Parsers\PrivateParser.cs" />
+    <Compile Include="Parsers\ValuesParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\SR.Designer.cs">
       <AutoGen>True</AutoGen>

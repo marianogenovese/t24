@@ -74,16 +74,16 @@ namespace Integra.Vision.Language.General.Validations
             {
                 if (this.RightType == null || this.LeftType == null)
                 {
-                    selectedType = typeof(object);
-
                     if (this.RightType != null)
                     {
-                        this.ConvertRightNode = true;
+                        selectedType = this.RightType;
+                        this.ConvertLeftNode = true;
                     }
 
                     if (this.LeftType != null)
                     {
-                        this.ConvertLeftNode = true;
+                        selectedType = this.LeftType;
+                        this.ConvertRightNode = true;
                     }
                 }
                 else if (this.RightType.ToString().Equals(this.LeftType.ToString()))

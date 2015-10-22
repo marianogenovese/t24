@@ -9,6 +9,7 @@ namespace Integra.Vision.Language.Grammars
     using Integra.Vision.Language.ASTNodes.Constants;
     using Integra.Vision.Language.ASTNodes.Lists;
     using Integra.Vision.Language.ASTNodes.Root;
+    using Integra.Vision.Language.ASTNodes.SystemViews;
     using Irony.Interpreter;
     using Irony.Parsing;
 
@@ -48,12 +49,15 @@ namespace Integra.Vision.Language.Grammars
             /* PALABRAS RESERVADAS */
             KeyTerm terminalBoot = ToTerm("boot", "boot");
             KeyTerm terminalEngine = ToTerm("engine", "engine");
+            KeyTerm terminalSelect = ToTerm("select", "select");
+            KeyTerm terminalFrom = ToTerm("from", "from");
+            KeyTerm terminalWhere = ToTerm("where", "where");
 
             /* CONSTANTES E IDENTIFICADORES */
             RegexBasedTerminal terminalId = new RegexBasedTerminal("[a-zA-Z]+([a-zA-Z]|[0-9]|[_])*");
             terminalId.AstConfig.NodeType = null;
             terminalId.AstConfig.DefaultNodeCreator = () => new IdentifierNode();
-
+            
             /*** NO TERMINALES DE LA GRAMATICA ***/
             NonTerminal nt_BOOT_ENGINE = new NonTerminal("BOOT_ENGINE", typeof(EngineActionsNode));
             nt_BOOT_ENGINE.AstConfig.NodeType = null;
@@ -75,7 +79,7 @@ namespace Integra.Vision.Language.Grammars
             nt_COMMAND_LIST.Rule = nt_COMMAND_LIST + nt_COMMAND_NODE
                                     | nt_COMMAND_NODE;
             /* **************************** */
-                                    
+          
             if (prueba)
             {
                 this.Root = nt_COMMAND_LIST;

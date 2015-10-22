@@ -267,13 +267,13 @@ namespace Integra.Vision.Language.ASTNodes.Operations
                     case "or":
                         if (!leftType.Equals(typeof(bool)) && !rightType.Equals(typeof(object)))
                         {
-                            error.Message = "No es posible realizar la operación booleana '" + operacion + "' con el tipo " + leftType.ToString();
+                            error.Message = "No es posible realizar la operación booleana '" + operacion + "' con el tipo " + leftType;
                             errores.AlmacenarError(error);
                         }
 
                         if (!rightType.Equals(typeof(bool)) && !rightType.Equals(typeof(object)))
                         {
-                            error.Message = "No es posible realizar la operación booleana '" + operacion + "' con el tipo " + leftType.ToString();
+                            error.Message = "No es posible realizar la operación booleana '" + operacion + "' con el tipo " + leftType;
                             errores.AlmacenarError(error);
                         }
 
@@ -286,7 +286,7 @@ namespace Integra.Vision.Language.ASTNodes.Operations
             }
             catch (Exception e)
             {
-                error.Message = "No es posible realizar una operación booleana '" + operacion + "' con los tipos de dato " + leftType.ToString() + " y " + rightType.ToString();
+                error.Message = "No es posible realizar una operación booleana '" + operacion + "' con los tipos de dato " + leftType + " y " + rightType;
                 errores.AlmacenarError(error);
             }
         }

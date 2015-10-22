@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="SecureObjectsNode.cs" company="Integra.Vision.Language">
+// <copyright file="SecureObjectsTypeNode.cs" company="Integra.Vision.Language">
 //     Copyright (c) Integra.Vision.Language. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -13,17 +13,12 @@ namespace Integra.Vision.Language.ASTNodes.Permissions
     /// <summary>
     /// SecureObjects class
     /// </summary>
-    internal sealed class SecureObjectsNode : AstNodeBase
+    internal sealed class SecureObjectsTypeNode : AstNodeBase
     {
         /// <summary>
         /// secure object: role, stream, server role
         /// </summary>
         private string secureObject;
-
-        /// <summary>
-        /// result planNode
-        /// </summary>
-        private PlanNode result;
 
         /// <summary>
         /// First method called
@@ -35,13 +30,14 @@ namespace Integra.Vision.Language.ASTNodes.Permissions
             base.Init(context, treeNode);
             int childrenCount = ChildrenNodes.Count;
 
-            this.secureObject = (string)ChildrenNodes[0].Token.Value;
-
-            this.result = new PlanNode();
-            this.result.Column = ChildrenNodes[0].Token.Location.Column;
-            this.result.Line = ChildrenNodes[0].Token.Location.Line;
-            this.result.NodeText = treeNode.Token.Text;
-            this.result.Properties.Add("Value", treeNode.Token.Value);
+            if (childrenCount == 1)
+            {
+                this.secureObject = (string)ChildrenNodes[0].Token.Value;
+            }
+            else if (childrenCount == 2)
+            {
+                this.secureObject = (string)ChildrenNodes[0].Token.Value + " " + (string)ChildrenNodes[1].Token.Value;
+            }
         }
 
         /// <summary>
@@ -52,10 +48,7 @@ namespace Integra.Vision.Language.ASTNodes.Permissions
         /// <returns>return a plan node</returns>
         protected override object DoEvaluate(ScriptThread thread)
         {
-            this.result.NodeType = PlanNodeTypeEnum.Constant;
-            this.result.Properties.Add("DataType", typeof(object).ToString());
-
-            return this.result;
+            return this.secureObject;
         }
     }
 }

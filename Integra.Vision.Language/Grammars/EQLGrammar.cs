@@ -102,6 +102,35 @@ namespace Integra.Vision.Language.Grammars
             KeyTerm terminalLevel = ToTerm("level", "level");
             KeyTerm terminalEngine = ToTerm("engine", "engine");
             KeyTerm terminalAdd = ToTerm("add", "add");
+            KeyTerm terminalNext = ToTerm("next", "next");
+            
+            /* IDENTIFICADORES RESERVADOS */
+            KeyTerm terminalConnectRole = ToTerm("ConnectRole", "ConnectRole");
+            KeyTerm terminalSystemAdminRole = ToTerm("SystemAdminRole", "SystemAdminRole");
+            KeyTerm terminalSourceAdminRole = ToTerm("SourceAdminRole", "SourceAdminRole");
+            KeyTerm terminalStreamAdminRole = ToTerm("StreamAdminRole", "StreamAdminRole");
+            KeyTerm terminalSystemReaderRole = ToTerm("SystemReaderRole", "SystemReaderRole");
+            KeyTerm terminalSourceReaderRole = ToTerm("SourceReaderRole", "SourceReaderRole");
+            KeyTerm terminalStreamReaderRole = ToTerm("StreamReaderRole", "StreamReaderRole");
+                        
+            /* VISTAS */
+            KeyTerm terminalSources = ToTerm("System.Sources", "System.Sources");
+            KeyTerm terminalStreams = ToTerm("System.Streams", "System.Streams");
+            KeyTerm terminalPList = ToTerm("System.PList", "System.PList");
+            KeyTerm terminalConditions = ToTerm("System.Conditions", "System.Conditions");
+            KeyTerm terminalDependcies = ToTerm("System.Dependencies", "System.Dependencies");
+            KeyTerm terminalSourceTrace = ToTerm("System.SourceTrace", "System.SourceTrace");
+            KeyTerm terminalStreamTrace = ToTerm("System.StreamTrace", "System.StreamTrace");
+            KeyTerm terminalEngineTrace = ToTerm("System.EngineTrace", "System.EngineTrace");
+            KeyTerm terminalRoles = ToTerm("System.Roles", "System.Roles");
+            KeyTerm terminalUsers = ToTerm("System.Users", "System.Users");
+            KeyTerm terminalRoleMembers = ToTerm("System.RoleMembers", "System.RoleMembers");
+            KeyTerm terminalPermissions = ToTerm("System.Permissions", "System.Permissions");
+            
+            /* VISTAS DEL SISTEMA */
+            RegexBasedTerminal terminalUnidadDeTexto = new RegexBasedTerminal("texto", @"((?!where)|(?!from)|(?!select)).+");
+            terminalUnidadDeTexto.AstConfig.NodeType = null;
+            terminalUnidadDeTexto.AstConfig.DefaultNodeCreator = () => new StringNode();
 
             /* EVENTOS */
             KeyTerm terminalEvent = ToTerm("event", "event");
@@ -150,11 +179,6 @@ namespace Integra.Vision.Language.Grammars
             RegexBasedTerminal terminalId = new RegexBasedTerminal("[a-zA-Z]+([a-zA-Z]|[0-9]|[_])*");
             terminalId.AstConfig.NodeType = null;
             terminalId.AstConfig.DefaultNodeCreator = () => new IdentifierNode();
-
-            /* VISTAS DEL SISTEMA */
-            RegexBasedTerminal terminalUnidadDeTexto = new RegexBasedTerminal("texto", @"((?!where)|(?!from)|(?!select)).+");
-            terminalUnidadDeTexto.AstConfig.NodeType = null;
-            terminalUnidadDeTexto.AstConfig.DefaultNodeCreator = () => new StringNode();
             
             /* COMENTARIOS */
             CommentTerminal comentarioLinea = new CommentTerminal("comentario_linea", "//", "\n", "\r\n");
@@ -215,6 +239,9 @@ namespace Integra.Vision.Language.Grammars
             NonTerminal nt_USER_OR_ROLE = new NonTerminal("PERMISSIONS_BODY", typeof(PermissionsBodyNode));
             nt_USER_OR_ROLE.AstConfig.NodeType = null;
             nt_USER_OR_ROLE.AstConfig.DefaultNodeCreator = () => new PermissionsBodyNode();
+            NonTerminal nt_SECURE_OBJECTS_TYPE = new NonTerminal("SECURE_OBJECTS_TYPE", typeof(SecureObjectsTypeNode));
+            nt_SECURE_OBJECTS_TYPE.AstConfig.NodeType = null;
+            nt_SECURE_OBJECTS_TYPE.AstConfig.DefaultNodeCreator = () => new SecureObjectsTypeNode();
             NonTerminal nt_SECURE_OBJECTS = new NonTerminal("SECURE_OBJECTS", typeof(SecureObjectsNode));
             nt_SECURE_OBJECTS.AstConfig.NodeType = null;
             nt_SECURE_OBJECTS.AstConfig.DefaultNodeCreator = () => new SecureObjectsNode();
@@ -230,9 +257,6 @@ namespace Integra.Vision.Language.Grammars
             NonTerminal nt_SET_TRACE = new NonTerminal("SET_TRACE", typeof(SetTraceNode));
             nt_SET_TRACE.AstConfig.NodeType = null;
             nt_SET_TRACE.AstConfig.DefaultNodeCreator = () => new SetTraceNode();
-            NonTerminal nt_SYSTEM_VIEW = new NonTerminal("SYSTEM_VIEW", typeof(SystemViewNode));
-            nt_SYSTEM_VIEW.AstConfig.NodeType = null;
-            nt_SYSTEM_VIEW.AstConfig.DefaultNodeCreator = () => new SystemViewNode();
 
             NonTerminal nt_PUBLISH = new NonTerminal("PUBLISH", typeof(PublishNode));
             nt_PUBLISH.AstConfig.NodeType = null;
@@ -243,6 +267,12 @@ namespace Integra.Vision.Language.Grammars
             NonTerminal nt_USER_QUERY = new NonTerminal("USER_QUERY", typeof(UserQueryNode));
             nt_USER_QUERY.AstConfig.NodeType = null;
             nt_USER_QUERY.AstConfig.DefaultNodeCreator = () => new UserQueryNode();
+            NonTerminal nt_SYSTEM_VIEW = new NonTerminal("SYSTEM_VIEW", typeof(SystemViewNode));
+            nt_SYSTEM_VIEW.AstConfig.NodeType = null;
+            nt_SYSTEM_VIEW.AstConfig.DefaultNodeCreator = () => new SystemViewNode();
+            NonTerminal nt_VIEWS = new NonTerminal("VIEWS", typeof(StringNode));
+            nt_VIEWS.AstConfig.NodeType = null;
+            nt_VIEWS.AstConfig.DefaultNodeCreator = () => new StringNode();
 
             NonTerminal nt_COMMAND_NODE = new NonTerminal("COMMAND_NODE", typeof(CommandNode));
             nt_COMMAND_NODE.AstConfig.NodeType = null;
@@ -251,6 +281,24 @@ namespace Integra.Vision.Language.Grammars
             nt_COMMAND_LIST.AstConfig.NodeType = null;
             nt_COMMAND_LIST.AstConfig.DefaultNodeCreator = () => new CommandListNode();
 
+            /* SYSTEM VIEWS */
+            nt_SYSTEM_VIEW.Rule = terminalSelect + terminalUnidadDeTexto + terminalFrom + terminalUnidadDeTexto + terminalWhere + terminalUnidadDeTexto
+                                    | terminalSelect + terminalUnidadDeTexto + terminalFrom + terminalUnidadDeTexto;
+
+            nt_VIEWS.Rule = terminalSources 
+                            | terminalStreams 
+                            | terminalPList 
+                            | terminalConditions 
+                            | terminalDependcies 
+                            | terminalSourceTrace
+                            | terminalStreamTrace
+                            | terminalEngineTrace
+                            | terminalRoles 
+                            | terminalUsers 
+                            | terminalRoleMembers
+                            | terminalPermissions;
+
+            /* **************************** */
             /* USER QUERY */
             nt_USER_QUERY.Rule = nt_FROM + nt_WHERE + nt_SELECT
                                     | nt_FROM + nt_SELECT;
@@ -260,10 +308,6 @@ namespace Integra.Vision.Language.Grammars
             /* **************************** */
             /* RECEIVE */
             nt_RECEIVE.Rule = terminalRecive + terminalFrom + terminalId;
-            /* **************************** */
-            /* SYSTEM VIEWS */
-            nt_SYSTEM_VIEW.Rule = terminalSelect + terminalUnidadDeTexto + terminalFrom + terminalUnidadDeTexto + terminalWhere + terminalUnidadDeTexto
-                                    | terminalSelect + terminalUnidadDeTexto + terminalFrom + terminalUnidadDeTexto;
             /* **************************** */
             /* SET TRACE */
             nt_SET_TRACE.Rule = terminalSet + terminalTrace + terminalLevel + terminalNumero + terminalTo + nt_OBJECTS_TO_TRACE;
@@ -282,16 +326,25 @@ namespace Integra.Vision.Language.Grammars
             /* **************************** */
 
             /* PERMISOS */
-            nt_PERMISSIONS.Rule = terminalGrant + nt_SECURE_OBJECTS + terminalId + terminalTo + nt_USER_OR_ROLE
-                                    | terminalRevoke + nt_SECURE_OBJECTS + terminalId + terminalTo + nt_USER_OR_ROLE
-                                    | terminalDeny + nt_SECURE_OBJECTS + terminalId + terminalTo + nt_USER_OR_ROLE;
+            nt_PERMISSIONS.Rule = terminalGrant + nt_SECURE_OBJECTS_TYPE + nt_SECURE_OBJECTS + terminalTo + nt_USER_OR_ROLE
+                                    | terminalRevoke + nt_SECURE_OBJECTS_TYPE + nt_SECURE_OBJECTS + terminalTo + nt_USER_OR_ROLE
+                                    | terminalDeny + nt_SECURE_OBJECTS_TYPE + nt_SECURE_OBJECTS + terminalTo + nt_USER_OR_ROLE;
 
             nt_USER_OR_ROLE.Rule = terminalUser + terminalId 
                                         | terminalRole + terminalId;
 
-            nt_SECURE_OBJECTS.Rule = terminalStream 
+            nt_SECURE_OBJECTS_TYPE.Rule = terminalStream 
                                         | terminalRole 
                                         | terminalServer + terminalRole;
+
+            nt_SECURE_OBJECTS.Rule = terminalConnectRole
+                                     | terminalSystemAdminRole 
+                                     | terminalSourceAdminRole 
+                                     | terminalStreamAdminRole 
+                                     | terminalSystemReaderRole
+                                     | terminalSourceReaderRole
+                                     | terminalStreamReaderRole;
+                                     
             /* **************************** */
 
             /* DROP */
@@ -306,7 +359,7 @@ namespace Integra.Vision.Language.Grammars
             /* EXPRESIONES CREATE */
 
             /* CREAR ROL */
-            nt_CREATE_ROLE.Rule = this.ToTerm("create") + terminalRole + terminalId;
+            nt_CREATE_ROLE.Rule = this.ToTerm("create", "createWordAtRole") + terminalRole + terminalId;
             /* **************************** */
             /* CREAR USUARIO */
             nt_CREATE_USER.Rule = terminalCreateAlter + terminalUser + terminalId + terminalWith + terminalPassword + terminalIgual + terminalCadena + terminalComa + terminalStatus + terminalIgual + terminalUserStatus;
@@ -347,13 +400,13 @@ namespace Integra.Vision.Language.Grammars
                                         | nt_PERMISSIONS
                                         | nt_START_STOP
                                         | nt_SET_TRACE
-                                        | nt_SYSTEM_VIEW
                                         | nt_PUBLISH
                                         | nt_RECEIVE
+                                        | nt_SYSTEM_VIEW
                                         | nt_USER_QUERY;
             /* **************************** */
             /* LISTA DE COMANDOS */
-            nt_COMMAND_LIST.Rule = nt_COMMAND_LIST + nt_COMMAND_NODE
+            nt_COMMAND_LIST.Rule = nt_COMMAND_LIST + terminalNext + nt_COMMAND_NODE
                                     | nt_COMMAND_NODE;
             /* **************************** */
 

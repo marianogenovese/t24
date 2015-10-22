@@ -330,7 +330,7 @@ namespace Integra.Vision.Language.ASTNodes.Operations
                         {
                             if (leftType != null && rightType != null)
                             {
-                                error.Message = "No es posible realizar la operación '" + operacion + "' con los tipos " + leftType.ToString() + " y " + rightType.ToString();
+                                error.Message = "No es posible realizar la operación '" + operacion + "' con los tipos " + leftType + " y " + rightType;
                                 errores.AlmacenarError(error);
                             }
                         }
@@ -348,13 +348,13 @@ namespace Integra.Vision.Language.ASTNodes.Operations
                                 {
                                     if (!leftType.Equals(typeof(object)) || !rightType.Equals(typeof(object)))
                                     {
-                                        error.Message = "La operación '" + operacion + "' solo puede realizarse con tipos de dato numérico y se intentó con " + leftType.ToString() + " y " + rightType.ToString();
+                                        error.Message = "La operación '" + operacion + "' solo puede realizarse con tipos de dato numérico y se intentó con " + leftType + " y " + rightType;
                                         errores.AlmacenarError(error);
                                     }
                                 }
                                 else
                                 {
-                                    error.Message = "La operación '" + operacion + "' solo puede realizarse con tipos de dato numérico y se intentó con " + leftType.ToString() + " y " + rightType.ToString();
+                                    error.Message = "La operación '" + operacion + "' solo puede realizarse con tipos de dato numérico y se intentó con " + leftType + " y " + rightType;
                                     errores.AlmacenarError(error);
                                 }
                             }
@@ -366,13 +366,13 @@ namespace Integra.Vision.Language.ASTNodes.Operations
                         {
                             if (!leftType.Equals(typeof(string)) || !rightType.Equals(typeof(string)))
                             {
-                                error.Message = "La operación '" + operacion + "' solo puede realizarse con tipos de dato cadena y se intentó con " + leftType.ToString() + " y " + rightType.ToString();
+                                error.Message = "La operación '" + operacion + "' solo puede realizarse con tipos de dato cadena y se intentó con " + leftType + " y " + rightType;
                                 errores.AlmacenarError(error);
                             }
                         }
                         else
                         {
-                            error.Message = "La operación '" + operacion + "' solo puede realizarse con tipos de dato cadena y se intentó con " + leftType.ToString() + " y " + rightType.ToString();
+                            error.Message = "La operación '" + operacion + "' solo puede realizarse con tipos de dato cadena y se intentó con " + leftType + " y " + rightType;
                             errores.AlmacenarError(error);
                         }
 
@@ -385,7 +385,7 @@ namespace Integra.Vision.Language.ASTNodes.Operations
             }
             catch (Exception e)
             {
-                error.Message = "No es posible realizar una operación '" + operacion + "' con los tipos de dato " + leftType.ToString() + " y " + rightType.ToString();
+                error.Message = "No es posible realizar una operación '" + operacion + "' con los tipos de dato " + leftType + " y " + rightType;
                 errores.AlmacenarError(error);
             }
         }

@@ -24,6 +24,11 @@ namespace Integra.Vision.Language.ASTNodes.Lists
         private AstNodeBase parentNode;
 
         /// <summary>
+        /// Reserved word 'next'
+        /// </summary>
+        private string nextWord;
+
+        /// <summary>
         /// command: create, drop, alter, grant, revoke, deny, start, stop, set
         /// </summary>
         private AstNodeBase command;
@@ -46,7 +51,8 @@ namespace Integra.Vision.Language.ASTNodes.Lists
             if (childrenCount == 2)
             {
                 this.parentNode = AddChild(NodeUseType.Parameter, "ParentNode", ChildrenNodes[0]) as AstNodeBase;
-                this.command = AddChild(NodeUseType.Parameter, "Command", ChildrenNodes[1]) as AstNodeBase;
+                this.nextWord = (string)ChildrenNodes[1].Token.Value;
+                this.command = AddChild(NodeUseType.Parameter, "Command", ChildrenNodes[2]) as AstNodeBase;
             }
             else
             {

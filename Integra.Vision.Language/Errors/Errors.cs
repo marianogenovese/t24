@@ -45,6 +45,7 @@ namespace Integra.Vision.Language.Errors
                 if (errorList == null)
                 {
                     b.SetValueRef(this.Thread, new List<ErrorNode>());
+                    errorList = (List<ErrorNode>)b.GetValueRef(this.Thread);
                 }
 
                 errorList.Add(error);

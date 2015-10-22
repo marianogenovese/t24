@@ -5,12 +5,14 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Language
 {
+    using System;
     using System.Collections.Generic;
 
     /// <summary>
     /// PlanNode class 
     /// Execution plan tree node
     /// </summary>
+    [Serializable]
     internal sealed class PlanNode
     {
         /// <summary>
