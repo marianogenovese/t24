@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="PublicParser.cs" company="Integra.Vision.Language">
+// <copyright file="EQLPublicParser.cs" company="Integra.Vision.Language">
 //     Copyright (c) Integra.Vision.Language. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -14,7 +14,7 @@ namespace Integra.Vision.Language
     /// <summary>
     /// Class that implements the logic to parse commands
     /// </summary>
-    internal sealed class PublicParser
+    internal sealed class EQLPublicParser
     {
         /// <summary>
         /// Command text
@@ -22,10 +22,10 @@ namespace Integra.Vision.Language
         private string commandText;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PublicParser"/> class
+        /// Initializes a new instance of the <see cref="EQLPublicParser"/> class
         /// </summary>
         /// <param name="commandText">Command text</param>
-        public PublicParser(string commandText)
+        public EQLPublicParser(string commandText)
         {
             this.commandText = commandText;
         }

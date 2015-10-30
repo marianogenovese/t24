@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Language.ASTNodes.QuerySections
 {
+    using System.Collections.Generic;
     using Integra.Vision.Language.ASTNodes.Base;
     using Irony.Ast;
     using Irony.Interpreter;
@@ -41,10 +42,11 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
             base.Init(context, treeNode);
             this.where = (string)ChildrenNodes[0].Token.Value;
             this.condition = AddChild(NodeUseType.Parameter, "whereConditions", ChildrenNodes[1]) as AstNodeBase;
+
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[0].Token.Location.Line;
-            this.result.NodeType = PlanNodeTypeEnum.Where;
+            this.result.NodeType = PlanNodeTypeEnum.ObservableWhere;
         }
 
         /// <summary>
@@ -59,9 +61,14 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
             PlanNode conditionAux = (PlanNode)this.condition.Evaluate(thread);
             this.EndEvaluate(thread);
 
+            PlanNode newScope = new PlanNode();
+            newScope.NodeType = PlanNodeTypeEnum.NewScope;
+            newScope.Children = new List<PlanNode>();
+
             this.result.NodeText = this.where + " " + conditionAux.NodeText;
 
             this.result.Children = new System.Collections.Generic.List<PlanNode>();
+            this.result.Children.Add(newScope);
             this.result.Children.Add(conditionAux);
 
             return this.result;

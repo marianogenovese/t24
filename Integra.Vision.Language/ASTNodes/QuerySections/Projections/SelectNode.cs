@@ -6,8 +6,8 @@
 namespace Integra.Vision.Language.ASTNodes.QuerySections
 {
     using System.Collections.Generic;
+    using System.Linq;
     using Integra.Vision.Language.ASTNodes.Base;
-
     using Irony.Ast;
     using Irony.Interpreter;
     using Irony.Interpreter.Ast;
@@ -47,7 +47,7 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[0].Token.Location.Line;
-            this.result.NodeType = PlanNodeTypeEnum.Select;
+            this.result.NodeType = PlanNodeTypeEnum.Projection;
         }
 
         /// <summary>
@@ -83,6 +83,21 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
                 plan.Children = new List<PlanNode>();
                 plan.Children.Add(tupla.Key);
                 plan.Children.Add(tupla.Value);
+
+                PlanNode fromLambda = new PlanNode();
+                fromLambda.NodeType = PlanNodeTypeEnum.ObservableFromForLambda;
+                                
+                if (tupla.Value.NodeType.Equals(PlanNodeTypeEnum.EnumerableSum))
+                {
+                    // se le agrega el from lambda a las extensiones que reciben dos parametros, donde el último de ellos es una funcion
+                    tupla.Value.Children.ElementAt(0).Children = new List<PlanNode>();
+                    tupla.Value.Children.ElementAt(0).Children.Add(fromLambda);
+                }
+                else
+                {
+                    // se le agrega el from lambda a las extensiones que reciben un parametro
+                    tupla.Value.Children.Add(fromLambda);
+                }
 
                 if (isFirst)
                 {

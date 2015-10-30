@@ -142,6 +142,12 @@ namespace Integra.Vision.Language.Resources
 	
 		/// <summary>
 		/// Looks up a localized string similar to: 
+		///	GroupBy
+		/// </summary>
+		public static string GroupByRole { get { return global::Integra.Vision.Language.SR.GroupByRole; } }
+	
+		/// <summary>
+		/// Looks up a localized string similar to: 
 		///	Identifier
 		/// </summary>
 		public static string IdentifierRole { get { return global::Integra.Vision.Language.SR.IdentifierRole; } }

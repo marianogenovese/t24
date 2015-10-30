@@ -1,32 +1,32 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="DateFunctionNode.cs" company="Integra.Vision.Language">
+// <copyright file="ExplicitCast.cs" company="Integra.Vision.Language">
 //     Copyright (c) Integra.Vision.Language. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Language.ASTNodes.Constants
+namespace Integra.Vision.Language.ASTNodes.Cast
 {
+    using System;
     using System.Collections.Generic;
     using Integra.Vision.Language.ASTNodes.Base;
-    
     using Irony.Ast;
     using Irony.Interpreter;
     using Irony.Interpreter.Ast;
     using Irony.Parsing;
 
     /// <summary>
-    /// DateFunctionNode class
+    /// Explicit cast class
     /// </summary>
-    internal sealed class DateFunctionNode : AstNodeBase
+    internal class ExplicitCast : AstNodeBase
     {
         /// <summary>
-        /// DateTime or Timespan node
+        /// target type for cast
         /// </summary>
-        private AstNodeBase date;
+        private AstNodeBase targetType;
 
         /// <summary>
-        /// function to execute
+        /// value to cast
         /// </summary>
-        private string function;
+        private AstNodeBase value;
 
         /// <summary>
         /// result plan
@@ -41,11 +41,13 @@ namespace Integra.Vision.Language.ASTNodes.Constants
         public override void Init(AstContext context, ParseTreeNode treeNode)
         {
             base.Init(context, treeNode);
-            this.function = (string)ChildrenNodes[0].Token.Value;
-            this.date = AddChild(NodeUseType.Parameter, "DateTimeNode", ChildrenNodes[2]) as AstNodeBase;
+            this.targetType = AddChild(NodeUseType.Parameter, "TargetType", ChildrenNodes[1]) as AstNodeBase;
+            this.value = AddChild(NodeUseType.Parameter, "Value", ChildrenNodes[3]) as AstNodeBase;
+
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[0].Token.Location.Line;
+            this.result.NodeType = PlanNodeTypeEnum.Cast;
         }
 
         /// <summary>
@@ -57,27 +59,14 @@ namespace Integra.Vision.Language.ASTNodes.Constants
         protected override object DoEvaluate(ScriptThread thread)
         {
             this.BeginEvaluate(thread);
-            PlanNode auxDate = (PlanNode)this.date.Evaluate(thread);
+            PlanNode targetTypeAux = (PlanNode)this.targetType.Evaluate(thread);
+            PlanNode valueAux = (PlanNode)this.value.Evaluate(thread);
             this.EndEvaluate(thread);
 
+            this.result.Properties.Add("DataType", ((Type)targetTypeAux.Properties["Value"]).ToString());
+            this.result.NodeText = string.Format("({0}){1} ", targetTypeAux.NodeText, valueAux.NodeText);
             this.result.Children = new List<PlanNode>();
-            this.result.Children.Add(auxDate);
-            this.result.NodeText = this.function + "(" + auxDate.NodeText + ")";
-            this.result.Properties.Add("DataType", typeof(int));
-            this.result.NodeType = PlanNodeTypeEnum.DateTimeFunction;
-
-            switch (this.function)
-            {
-                case "hour":
-                    this.result.Properties.Add("Property", "Hour");
-                    break;
-                case "minute":
-                    this.result.Properties.Add("Property", "Minute");
-                    break;
-                case "second":
-                    this.result.Properties.Add("Property", "Second");
-                    break;
-            }
+            this.result.Children.Add(valueAux);
 
             return this.result;
         }

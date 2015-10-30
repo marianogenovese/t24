@@ -21,16 +21,10 @@ namespace Integra.Vision.Language.Runtime
     [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1111:ClosingParenthesisMustBeOnLineOfLastParameter", Justification = "Reviewed.")]
     internal sealed class ExpressionConstructor
     {
+        /// <summary>
+        /// Print log flag
+        /// </summary>
         private bool printLog;
-        public ExpressionConstructor(bool printLog)
-        {
-            this.printLog = printLog;
-        }
-
-        public ExpressionConstructor()
-        {
-            this.printLog = true;
-        }
 
         /// <summary>
         /// Parameter list
@@ -41,6 +35,23 @@ namespace Integra.Vision.Language.Runtime
         /// Object prefix
         /// </summary>
         private string objectPrefix;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExpressionConstructor"/> class
+        /// </summary>
+        /// <param name="printLog">Print log flag</param>
+        public ExpressionConstructor(bool printLog)
+        {
+            this.printLog = printLog;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExpressionConstructor"/> class
+        /// </summary>
+        public ExpressionConstructor()
+        {
+            this.printLog = true;
+        }
 
         /// <summary>
         /// Get the compiled function

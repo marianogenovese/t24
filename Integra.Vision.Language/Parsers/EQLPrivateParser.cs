@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="PrivateParser.cs" company="Integra.Vision.Language">
+// <copyright file="EQLPrivateParser.cs" company="Integra.Vision.Language">
 //     Copyright (c) Integra.Vision.Language. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -13,7 +13,7 @@ namespace Integra.Vision.Language
     /// <summary>
     /// Class that implements the logic to parse private commands
     /// </summary>
-    internal sealed class PrivateParser
+    internal sealed class EQLPrivateParser
     {
         /// <summary>
         /// Command text
@@ -21,10 +21,10 @@ namespace Integra.Vision.Language
         private string commandText;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PrivateParser"/> class
+        /// Initializes a new instance of the <see cref="EQLPrivateParser"/> class
         /// </summary>
         /// <param name="commandText">Command text</param>
-        public PrivateParser(string commandText)
+        public EQLPrivateParser(string commandText)
         {
             this.commandText = commandText;
         }

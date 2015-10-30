@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="ProjectionGrammar.cs" company="Integra.Vision.Language">
+// <copyright file="GroupByGrammar.cs" company="Integra.Vision.Language">
 //     Copyright (c) Integra.Vision.Language. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -17,7 +17,7 @@ namespace Integra.Vision.Language.Grammars
     /// Projection grammar for the commands
     /// </summary>
     [Language("ProjectionGrammar", "0.1", "")]
-    internal sealed class ProjectionGrammar : InterpretedLanguageGrammar
+    internal sealed class GroupByGrammar : InterpretedLanguageGrammar
     {
         /// <summary>
         /// Expression grammar
@@ -27,12 +27,12 @@ namespace Integra.Vision.Language.Grammars
         /// <summary>
         /// Expression grammar
         /// </summary>
-        private NonTerminal projectionList;
+        private NonTerminal groupList;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProjectionGrammar"/> class
+        /// Initializes a new instance of the <see cref="GroupByGrammar"/> class
         /// </summary>
-        public ProjectionGrammar()
+        public GroupByGrammar()
             : base(false)
         {
             this.valueGrammar = new ValuesGrammar();
@@ -42,11 +42,11 @@ namespace Integra.Vision.Language.Grammars
         /// <summary>
         /// Gets the nonterminal for expression conditions
         /// </summary>
-        public NonTerminal ProjectionList
+        public NonTerminal GroupList
         {
             get
             {
-                return this.projectionList;
+                return this.groupList;
             }
         }
 
@@ -56,7 +56,8 @@ namespace Integra.Vision.Language.Grammars
         public void CreateGrammar()
         {
             // reserved words
-            KeyTerm terminalSelect = ToTerm("select", "select");
+            KeyTerm terminalgroup = ToTerm("group", "group");
+            KeyTerm terminalBy = ToTerm("by", "by");
             KeyTerm terminalComa = ToTerm(",", "coma");
             KeyTerm terminalAs = ToTerm("as", "as");
 
@@ -75,12 +76,12 @@ namespace Integra.Vision.Language.Grammars
             NonTerminal nt_LIST_OF_VALUES = new NonTerminal("LIST_OF_VALUES", typeof(PlanNodeListNode));
             nt_LIST_OF_VALUES.AstConfig.NodeType = null;
             nt_LIST_OF_VALUES.AstConfig.DefaultNodeCreator = () => new PlanNodeListNode();
-            this.projectionList = new NonTerminal("SELECT", typeof(SelectNode));
-            this.projectionList.AstConfig.NodeType = null;
-            this.projectionList.AstConfig.DefaultNodeCreator = () => new SelectNode();
+            this.groupList = new NonTerminal("SELECT", typeof(GroupByNode));
+            this.groupList.AstConfig.NodeType = null;
+            this.groupList.AstConfig.DefaultNodeCreator = () => new GroupByNode();
 
             /* SELECT */
-            this.projectionList.Rule = terminalSelect + nt_LIST_OF_VALUES;
+            this.groupList.Rule = terminalgroup + terminalBy + nt_LIST_OF_VALUES;
             /* **************************** */
             /* LISTA DE VALORES */
             nt_LIST_OF_VALUES.Rule = nt_LIST_OF_VALUES + terminalComa + nt_VALUES_WITH_ALIAS
@@ -89,7 +90,7 @@ namespace Integra.Vision.Language.Grammars
             /* VALORES CON ALIAS */
             nt_VALUES_WITH_ALIAS.Rule = this.valueGrammar.ProjectionValue + terminalAs + terminalId;
 
-            this.Root = this.projectionList;
+            this.Root = this.groupList;
 
             this.LanguageFlags = Irony.Parsing.LanguageFlags.CreateAst;
         }

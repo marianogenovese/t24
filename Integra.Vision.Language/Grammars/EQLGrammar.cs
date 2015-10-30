@@ -41,6 +41,16 @@ namespace Integra.Vision.Language.Grammars
         private ProjectionGrammar projectionGrammar;
 
         /// <summary>
+        /// Group by grammar
+        /// </summary>
+        private GroupByGrammar groupByGrammar;
+
+        /// <summary>
+        /// Expression grammar
+        /// </summary>
+        private ValuesGrammar valueGrammar;
+        
+        /// <summary>
         /// Initializes a new instance of the <see cref="EQLGrammar"/> class
         /// </summary>
         public EQLGrammar()
@@ -48,6 +58,8 @@ namespace Integra.Vision.Language.Grammars
         {
             this.expressionGrammar = new ExpressionGrammar();
             this.projectionGrammar = new ProjectionGrammar();
+            this.groupByGrammar = new GroupByGrammar();
+            this.valueGrammar = new ValuesGrammar();
             this.Grammar(false);
         }
 
@@ -60,6 +72,7 @@ namespace Integra.Vision.Language.Grammars
         {
             this.expressionGrammar = new ExpressionGrammar();
             this.projectionGrammar = new ProjectionGrammar();
+            this.valueGrammar = new ValuesGrammar();
             this.Grammar(prueba);
         }
 
@@ -85,6 +98,9 @@ namespace Integra.Vision.Language.Grammars
             KeyTerm terminalOn = ToTerm("on", "on");
             KeyTerm terminalApply = ToTerm("apply", "apply");
             KeyTerm terminalWindow = ToTerm("window", "window");
+            KeyTerm terminalOf = ToTerm("of", "of");
+            KeyTerm terminalGroup = ToTerm("group", "group");
+            KeyTerm terminalBy = ToTerm("by", "by");
             KeyTerm terminalTo = ToTerm("to", "to");
             KeyTerm terminalRole = ToTerm("role", "role");
             KeyTerm terminalUser = ToTerm("user", "user");
@@ -189,6 +205,7 @@ namespace Integra.Vision.Language.Grammars
             /* NO TERMINALES */            
             NonTerminal nt_LOGIC_EXPRESSION = this.expressionGrammar.LogicExpression;
             NonTerminal nt_SELECT = this.projectionGrammar.ProjectionList;
+            NonTerminal nt_GROUP_BY = this.groupByGrammar.GroupList;
 
             NonTerminal nt_WHERE = new NonTerminal("WHERE", typeof(WhereNode));
             nt_WHERE.AstConfig.NodeType = null;
@@ -208,6 +225,11 @@ namespace Integra.Vision.Language.Grammars
             NonTerminal nt_APPLY_WINDOW = new NonTerminal("APPLY_WINDOW", typeof(ApplyWindowNode));
             nt_APPLY_WINDOW.AstConfig.NodeType = null;
             nt_APPLY_WINDOW.AstConfig.DefaultNodeCreator = () => new ApplyWindowNode();
+
+            /*NonTerminal nt_GROUP_BY = new NonTerminal("GROUP_BY", typeof(GroupByNode));
+            nt_GROUP_BY.AstConfig.NodeType = null;
+            nt_GROUP_BY.AstConfig.DefaultNodeCreator = () => new GroupByNode();*/
+
             NonTerminal nt_PARAMETER = new NonTerminal("PARAMETER", typeof(ParameterNode));
             nt_PARAMETER.AstConfig.NodeType = null;
             nt_PARAMETER.AstConfig.DefaultNodeCreator = () => new ParameterNode();
@@ -300,8 +322,10 @@ namespace Integra.Vision.Language.Grammars
 
             /* **************************** */
             /* USER QUERY */
-            nt_USER_QUERY.Rule = nt_FROM + nt_WHERE + nt_SELECT
-                                    | nt_FROM + nt_SELECT;
+            nt_USER_QUERY.Rule = nt_FROM + nt_SELECT
+                                    | nt_FROM + nt_WHERE + nt_SELECT
+                                    | nt_FROM + nt_APPLY_WINDOW + nt_GROUP_BY + nt_SELECT
+                                    | nt_FROM + nt_WHERE + nt_APPLY_WINDOW + nt_GROUP_BY + nt_SELECT;
             /* **************************** */
             /* PUBLISH */
             nt_PUBLISH.Rule = terminalPublish + terminalEvent + terminalTo + terminalId;
@@ -383,7 +407,10 @@ namespace Integra.Vision.Language.Grammars
             nt_ON.Rule = terminalOn + nt_LOGIC_EXPRESSION;
             /* **************************** */
             /* APPLY WINDOW */
-            nt_APPLY_WINDOW.Rule = terminalApply + terminalWindow + terminalDateTimeValue;
+            nt_APPLY_WINDOW.Rule = terminalApply + terminalWindow + terminalOf + terminalDateTimeValue;
+            /* **************************** */
+            /* GROUP BY */
+            /*nt_GROUP_BY.Rule = terminalGroup + terminalBy + this.valueGrammar.NonConstantValues;*/
             /* **************************** */
             /* FROM */
             nt_FROM.Rule = terminalFrom + terminalId;

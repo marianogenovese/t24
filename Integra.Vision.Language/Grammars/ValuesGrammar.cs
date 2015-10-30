@@ -7,6 +7,8 @@ namespace Integra.Vision.Language.Grammars
 {
     using System;
     using System.Linq;
+    using ASTNodes.Cast;
+    using ASTNodes.QuerySections;
     using Integra.Vision.Language.ASTNodes.Constants;
     using Integra.Vision.Language.ASTNodes.Lists;
     using Integra.Vision.Language.ASTNodes.Objects.Event;
@@ -40,6 +42,11 @@ namespace Integra.Vision.Language.Grammars
         /// Non constant values: objects
         /// </summary>
         private NonTerminal nonConstantValues;
+
+        /// <summary>
+        /// Projection values
+        /// </summary>
+        private NonTerminal projectionValue;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ValuesGrammar"/> class
@@ -95,6 +102,17 @@ namespace Integra.Vision.Language.Grammars
         }
 
         /// <summary>
+        /// Gets the projection value
+        /// </summary>
+        public NonTerminal ProjectionValue
+        {
+            get
+            {
+                return this.projectionValue;
+            }
+        }
+
+        /// <summary>
         /// Specify the language grammar
         /// </summary>
         public void CreateGrammar()
@@ -103,6 +121,8 @@ namespace Integra.Vision.Language.Grammars
             KeyTerm terminalHour = ToTerm("hour", "hour");
             KeyTerm terminalMinute = ToTerm("minute", "minute");
             KeyTerm terminalSecond = ToTerm("second", "second");
+            KeyTerm terminalCount = ToTerm("count", "count");
+            KeyTerm terminalSum = ToTerm("sum", "sum");
 
             /* EVENTOS */
             KeyTerm terminalEvent = ToTerm("event", "event");
@@ -121,7 +141,7 @@ namespace Integra.Vision.Language.Grammars
 
             /* SIMBOLOS */
             KeyTerm terminalParentesisIz = ToTerm("(", "parentesisIz");
-            KeyTerm terminalParentesisDer = ToTerm(")", "parentesisDer");
+            KeyTerm terminalParentesisDer = ToTerm(")", "parentesisDerValuesGrammar");
             KeyTerm terminalCorcheteIz = ToTerm("[", "corcheteIz");
             KeyTerm terminalCorcheteDer = ToTerm("]", "corcheteDer");
             KeyTerm terminalLlaveIz = ToTerm("{", "llaveIz");
@@ -133,6 +153,15 @@ namespace Integra.Vision.Language.Grammars
             KeyTerm terminalComa = ToTerm(",", "coma");
             KeyTerm terminalArroba = ToTerm("@", "arroba");
             KeyTerm terminalIgual = ToTerm("=", "igual");
+
+            /* TIPOS PARA CASTEO */
+            ConstantTerminal terminalType = new ConstantTerminal("contanteTipo");
+            terminalType.Add("int", typeof(int?));
+            terminalType.Add("long", typeof(long?));
+            terminalType.Add("byte", typeof(byte?));
+            terminalType.Add("string", typeof(string));
+            terminalType.AstConfig.NodeType = null;
+            terminalType.AstConfig.DefaultNodeCreator = () => new TypeNode();
 
             /* COMENTARIOS */
             CommentTerminal comentarioLinea = new CommentTerminal("comentario_linea", "//", "\n", "\r\n");
@@ -165,8 +194,8 @@ namespace Integra.Vision.Language.Grammars
             terminalId.AstConfig.DefaultNodeCreator = () => new IdentifierNode();
 
             /* PRECEDENCIA Y ASOCIATIVIDAD */
-            this.AddBracePair();
-            this.AddMarkPunctuation();
+            /* this.AddBracePair();
+            this.AddMarkPunctuation();*/
 
             /* NO TERMINALES */
             this.values = new NonTerminal("VALUES", typeof(ConstantValueNode));
@@ -184,6 +213,10 @@ namespace Integra.Vision.Language.Grammars
             NonTerminal nt_DATETIME_TIMESPAN_VALUES = new NonTerminal("DATETIME_TIMESPAN_VALUES", typeof(ConstantValueNode));
             nt_DATETIME_TIMESPAN_VALUES.AstConfig.NodeType = null;
             nt_DATETIME_TIMESPAN_VALUES.AstConfig.DefaultNodeCreator = () => new ConstantValueNode();
+
+            NonTerminal nt_EXPLICIT_CAST = new NonTerminal("EXPLICIT_CAST", typeof(ExplicitCast));
+            nt_EXPLICIT_CAST.AstConfig.NodeType = null;
+            nt_EXPLICIT_CAST.AstConfig.DefaultNodeCreator = () => new ExplicitCast();
 
             NonTerminal nt_PARAMETER_VALUES = new NonTerminal("PARAMETER_VALUES", typeof(ConstantValueNode));
             nt_PARAMETER_VALUES.AstConfig.NodeType = null;
@@ -222,10 +255,24 @@ namespace Integra.Vision.Language.Grammars
             nt_ARITHMETIC_EXPRESSION.AstConfig.NodeType = null;
             nt_ARITHMETIC_EXPRESSION.AstConfig.DefaultNodeCreator = () => new ArithmeticExpressionNode();
 
+            this.projectionValue = new NonTerminal("PROJECTION_VALUES", typeof(ProjectionValue));
+            this.projectionValue.AstConfig.NodeType = null;
+            this.projectionValue.AstConfig.DefaultNodeCreator = () => new ProjectionValue();
+
+            /* PROJECTION VALUES */
+            this.projectionValue.Rule = terminalCount + terminalParentesisIz + terminalParentesisDer
+                                        | terminalSum + terminalParentesisIz + this.values + terminalParentesisDer
+                                        | this.values;
+            /* **************************** */
             /* CONSTANTES */
             this.values.Rule = this.numericValues
                                 | this.nonConstantValues
-                                | this.otherValues;
+                                | this.otherValues
+                                | nt_EXPLICIT_CAST;
+
+            nt_EXPLICIT_CAST.Rule = terminalParentesisIz + terminalType + terminalParentesisDer + this.numericValues
+                                    | terminalParentesisIz + terminalType + terminalParentesisDer + this.nonConstantValues
+                                    | terminalParentesisIz + terminalType + terminalParentesisDer + this.otherValues;
 
             this.nonConstantValues.Rule = nt_EVENT_WITH_SOURCE
                                             | nt_OBJECT_VALUE

@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Language.ASTNodes.QuerySections
 {
+    using System.Collections.Generic;
     using Integra.Vision.Language.ASTNodes.Base;
     using Irony.Ast;
     using Irony.Interpreter;
@@ -27,6 +28,11 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
         private string windowWord;
 
         /// <summary>
+        /// reserved word of
+        /// </summary>
+        private string reservedWordOf;
+
+        /// <summary>
         /// window size
         /// </summary>
         private AstNodeBase windowSize;
@@ -46,11 +52,13 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
             base.Init(context, treeNode);
             this.applyWord = (string)ChildrenNodes[0].Token.Value;
             this.windowWord = (string)ChildrenNodes[1].Token.Value;
-            this.windowSize = AddChild(NodeUseType.Parameter, "windowSize", ChildrenNodes[2]) as AstNodeBase;
+            this.reservedWordOf = (string)ChildrenNodes[2].Token.Value;
+            this.windowSize = AddChild(NodeUseType.Parameter, "windowSize", ChildrenNodes[3]) as AstNodeBase;
+
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
-            this.result.Line = ChildrenNodes[1].Token.Location.Line;
-            this.result.NodeType = PlanNodeTypeEnum.ApplyWindow;
+            this.result.Line = ChildrenNodes[0].Token.Location.Line;
+            this.result.NodeType = PlanNodeTypeEnum.ObservableBuffer;
         }
 
         /// <summary>
@@ -65,9 +73,13 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
             PlanNode windowSizeAux = (PlanNode)this.windowSize.Evaluate(thread);
             this.EndEvaluate(thread);
 
-            this.result.NodeText = this.applyWord + " " + this.windowWord + "' " + windowSizeAux.NodeText + "'";
+            PlanNode fromLambdaForBuffer = new PlanNode();
+            fromLambdaForBuffer.NodeType = PlanNodeTypeEnum.ObservableFromForLambda;
 
-            this.result.Children = new System.Collections.Generic.List<PlanNode>();
+            this.result.NodeText = this.applyWord + " " + this.windowWord + this.reservedWordOf + "' " + windowSizeAux.NodeText + "'";
+
+            this.result.Children = new List<PlanNode>();
+            this.result.Children.Add(fromLambdaForBuffer);
             this.result.Children.Add(windowSizeAux);
 
             return this.result;

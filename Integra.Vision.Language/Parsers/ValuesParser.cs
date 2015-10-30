@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="ProjectionParser.cs" company="Integra.Vision.Language">
+// <copyright file="ValuesParser.cs" company="Integra.Vision.Language">
 //     Copyright (c) Integra.Vision.Language. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -21,7 +21,7 @@ namespace Integra.Vision.Language.Parsers
         private string commandText;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProjectionParser"/> class
+        /// Initializes a new instance of the <see cref="ValuesParser"/> class
         /// </summary>
         /// <param name="commandText">Command text</param>
         public ValuesParser(string commandText)

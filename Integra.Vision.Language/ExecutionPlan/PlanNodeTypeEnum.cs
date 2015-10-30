@@ -501,7 +501,7 @@ namespace Integra.Vision.Language
         ObservableSelectManyForWindow = 506,
 
         /// <summary>
-        /// Select many for groupby observable type
+        /// Select many for group by observable type
         /// </summary>
         ObservableSelectManyForGroupBy = 507,
 
@@ -529,6 +529,11 @@ namespace Integra.Vision.Language
         /// Projection type
         /// </summary>
         Projection = 512,
+
+        /// <summary>
+        /// Observable merge type
+        /// </summary>
+        ObservableMerge = 513,
                 
         /// <summary>
         /// Enumerable count type

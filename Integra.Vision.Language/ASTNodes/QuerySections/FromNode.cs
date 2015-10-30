@@ -43,10 +43,11 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
             base.Init(context, treeNode);
             this.from = (string)ChildrenNodes[0].Token.Value;
             this.idFromNode = AddChild(NodeUseType.Parameter, "listOfValues", ChildrenNodes[1]) as AstNodeBase;
+
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[0].Token.Location.Line;
-            this.result.NodeType = PlanNodeTypeEnum.From;
+            this.result.NodeType = PlanNodeTypeEnum.ObservableFrom;
         }
 
         /// <summary>

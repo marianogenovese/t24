@@ -162,6 +162,9 @@
   <data name="FromRole" xml:space="preserve">
     <value>From</value>
   </data>
+  <data name="GroupByRole" xml:space="preserve">
+    <value>GroupBy</value>
+  </data>
   <data name="IdentifierRole" xml:space="preserve">
     <value>Identifier</value>
   </data>
