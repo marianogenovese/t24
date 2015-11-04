@@ -5,9 +5,12 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Event
 {
+    using System;
+
     /// <summary>
     /// Event properties enumerator
     /// </summary>
+    [Serializable]
     public enum EventPropertiesEnum
     {
         /// <summary>

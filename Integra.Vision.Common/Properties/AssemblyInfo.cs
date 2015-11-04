@@ -46,3 +46,5 @@ using System.Runtime.InteropServices;
 [assembly: InternalsVisibleTo("Integra.Vision.Common.Tests")]
 [assembly: InternalsVisibleTo("Integra.Vision.Engine.Host")]
 [assembly: InternalsVisibleTo("Integra.Vision.Engine.ClientTests")]
+[assembly: InternalsVisibleTo("StormTest")]
+[assembly: InternalsVisibleTo("Integra.Space.Services")]

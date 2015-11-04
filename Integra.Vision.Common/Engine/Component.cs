@@ -1,4 +1,5 @@
-﻿//-----------------------------------------------------------------------
+﻿#define DEBUG
+//-----------------------------------------------------------------------
 // <copyright file="Component.cs" company="Integra.Vision.Engine">
 //     Copyright (c) Integra.Vision.Engine. All rights reserved.
 // </copyright>
