@@ -47,10 +47,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\Integra.Messaging.dll</HintPath>
     </Reference>
-    <Reference Include="Integra.Vision.EventObject, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\Integra.Vision.EventObject.dll</HintPath>
-    </Reference>
     <Reference Include="Integra.Vision.Language">
       <HintPath>..\Integra.Vision.Language\bin\Debug\Integra.Vision.Language.dll</HintPath>
     </Reference>
@@ -114,7 +110,20 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Integra.Vision.EventObject\Integra.Vision.Event.csproj">
+      <Project>{38abf8b4-fc77-4ffc-96a2-1ee03bd22056}</Project>
+      <Name>Integra.Vision.Event</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\Integra.Common.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lib\Integra.Messaging.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
