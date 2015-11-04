@@ -322,13 +322,13 @@ namespace Integra.Vision.Language.Runtime
         private Expression CreateFrom(PlanNode actualNode, ConstantExpression source)
         {
             // se obtiene el SpaceContext del proyecto Integra.Space.Services
-            string sourceName = source.Value.ToString() + "_converted";
+            /*string sourceName = source.Value.ToString() + "_converted";
             PropertyInfo propertyInfo = typeof(Integra.Space.Services.Signalr.Contexts.SpaceContext).GetProperty(sourceName);
 
             if (propertyInfo == null)
             {
                 throw new NotImplementedException(string.Format("Fuente '{0}' no implementada.", sourceName));
-            }
+            }*/
 
             ParameterExpression currentParameter = null;
             bool existsParameter = false;
@@ -346,7 +346,7 @@ namespace Integra.Vision.Language.Runtime
 
             if (!existsParameter)
             {
-                currentParameter = Expression.Parameter(propertyInfo.PropertyType, parameterName);
+                currentParameter = Expression.Parameter(typeof(IQbservable<EventObject>), parameterName);
                 this.parameterList.Add(currentParameter);
             }
 
