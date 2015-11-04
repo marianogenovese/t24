@@ -39,6 +39,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Integra.Messaging, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\Integra.Messaging.dll</HintPath>
+    </Reference>
     <Reference Include="Integra.Space.Services">
       <HintPath>..\..\..\..\Repos\Integra.Space.Services\Integra.Space.Services\bin\Debug\Integra.Space.Services.dll</HintPath>
     </Reference>
@@ -229,7 +233,11 @@
       <Name>Integra.Vision.Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Integra.Messaging.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

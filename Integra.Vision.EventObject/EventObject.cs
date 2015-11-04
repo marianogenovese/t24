@@ -6,6 +6,7 @@
 namespace Integra.Vision.Event
 {
     using System;
+    using Messaging;
 
     /// <summary>
     /// Event object class
@@ -29,7 +30,7 @@ namespace Integra.Vision.Event
         /// message
         /// Doc go here
         /// </summary>
-        private EventMessage message;
+        private Message message;
 
         /// <summary>
         /// Gets or sets the agent
@@ -76,7 +77,7 @@ namespace Integra.Vision.Event
         /// <summary>
         /// Gets or sets the message
         /// </summary>
-        public EventMessage Message
+        public Message Message
         {
             get
             {

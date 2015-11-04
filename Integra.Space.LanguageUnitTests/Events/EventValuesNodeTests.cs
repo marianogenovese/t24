@@ -113,7 +113,7 @@ namespace Integra.Space.LanguageUnitTests.Events
                     new Subscription(50, 200)
                 });
         }
-
+        
         [TestMethod]
         public void EventPropertyAgentTimeStampType()
         {
