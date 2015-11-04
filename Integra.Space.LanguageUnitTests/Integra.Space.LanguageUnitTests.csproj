@@ -47,9 +47,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\Integra.Messaging.dll</HintPath>
     </Reference>
-    <Reference Include="Integra.Vision.Language">
-      <HintPath>..\Integra.Vision.Language\bin\Debug\Integra.Vision.Language.dll</HintPath>
-    </Reference>
     <Reference Include="Irony.Interpreter, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ca48ace7223ead47" />
     <Reference Include="Microsoft.Reactive.Testing, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Rx-Testing.2.2.5\lib\net45\Microsoft.Reactive.Testing.dll</HintPath>
@@ -114,6 +111,10 @@
     <ProjectReference Include="..\Integra.Vision.EventObject\Integra.Vision.Event.csproj">
       <Project>{38abf8b4-fc77-4ffc-96a2-1ee03bd22056}</Project>
       <Name>Integra.Vision.Event</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integra.Vision.Language\Integra.Vision.Language.csproj">
+      <Project>{6d4d259b-281f-454f-9b47-4ce2d108ba6a}</Project>
+      <Name>Integra.Vision.Language</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
