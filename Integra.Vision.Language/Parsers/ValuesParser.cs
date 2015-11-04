@@ -5,8 +5,7 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Language.Parsers
 {
-    using System;
-    using System.Collections.Generic;
+    using Exceptions;
     using Integra.Vision.Language.Grammars;
     using Irony.Parsing;
 
@@ -47,7 +46,7 @@ namespace Integra.Vision.Language.Parsers
                 {
                     foreach (var parserMessage in parseTree.ParserMessages)
                     {
-                        throw new Exception(Resources.SR.SyntaxError(parserMessage.Message, parserMessage.Location.Line, parserMessage.Location.Column));
+                        throw new SyntaxException(Resources.SR.SyntaxError(parserMessage.Message, parserMessage.Location.Line, parserMessage.Location.Column));
                     }
                 }
                 else
@@ -58,7 +57,7 @@ namespace Integra.Vision.Language.Parsers
             }
             catch (System.Exception e)
             {
-                throw new Exception(Resources.SR.InterpretationException, e);
+                throw new ParseException(Resources.SR.InterpretationException, e);
             }
 
             return nodes;

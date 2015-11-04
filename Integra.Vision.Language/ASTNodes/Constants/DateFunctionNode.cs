@@ -66,8 +66,17 @@ namespace Integra.Vision.Language.ASTNodes.Constants
             this.result.Properties.Add("DataType", typeof(int));
             this.result.NodeType = PlanNodeTypeEnum.DateTimeFunction;
 
-            switch (this.function)
+            switch (this.function.ToLower())
             {
+                case "year":
+                    this.result.Properties.Add("Property", "Year");
+                    break;
+                case "month":
+                    this.result.Properties.Add("Property", "Month");
+                    break;
+                case "day":
+                    this.result.Properties.Add("Property", "Day");
+                    break;
                 case "hour":
                     this.result.Properties.Add("Property", "Hour");
                     break;
@@ -76,6 +85,9 @@ namespace Integra.Vision.Language.ASTNodes.Constants
                     break;
                 case "second":
                     this.result.Properties.Add("Property", "Second");
+                    break;
+                case "millisecond":
+                    this.result.Properties.Add("Property", "Millisecond");
                     break;
             }
 

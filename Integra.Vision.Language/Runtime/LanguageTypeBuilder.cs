@@ -52,7 +52,7 @@ namespace Integra.Vision.Language.Runtime
         /// <returns>Type builder.</returns>
         private static TypeBuilder GetTypeBuilder()
         {
-            var typeSignature = "MyDynamicType_" + DateTime.Now.Millisecond;
+            var typeSignature = "SpaceDynamicType_" + DateTime.Now.Millisecond;
             var an = new AssemblyName(typeSignature);
             AssemblyBuilder assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(an, AssemblyBuilderAccess.Run);
             ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("MainModule");

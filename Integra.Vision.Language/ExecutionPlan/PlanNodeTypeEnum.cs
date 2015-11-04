@@ -141,6 +141,21 @@ namespace Integra.Vision.Language
         ObjectPropertyValue = 77,
 
         /// <summary>
+        /// Group key type
+        /// </summary>
+        GroupKey = 80,
+
+        /// <summary>
+        /// Group key property type
+        /// </summary>
+        GroupKeyProperty = 81,
+
+        /// <summary>
+        /// Group key value type
+        /// </summary>
+        GroupKeyValue = 82,
+
+        /// <summary>
         /// Negate type
         /// </summary>
         Negate = 90,

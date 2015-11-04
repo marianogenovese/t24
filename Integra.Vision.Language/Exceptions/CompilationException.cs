@@ -28,5 +28,13 @@ namespace Integra.Vision.Language.Exceptions
         public CompilationException(string message, Exception innerException) : base(message, innerException)
         {
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CompilationException"/> class
+        /// </summary>
+        /// <param name="innerException">Inner exception</param>
+        public CompilationException(Exception innerException) : base(string.Empty, innerException)
+        {
+        }
     }
 }

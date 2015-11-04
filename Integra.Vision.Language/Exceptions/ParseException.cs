@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="ParsingException.cs" company="Ingetra.Vision.Language">
+// <copyright file="ParseException.cs" company="Ingetra.Vision.Language">
 //     Copyright (c) Ingetra.Vision.Language. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -8,24 +8,24 @@ namespace Integra.Vision.Language.Exceptions
     using System;
 
     /// <summary>
-    /// Parsing exception.
+    /// Parse exception.
     /// </summary>
-    internal sealed class ParsingException : Exception
+    internal sealed class ParseException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ParsingException"/> class
+        /// Initializes a new instance of the <see cref="ParseException"/> class
         /// </summary>
         /// <param name="message">Exception message</param>
-        public ParsingException(string message) : base(message)
+        public ParseException(string message) : base(message)
         {
         }
         
         /// <summary>
-        /// Initializes a new instance of the <see cref="ParsingException"/> class
+        /// Initializes a new instance of the <see cref="ParseException"/> class
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="innerException">Inner exception</param>
-        public ParsingException(string message, Exception innerException) : base(message, innerException)
+        public ParseException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }

@@ -1,11 +1,10 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="ExplicitCast.cs" company="Integra.Vision.Language">
+// <copyright file="GroupKeyValue.cs" company="Integra.Vision.Language">
 //     Copyright (c) Integra.Vision.Language. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Integra.Vision.Language.ASTNodes.Cast
+namespace Integra.Vision.Language.ASTNodes.QuerySections
 {
-    using System;
     using System.Collections.Generic;
     using Integra.Vision.Language.ASTNodes.Base;
     using Irony.Ast;
@@ -14,24 +13,19 @@ namespace Integra.Vision.Language.ASTNodes.Cast
     using Irony.Parsing;
 
     /// <summary>
-    /// Explicit cast class
+    /// Group key value class
     /// </summary>
-    internal class ExplicitCast : AstNodeBase
+    internal class GroupKeyValue : AstNodeBase
     {
         /// <summary>
-        /// target type for cast
-        /// </summary>
-        private AstNodeBase targetType;
-
-        /// <summary>
-        /// value to cast
-        /// </summary>
-        private AstNodeBase value;
-
-        /// <summary>
-        /// result plan
+        /// Result plan node
         /// </summary>
         private PlanNode result;
+
+        /// <summary>
+        /// object node
+        /// </summary>
+        private AstNodeBase groupKey;
 
         /// <summary>
         /// First method called
@@ -41,13 +35,8 @@ namespace Integra.Vision.Language.ASTNodes.Cast
         public override void Init(AstContext context, ParseTreeNode treeNode)
         {
             base.Init(context, treeNode);
-            this.targetType = AddChild(NodeUseType.Parameter, "TargetType", ChildrenNodes[1]) as AstNodeBase;
-            this.value = AddChild(NodeUseType.Parameter, "Value", ChildrenNodes[3]) as AstNodeBase;
 
-            this.result = new PlanNode();
-            this.result.Column = ChildrenNodes[0].Token.Location.Column;
-            this.result.Line = ChildrenNodes[0].Token.Location.Line;
-            this.result.NodeType = PlanNodeTypeEnum.Cast;
+            this.groupKey = AddChild(NodeUseType.Keyword, SR.ObjectRole, ChildrenNodes[0]) as AstNodeBase;
         }
 
         /// <summary>
@@ -59,14 +48,23 @@ namespace Integra.Vision.Language.ASTNodes.Cast
         protected override object DoEvaluate(ScriptThread thread)
         {
             this.BeginEvaluate(thread);
-            PlanNode targetTypeAux = (PlanNode)this.targetType.Evaluate(thread);
-            PlanNode valueAux = (PlanNode)this.value.Evaluate(thread);
+            PlanNode groupKeyAux = (PlanNode)this.groupKey.Evaluate(thread);
             this.EndEvaluate(thread);
 
-            this.result.Properties.Add("DataType", ((Type)targetTypeAux.Properties["Value"]).ToString());
-            this.result.NodeText = string.Format("({0}){1}", targetTypeAux.NodeText, valueAux.NodeText);
-            this.result.Children = new List<PlanNode>();
-            this.result.Children.Add(valueAux);
+            if (groupKeyAux.NodeType.Equals(PlanNodeTypeEnum.GroupKey))
+            {
+                this.result = groupKeyAux;
+            }
+            else
+            {
+                this.result = new PlanNode();
+                this.result.NodeType = PlanNodeTypeEnum.GroupKeyValue;
+                this.result.Column = groupKeyAux.Column;
+                this.result.Line = groupKeyAux.Line;
+                this.result.NodeText = groupKeyAux.NodeText;
+                this.result.Children = new List<PlanNode>();
+                this.result.Children.Add(groupKeyAux);
+            }
 
             return this.result;
         }

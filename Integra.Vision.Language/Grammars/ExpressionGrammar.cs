@@ -107,8 +107,7 @@ namespace Integra.Vision.Language.Grammars
             KeyTerm terminalMenorQue = ToTerm("<", "menorQue");
                                     
             /* SIMBOLOS */
-            KeyTerm terminalParentesisIz = ToTerm("(", "parentesisIz");
-            KeyTerm terminalParentesisDer = ToTerm(")", "parentesisDer");
+            KeyTerm terminalParentesisIz = ToTerm("(", "parentesisIzExpressionGrammar");
             KeyTerm terminalCorcheteIz = ToTerm("[", "corcheteIz");
             KeyTerm terminalCorcheteDer = ToTerm("]", "corchete_der");
             KeyTerm terminalLlaveIz = ToTerm("{", "llave_iz");
@@ -155,13 +154,13 @@ namespace Integra.Vision.Language.Grammars
             this.RegisterBracePair("(", ")");
             this.RegisterBracePair("[", "]");
             this.RegisterBracePair("{", "}");
-            this.RegisterOperators(40, Associativity.Right, terminalParentesisIz, terminalParentesisDer);
+            this.RegisterOperators(40, Associativity.Right, terminalParentesisIz, this.valuesGrammar.ParentesisDer);
             this.RegisterOperators(35, Associativity.Right, terminalMenos);
             this.RegisterOperators(30, Associativity.Right, terminalIgualIgual, terminalNoIgual, terminalMayorIgual, terminalMayorQue, terminalMenorIgual, terminalMenorQue, terminalLike, terminalIn);
             this.RegisterOperators(20, Associativity.Right, terminalAnd);
             this.RegisterOperators(10, Associativity.Right, terminalOr);
             this.RegisterOperators(5, Associativity.Right, terminalNot);
-            this.MarkPunctuation(terminalParentesisIz, terminalParentesisDer, terminalCorcheteIz, terminalCorcheteDer, terminalLlaveIz, terminalLlaveDer);
+            this.MarkPunctuation(terminalParentesisIz, this.valuesGrammar.ParentesisDer, terminalCorcheteIz, terminalCorcheteDer, terminalLlaveIz, terminalLlaveDer);
 
             /* NO TERMINALES */
             NonTerminal nt_EXPRESSION_VALUES = new NonTerminal("EXPRESSION_VALUES", typeof(ConstantValueNode));
@@ -211,8 +210,8 @@ namespace Integra.Vision.Language.Grammars
             /* EXPRESIONES LÓGICAS */
             this.logicExpression.Rule = this.logicExpression + terminalAnd + this.logicExpression
                                     | this.logicExpression + terminalOr + this.logicExpression
-                                    | terminalParentesisIz + this.logicExpression + terminalParentesisDer
-                                    | terminalNot + terminalParentesisIz + this.logicExpression + terminalParentesisDer
+                                    | terminalParentesisIz + this.logicExpression + this.valuesGrammar.ParentesisDer
+                                    | terminalNot + terminalParentesisIz + this.logicExpression + this.valuesGrammar.ParentesisDer
                                     | nt_COMPARATIVE_EXPRESSION;
             /* **************************** */
             /* EXPRESIONES COMPARATIVAS */
@@ -223,8 +222,9 @@ namespace Integra.Vision.Language.Grammars
                                             | nt_EXPRESSION_VALUES + terminalMenorIgual + nt_EXPRESSION_VALUES
                                             | nt_EXPRESSION_VALUES + terminalMenorQue + nt_EXPRESSION_VALUES
                                             | nt_EXPRESSION_VALUES + terminalLike + terminalCadena
-                                            | terminalParentesisIz + nt_COMPARATIVE_EXPRESSION + terminalParentesisDer
-                                            | terminalNot + nt_COMPARATIVE_EXPRESSION;
+                                            | terminalParentesisIz + nt_COMPARATIVE_EXPRESSION + this.valuesGrammar.ParentesisDer
+                                            | terminalNot + nt_COMPARATIVE_EXPRESSION
+                                            | nt_EXPRESSION_VALUES;
             /* **************************** */
             
             /* CONSTANTES */

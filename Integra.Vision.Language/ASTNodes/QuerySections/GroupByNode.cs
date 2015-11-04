@@ -117,11 +117,11 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
                 if (isFirst)
                 {
                     isFirst = false;
-                    this.result.NodeText += " " + tupla.Key.NodeText + " as " + tupla.Value.NodeText;
+                    this.result.NodeText += " " + tupla.Value.NodeText + " as " + tupla.Key.NodeText;
                 }
                 else
                 {
-                    this.result.NodeText += ", " + tupla.Key.NodeText + " as " + tupla.Value.NodeText;
+                    this.result.NodeText += ", " + tupla.Value.NodeText + " as " + tupla.Key.NodeText;
                 }
 
                 planProjection.Children.Add(plan);

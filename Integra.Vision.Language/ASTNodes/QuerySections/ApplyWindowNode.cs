@@ -76,7 +76,7 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
             PlanNode fromLambdaForBuffer = new PlanNode();
             fromLambdaForBuffer.NodeType = PlanNodeTypeEnum.ObservableFromForLambda;
 
-            this.result.NodeText = this.applyWord + " " + this.windowWord + this.reservedWordOf + "' " + windowSizeAux.NodeText + "'";
+            this.result.NodeText = this.applyWord + " " + this.windowWord + " " + this.reservedWordOf + " " + windowSizeAux.NodeText;
 
             this.result.Children = new List<PlanNode>();
             this.result.Children.Add(fromLambdaForBuffer);

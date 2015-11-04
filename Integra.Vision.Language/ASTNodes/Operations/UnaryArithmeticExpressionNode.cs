@@ -43,7 +43,10 @@ namespace Integra.Vision.Language.ASTNodes.Operations
             base.Init(context, treeNode);
             this.operationNode = (string)ChildrenNodes[0].Token.Value;
             this.rightNode = AddChild(NodeUseType.Parameter, "rightNode", ChildrenNodes[1]) as AstNodeBase;
+
             this.result = new PlanNode();
+            this.result.Column = ChildrenNodes[0].Token.Location.Column;
+            this.result.Line = ChildrenNodes[0].Token.Location.Line;
         }
 
         /// <summary>
@@ -58,25 +61,28 @@ namespace Integra.Vision.Language.ASTNodes.Operations
             PlanNode r = (PlanNode)this.rightNode.Evaluate(thread);
             this.EndEvaluate(thread);
 
-            // se iguala result al nodo hijo para mantener sus propiedades
-            foreach (var property in r.Properties)
-            {
-                this.result.Properties.Add(property.Key, property.Value);
-            }
-
-            // se especifica la nueva informacion para result
-            this.result.Column = ChildrenNodes[0].Token.Location.Column;
-            this.result.Line = ChildrenNodes[0].Token.Location.Line;
-            this.result.NodeText = this.operationNode + " " + r.NodeText;
-
             // se especifica los hijos y el tipo de nodo result si la operacion es de negacion aritmetica
             if (this.operationNode == "-")
             {
+                // se iguala result al nodo hijo para mantener sus propiedades
+                foreach (var property in r.Properties)
+                {
+                    this.result.Properties.Add(property.Key, property.Value);
+                }
+
+                // se especifica la nueva informacion para result
                 this.result.NodeType = PlanNodeTypeEnum.Negate;
                 this.result.Children = new List<PlanNode>();
-                this.result.Children.Add(r);
+                this.result.Children.Add(r);                
+            }
+            else if (this.operationNode == "+")
+            {
+                this.result = r;
             }
 
+            // se especifica el texto del nodo resultante
+            this.result.NodeText = this.operationNode + r.NodeText;
+            
             return this.result;
         }
     }

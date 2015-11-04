@@ -93,7 +93,7 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
                     tupla.Value.Children.ElementAt(0).Children = new List<PlanNode>();
                     tupla.Value.Children.ElementAt(0).Children.Add(fromLambda);
                 }
-                else
+                else if (tupla.Value.NodeType.Equals(PlanNodeTypeEnum.EnumerableCount))
                 {
                     // se le agrega el from lambda a las extensiones que reciben un parametro
                     tupla.Value.Children.Add(fromLambda);
@@ -102,11 +102,11 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
                 if (isFirst)
                 {
                     isFirst = false;
-                    this.result.NodeText += " " + tupla.Key.NodeText + " as " + tupla.Value.NodeText;
+                    this.result.NodeText += " " + tupla.Value.NodeText + " as " + tupla.Key.NodeText;
                 }
                 else
                 {
-                    this.result.NodeText += ", " + tupla.Key.NodeText + " as " + tupla.Value.NodeText;
+                    this.result.NodeText += ", " + tupla.Value.NodeText + " as " + tupla.Key.NodeText;
                 }
 
                 this.result.Children.Add(plan);

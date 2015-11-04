@@ -49,6 +49,16 @@ namespace Integra.Vision.Language.Grammars
         private NonTerminal projectionValue;
 
         /// <summary>
+        /// Right parenthesis
+        /// </summary>
+        private KeyTerm parentesisDer;
+
+        /// <summary>
+        /// Left parenthesis
+        /// </summary>
+        private KeyTerm parentesisIz;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ValuesGrammar"/> class
         /// </summary>
         public ValuesGrammar()
@@ -113,14 +123,43 @@ namespace Integra.Vision.Language.Grammars
         }
 
         /// <summary>
+        /// Gets the right parenthesis
+        /// </summary>
+        public KeyTerm ParentesisDer
+        {
+            get
+            {
+                return this.parentesisDer;
+            }
+        }
+
+        /// <summary>
+        /// Gets the right parenthesis
+        /// </summary>
+        public KeyTerm ParentesisIz
+        {
+            get
+            {
+                return this.parentesisIz;
+            }
+        }
+
+        /// <summary>
         /// Specify the language grammar
         /// </summary>
         public void CreateGrammar()
         {
+            /* PROYECCIÓN */
+            KeyTerm terminalKey = ToTerm("key", "key");
+
             /* FUNCIONES */
+            KeyTerm terminalYear = ToTerm("year", "year");
+            KeyTerm terminalMonth = ToTerm("month", "month");
+            KeyTerm terminalDay = ToTerm("day", "day");
             KeyTerm terminalHour = ToTerm("hour", "hour");
             KeyTerm terminalMinute = ToTerm("minute", "minute");
             KeyTerm terminalSecond = ToTerm("second", "second");
+            KeyTerm terminalMillisecond = ToTerm("millisecond", "millisecond");
             KeyTerm terminalCount = ToTerm("count", "count");
             KeyTerm terminalSum = ToTerm("sum", "sum");
 
@@ -140,8 +179,8 @@ namespace Integra.Vision.Language.Grammars
             KeyTerm terminalMas = ToTerm("+", "mas");
 
             /* SIMBOLOS */
-            KeyTerm terminalParentesisIz = ToTerm("(", "parentesisIz");
-            KeyTerm terminalParentesisDer = ToTerm(")", "parentesisDerValuesGrammar");
+            KeyTerm terminalParentesisIz = ToTerm("(", "parentesisIzValuesGrammar");
+            this.parentesisDer = this.ToTerm(")", "parentesisDerValuesGrammar");
             KeyTerm terminalCorcheteIz = ToTerm("[", "corcheteIz");
             KeyTerm terminalCorcheteDer = ToTerm("]", "corcheteDer");
             KeyTerm terminalLlaveIz = ToTerm("{", "llaveIz");
@@ -156,13 +195,39 @@ namespace Integra.Vision.Language.Grammars
 
             /* TIPOS PARA CASTEO */
             ConstantTerminal terminalType = new ConstantTerminal("contanteTipo");
-            terminalType.Add("int", typeof(int?));
-            terminalType.Add("long", typeof(long?));
-            terminalType.Add("byte", typeof(byte?));
+            terminalType.Add("byte", typeof(byte));
+            terminalType.Add("byte?", typeof(byte?));
+            terminalType.Add("sbyte", typeof(sbyte));
+            terminalType.Add("sbyte?", typeof(sbyte?));
+            terminalType.Add("short", typeof(short));
+            terminalType.Add("short?", typeof(short?));
+            terminalType.Add("ushort", typeof(ushort));
+            terminalType.Add("ushort?", typeof(ushort?));
+            terminalType.Add("int", typeof(int));
+            terminalType.Add("int?", typeof(int?));
+            terminalType.Add("uint", typeof(uint));
+            terminalType.Add("uint?", typeof(uint?));
+            terminalType.Add("long", typeof(long));
+            terminalType.Add("long?", typeof(long?));
+            terminalType.Add("ulong", typeof(ulong));
+            terminalType.Add("ulong?", typeof(ulong?));
+            terminalType.Add("float", typeof(float));
+            terminalType.Add("float?", typeof(float?));
+            terminalType.Add("double", typeof(double));
+            terminalType.Add("double?", typeof(double?));
+            terminalType.Add("decimal", typeof(decimal));
+            terminalType.Add("decimal?", typeof(decimal?));
+            terminalType.Add("char", typeof(char));
+            terminalType.Add("char?", typeof(char?));
             terminalType.Add("string", typeof(string));
+            terminalType.Add("bool", typeof(bool));
+            terminalType.Add("bool?", typeof(bool?));
+            terminalType.Add("object", typeof(object));
+            terminalType.Add("DateTime", typeof(DateTime));
+            terminalType.Add("TimeSpan", typeof(TimeSpan));
             terminalType.AstConfig.NodeType = null;
             terminalType.AstConfig.DefaultNodeCreator = () => new TypeNode();
-
+            
             /* COMENTARIOS */
             CommentTerminal comentarioLinea = new CommentTerminal("comentario_linea", "//", "\n", "\r\n");
             CommentTerminal comentarioBloque = new CommentTerminal("comentario_bloque", "/*", "*/");
@@ -233,6 +298,12 @@ namespace Integra.Vision.Language.Grammars
             NonTerminal nt_EVENT = new NonTerminal("EVENT", typeof(EventNode));
             nt_EVENT.AstConfig.NodeType = null;
             nt_EVENT.AstConfig.DefaultNodeCreator = () => new EventNode();
+            NonTerminal nt_GROUP_KEY = new NonTerminal("GROUP_KEY", typeof(GroupKey));
+            nt_GROUP_KEY.AstConfig.NodeType = null;
+            nt_GROUP_KEY.AstConfig.DefaultNodeCreator = () => new GroupKey();
+            NonTerminal nt_GROUP_KEY_VALUE = new NonTerminal("GROUP_KEY_VALUE", typeof(GroupKeyValue));
+            nt_GROUP_KEY_VALUE.AstConfig.NodeType = null;
+            nt_GROUP_KEY_VALUE.AstConfig.DefaultNodeCreator = () => new GroupKeyValue();
             NonTerminal nt_EVENT_PROPERTIES = new NonTerminal("EVENT_VALUES", typeof(EventPropertiesNode));
             nt_EVENT_PROPERTIES.AstConfig.NodeType = null;
             nt_EVENT_PROPERTIES.AstConfig.DefaultNodeCreator = () => new EventPropertiesNode();
@@ -260,9 +331,16 @@ namespace Integra.Vision.Language.Grammars
             this.projectionValue.AstConfig.DefaultNodeCreator = () => new ProjectionValue();
 
             /* PROJECTION VALUES */
-            this.projectionValue.Rule = terminalCount + terminalParentesisIz + terminalParentesisDer
-                                        | terminalSum + terminalParentesisIz + this.values + terminalParentesisDer
+            this.projectionValue.Rule = terminalCount + terminalParentesisIz + this.parentesisDer
+                                        | terminalSum + terminalParentesisIz + this.values + this.parentesisDer
+                                        | nt_GROUP_KEY_VALUE
                                         | this.values;
+            /* **************************** */
+            /* GROUP KEY */
+            nt_GROUP_KEY.Rule = nt_GROUP_KEY + terminalPunto + terminalId
+                                | terminalKey;
+
+            nt_GROUP_KEY_VALUE.Rule = nt_GROUP_KEY;
             /* **************************** */
             /* CONSTANTES */
             this.values.Rule = this.numericValues
@@ -270,9 +348,9 @@ namespace Integra.Vision.Language.Grammars
                                 | this.otherValues
                                 | nt_EXPLICIT_CAST;
 
-            nt_EXPLICIT_CAST.Rule = terminalParentesisIz + terminalType + terminalParentesisDer + this.numericValues
-                                    | terminalParentesisIz + terminalType + terminalParentesisDer + this.nonConstantValues
-                                    | terminalParentesisIz + terminalType + terminalParentesisDer + this.otherValues;
+            nt_EXPLICIT_CAST.Rule = terminalParentesisIz + terminalType + this.parentesisDer + this.numericValues
+                                    | terminalParentesisIz + terminalType + this.parentesisDer + this.nonConstantValues
+                                    | terminalParentesisIz + terminalType + this.parentesisDer + this.otherValues;
 
             this.nonConstantValues.Rule = nt_EVENT_WITH_SOURCE
                                             | nt_OBJECT_VALUE
@@ -293,9 +371,13 @@ namespace Integra.Vision.Language.Grammars
 
             /* **************************** */
             /* FUNCIONES DE FECHAS */
-            nt_DATE_FUNCTIONS.Rule = terminalHour + terminalParentesisIz + nt_DATETIME_TIMESPAN_VALUES + terminalParentesisDer
-                                    | terminalMinute + terminalParentesisIz + nt_DATETIME_TIMESPAN_VALUES + terminalParentesisDer
-                                    | terminalSecond + terminalParentesisIz + nt_DATETIME_TIMESPAN_VALUES + terminalParentesisDer;
+            nt_DATE_FUNCTIONS.Rule = terminalYear + terminalParentesisIz + nt_DATETIME_TIMESPAN_VALUES + this.parentesisDer
+                                    | terminalMonth + terminalParentesisIz + nt_DATETIME_TIMESPAN_VALUES + this.parentesisDer
+                                    | terminalDay + terminalParentesisIz + nt_DATETIME_TIMESPAN_VALUES + this.parentesisDer
+                                    | terminalHour + terminalParentesisIz + nt_DATETIME_TIMESPAN_VALUES + this.parentesisDer
+                                    | terminalMinute + terminalParentesisIz + nt_DATETIME_TIMESPAN_VALUES + this.parentesisDer
+                                    | terminalSecond + terminalParentesisIz + nt_DATETIME_TIMESPAN_VALUES + this.parentesisDer
+                                    | terminalMillisecond + terminalParentesisIz + nt_DATETIME_TIMESPAN_VALUES + this.parentesisDer;
             /* **************************** */
             /* EXPRESIONES ARITMETICAS */
             nt_ARITHMETIC_EXPRESSION.Rule = nt_ARITHMETIC_EXPRESSION + terminalMenos + nt_ARITHMETIC_EXPRESSION

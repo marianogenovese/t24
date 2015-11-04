@@ -46,10 +46,14 @@ namespace Integra.Vision.Language.ASTNodes.Constants
         public override void Init(AstContext context, ParseTreeNode treeNode)
         {
             base.Init(context, treeNode);
+
             this.valueNode = AddChild(NodeUseType.Parameter, "ValueNode", ChildrenNodes[0]) as AstNodeBase;
             this.tAs = (string)ChildrenNodes[1].Token.Value;
             this.aliasNode = AddChild(NodeUseType.Parameter, "AliasNode", ChildrenNodes[2]) as AstNodeBase;
+
             this.result = new PlanNode();
+            this.result.NodeType = PlanNodeTypeEnum.ValueWithAlias;
+            this.result.Children = new List<PlanNode>();
         }
 
         /// <summary>
@@ -68,8 +72,7 @@ namespace Integra.Vision.Language.ASTNodes.Constants
             this.result.Column = v.Column;
             this.result.Line = v.Line;
             this.result.NodeText = v.NodeText + " " + this.tAs + " " + a.NodeText;
-            this.result.NodeType = PlanNodeTypeEnum.ValueWithAlias;
-            this.result.Children = new List<PlanNode>();
+
             this.result.Children.Add(v);
             this.result.Children.Add(a);
 

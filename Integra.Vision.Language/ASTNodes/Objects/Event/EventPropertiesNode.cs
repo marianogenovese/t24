@@ -2,7 +2,7 @@
 // <copyright file="EventPropertiesNode.cs" company="Integra.Vision.Language">
 //     Copyright (c) Integra.Vision.Language. All rights reserved.
 // </copyright>
-//-----------------------------------------------------------------------}
+//-----------------------------------------------------------------------
 namespace Integra.Vision.Language.ASTNodes.Objects.Event
 {
     using System;

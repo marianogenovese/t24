@@ -417,9 +417,9 @@ namespace Integra.Vision.Language.Grammars
             /* **************************** */
             /* WHERE */
             nt_WHERE.Rule = terminalWhere + nt_LOGIC_EXPRESSION;
-            /* **************************** */            
+            /* **************************** */
             /* COMANDOS */
-            nt_COMMAND_NODE.Rule = nt_CREATE_SOURCE
+            /*nt_COMMAND_NODE.Rule = nt_CREATE_SOURCE
                                         | nt_CREATE_STREAM
                                         | nt_CREATE_ROLE
                                         | nt_CREATE_USER
@@ -430,7 +430,9 @@ namespace Integra.Vision.Language.Grammars
                                         | nt_PUBLISH
                                         | nt_RECEIVE
                                         | nt_SYSTEM_VIEW
-                                        | nt_USER_QUERY;
+                                        | nt_USER_QUERY;*/
+
+            nt_COMMAND_NODE.Rule = nt_USER_QUERY;
             /* **************************** */
             /* LISTA DE COMANDOS */
             nt_COMMAND_LIST.Rule = nt_COMMAND_LIST + terminalNext + nt_COMMAND_NODE

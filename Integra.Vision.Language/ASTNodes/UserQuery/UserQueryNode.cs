@@ -106,9 +106,7 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
             {
                 PlanNode fromAux = (PlanNode)this.from.Evaluate(thread);
                 PlanNode projectionAux = (PlanNode)this.select.Evaluate(thread);
-
-                this.result.NodeText = string.Format("{0} {1}", fromAux.NodeText, projectionAux.NodeText);
-
+                
                 /* ******************************************************************************************************************************************************** */
                 PlanNode scopeSelectForBuffer = new PlanNode();
                 scopeSelectForBuffer.NodeType = PlanNodeTypeEnum.NewScope;
@@ -127,15 +125,14 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
                 this.result = selectForBuffer;
                 this.result.Column = fromAux.Column;
                 this.result.Line = fromAux.Line;
+                this.result.NodeText = string.Format("{0} {1}", fromAux.NodeText, projectionAux.NodeText);
             }
             else if (childrenCount == 3)
             {
                 PlanNode fromAux = (PlanNode)this.from.Evaluate(thread);
                 PlanNode whereAux = (PlanNode)this.where.Evaluate(thread);
                 PlanNode projectionAux = (PlanNode)this.select.Evaluate(thread);
-
-                this.result.NodeText = string.Format("{0} {1} {2}", fromAux.NodeText, whereAux.NodeText, projectionAux.NodeText);
-
+                
                 /* ******************************************************************************************************************************************************** */
                 whereAux.Children.ElementAt(0).Children.Add(fromAux);
                 /* ******************************************************************************************************************************************************** */
@@ -156,6 +153,7 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
                 this.result = selectForBuffer;
                 this.result.Column = fromAux.Column;
                 this.result.Line = fromAux.Line;
+                this.result.NodeText = string.Format("{0} {1} {2}", fromAux.NodeText, whereAux.NodeText, projectionAux.NodeText);
             }
             else if (childrenCount == 4)
             {
@@ -163,9 +161,7 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
                 PlanNode applyWindowAux = (PlanNode)this.applyWindow.Evaluate(thread);
                 PlanNode groupByAux = (PlanNode)this.groupBy.Evaluate(thread);
                 PlanNode projectionAux = (PlanNode)this.select.Evaluate(thread);
-
-                this.result.NodeText = string.Format("{0} {1} {2} {3}", fromAux.NodeText, applyWindowAux.NodeText, groupByAux.NodeText, projectionAux.NodeText);
-
+                
                 /* ******************************************************************************************************************************************************** */
                 groupByAux.Children.ElementAt(0).Children.Add(fromAux);
                 /* ******************************************************************************************************************************************************** */
@@ -204,6 +200,7 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
                 this.result = merge;
                 this.result.Column = fromAux.Column;
                 this.result.Line = fromAux.Line;
+                this.result.NodeText = string.Format("{0} {1} {2} {3}", fromAux.NodeText, applyWindowAux.NodeText, groupByAux.NodeText, projectionAux.NodeText);
             }
             else if (childrenCount == 5)
             {
@@ -213,9 +210,7 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
                 PlanNode applyWindowAux = (PlanNode)this.applyWindow.Evaluate(thread);
                 PlanNode groupByAux = (PlanNode)this.groupBy.Evaluate(thread);
                 PlanNode projectionAux = (PlanNode)this.select.Evaluate(thread);
-
-                this.result.NodeText = string.Format("{0} {1} {2} {3} {4}", fromAux.NodeText, whereAux.NodeText, applyWindowAux.NodeText, groupByAux.NodeText, projectionAux.NodeText);
-
+                
                 /* ******************************************************************************************************************************************************** */
                 whereAux.Children.ElementAt(0).Children.Add(fromAux);
                 groupByAux.Children.ElementAt(0).Children.Add(whereAux);
@@ -255,6 +250,7 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
                 this.result = merge;
                 this.result.Column = fromAux.Column;
                 this.result.Line = fromAux.Line;
+                this.result.NodeText = string.Format("{0} {1} {2} {3} {4}", fromAux.NodeText, whereAux.NodeText, applyWindowAux.NodeText, groupByAux.NodeText, projectionAux.NodeText);
             }
 
             this.EndEvaluate(thread);
