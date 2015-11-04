@@ -2,7 +2,7 @@
 using Integra.Vision.Language;
 using Integra.Vision.Language.Runtime;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-namespace EQL_Aritec.ASTNodes.Constants.Tests
+namespace EQL_Aritec.ASTNodes.Constants.Tests.Constants
 {
     [TestClass()]
     internal sealed class DateFunctionNodeTests

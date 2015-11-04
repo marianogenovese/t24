@@ -48,11 +48,11 @@ namespace Integra.Vision.Engine.Core
             // update the adapter
             adapter.State = (int)UserDefinedObjectStateEnum.Stopped;
 
+            // stop the source
+            Sources.StopSource(command.Name);
+
             // save changes
             vc.SaveChanges();
-
-            // close connection
-            vc.Dispose();
         }
     }
 }

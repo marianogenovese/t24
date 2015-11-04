@@ -37,14 +37,21 @@ namespace Integra.Vision.Engine.Commands
         private IDependencyEnumerator dependencyEnumerator;
 
         /// <summary>
+        /// Used for store the current channel for callback operations.
+        /// </summary>
+        private System.ServiceModel.OperationContext callback;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="PublishCommand"/> class
         /// </summary>
         /// <param name="node">Execution plan node that have the command arguments</param>
         /// <param name="eventObject">Incoming event from the remote client</param>
-        public PublishCommand(PlanNode node, EventObject eventObject) : base(node)
+        /// <param name="callback">The current channel for callback operations</param>
+        public PublishCommand(PlanNode node, EventObject eventObject, System.ServiceModel.OperationContext callback) : base(node)
         {
             this.node = node;
             this.eventObject = eventObject;
+            this.callback = callback;
         }
 
         /// <inheritdoc />
@@ -64,6 +71,17 @@ namespace Integra.Vision.Engine.Commands
             get
             {
                 return this.Arguments["SourceName"].Value.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Gets the current channel
+        /// </summary>
+        public System.ServiceModel.OperationContext Callback
+        {
+            get
+            {
+                return this.callback;
             }
         }
 

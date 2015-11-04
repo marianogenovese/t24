@@ -78,11 +78,11 @@ namespace Integra.Vision.Engine.Core
             // load object
             if (onCondition.Equals(string.Empty))
             {
-                this.LoadObject(whereCondition, projectionScript);
+                // this.LoadObject(whereCondition, projectionScript);
             }
             else
             {
-                this.LoadObject(onCondition, whereCondition, projectionScript);
+                // this.LoadObject(onCondition, whereCondition, projectionScript);
             }
 
             // save changes

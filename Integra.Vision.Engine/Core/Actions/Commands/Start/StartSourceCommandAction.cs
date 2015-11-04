@@ -52,26 +52,11 @@ namespace Integra.Vision.Engine.Core
             // update the adapter
             source.State = (int)UserDefinedObjectStateEnum.Started;
 
+            // load the source
+            Sources.StartSource(command.Name);
+
             // save changes
             vc.SaveChanges();
-
-            // close connection
-            vc.Dispose();
-        }
-
-        /// <summary>
-        /// Contains load source logic.
-        /// </summary>
-        /// <param name="whereCondition">Conditional expression</param>
-        private void LoadObject(string whereCondition)
-        {
-            System.Diagnostics.Debug.WriteLine("*** Creando función de la condicion where del source ***");
-            ExpressionParser expressionParser = new ExpressionParser(whereCondition);
-            PlanNode expressionNode = expressionParser.Parse();
-
-            ExpressionConstructor constructor = new ExpressionConstructor();
-            var resultWhereCondition = constructor.CompileWhere(expressionNode);
-            System.Diagnostics.Debug.WriteLine("*** Función creada exitosamente ***");
         }
     }
 }

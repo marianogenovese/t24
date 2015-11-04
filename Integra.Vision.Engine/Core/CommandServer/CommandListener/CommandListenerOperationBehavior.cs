@@ -6,6 +6,7 @@
 namespace Integra.Vision.Engine.Core
 {
     using System;
+    using System.Linq;
     using System.ServiceModel.Channels;
     using System.ServiceModel.Description;
     using System.ServiceModel.Dispatcher;

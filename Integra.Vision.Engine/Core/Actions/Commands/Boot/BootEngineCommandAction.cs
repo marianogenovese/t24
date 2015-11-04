@@ -41,21 +41,16 @@ namespace Integra.Vision.Engine.Core
             List<Tuple<string, ObjectTypeEnum>> userDefinedObjectList = new List<Tuple<string, ObjectTypeEnum>>();
 
             string type3 = ObjectTypeEnum.Source.ToString();
-            string type4 = ObjectTypeEnum.Stream.ToString();
             int state1 = (int)UserDefinedObjectStateEnum.Started;
             int state2 = (int)UserDefinedObjectStateEnum.StoppedByError;
 
-            IQueryable result = repoUserDefinedObject.Filter(x => (x.Type == type3 || x.Type == type4) && (x.State == state1 || x.State == state2));
+            IQueryable result = repoUserDefinedObject.Filter(x => (x.Type == type3) && (x.State == state1 || x.State == state2));
 
             foreach (UserDefinedObject userDefinedObject in result)
             {
                 if (userDefinedObject.Type.Equals(type3))
                 {
                     userDefinedObjectList.Add(new Tuple<string, ObjectTypeEnum>(userDefinedObject.Name, ObjectTypeEnum.Source));
-                }
-                else if (userDefinedObject.Type.Equals(type4))
-                {
-                    userDefinedObjectList.Add(new Tuple<string, ObjectTypeEnum>(userDefinedObject.Name, ObjectTypeEnum.Stream));
                 }
             }
             

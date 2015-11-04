@@ -32,12 +32,12 @@ namespace Integra.Vision.Engine.Core
             {
                 if (context.Data["IsPrivateCommand"].Equals(true))
                 {
-                    PrivateParser parser = new PrivateParser(context.Request.Script);
+                    EQLPrivateParser parser = new EQLPrivateParser(context.Request.Script);
                     context.Nodes = parser.Parse();
                 }
                 else
                 {
-                    PublicParser parser = new PublicParser(context.Request.Script);
+                    EQLPublicParser parser = new EQLPublicParser(context.Request.Script);
                     context.Nodes = parser.Parse();
                 }
             }

@@ -22,7 +22,7 @@ namespace EQL_Aritec.ASTNodes.Operations.Tests
             result = te.GetConstantExpressionCompiled(plan);
             TimeSpan r = (TimeSpan)result;
             Assert.AreEqual<int>(425, r.Days, "El plan obtenido difiere del plan esperado.");
-
+            
             plan = parser.callParserTest("-1 - -1");
             result = te.GetConstantExpressionCompiled(plan);
             Assert.AreEqual(0, result, "El plan obtenido difiere del plan esperado.");

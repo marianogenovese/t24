@@ -9,25 +9,45 @@ namespace Integra.Vision.Engine.Core
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Reactive.Linq;
     using System.Runtime.Serialization.Formatters.Binary;
+    using System.Threading;
+    using System.Threading.Tasks.Dataflow;
     using Integra.Vision.Engine.Commands;
     using Integra.Vision.Engine.Database.Contexts;
     using Integra.Vision.Engine.Database.Repositories;
     using Integra.Vision.Event;
     using Integra.Vision.Language;
     using Integra.Vision.Language.Runtime;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Implements all the process of return the results to the client.
     /// </summary>
     internal sealed class ReceiveCommandAction : ExecutionCommandAction
     {
+        /// <summary>
+        /// Transaction counter
+        /// </summary>
+        public long contador = 0;
+
+        /// <summary>
+        /// Transaction counter
+        /// </summary>
+        public static long counter = 0;
+
+        /// <summary>
+        /// Doc goes here
+        /// </summary>
+        public static Timer t = new Timer(timerCallback, null, 0, 1000);
+
         /// <inheritdoc />
         protected override CommandActionResult OnExecuteCommand(CommandBase command)
         {
             try
             {
-                return new QueryCommandResult(this.CreateEvent(command as ReceiveCommand));
+                this.CreateEvent(command as ReceiveCommand);
+                return new OkCommandResult();
             }
             catch (Exception e)
             {
@@ -39,8 +59,7 @@ namespace Integra.Vision.Engine.Core
         /// Contains the logic for return results to the client.
         /// </summary>
         /// <param name="receiveCommand">Receive command</param>
-        /// <returns>Events result</returns>
-        private System.Collections.IEnumerable CreateEvent(ReceiveCommand receiveCommand)
+        private void CreateEvent(ReceiveCommand receiveCommand)
         {
             string onCondition = string.Empty;
             string whereCondition = string.Empty;
@@ -57,7 +76,7 @@ namespace Integra.Vision.Engine.Core
                 Database.Models.UserDefinedObject stream = repoUserDefinedObject.Find(x => x.Name == receiveCommand.StreamName);
 
                 // get the stream projection
-                IQueryable projection = repoProjection.Filter(x => x.StreamId == stream.Id);
+                IQueryable projection = repoProjection.Filter(x => x.StreamId == stream.Id).Cast<Database.Models.PList>().OrderBy(x => x.Order);
                 projectionScript = this.GenerateProjectionScript(projection);
 
                 // get the stream conditions
@@ -79,29 +98,11 @@ namespace Integra.Vision.Engine.Core
             // load object
             if (onCondition.Equals(string.Empty))
             {
-                IDictionary<string, object> dic = this.LoadObject("httpSource", whereCondition, projectionScript);
-                if (dic == null)
-                {
-                    yield break;
-                }
-
-                foreach (var tuple in dic)
-                {
-                    yield return new { Llave = tuple.Key, Valor = tuple.Value };
-                }
+                this.LoadObject("httpSource", whereCondition, projectionScript, receiveCommand.Callback);
             }
             else
             {
-                IDictionary<string, object> dic = this.LoadObject("httpSource", "httpSource", onCondition, whereCondition, projectionScript);
-                if (dic == null)
-                {
-                    yield break;
-                }
-
-                foreach (var tuple in dic)
-                {
-                    yield return new { Llave = tuple.Key, Valor = tuple.Value };
-                }
+                this.LoadObject("httpSource", "httpSource", onCondition, whereCondition, projectionScript, receiveCommand.Callback);
             }
         }
 
@@ -113,52 +114,91 @@ namespace Integra.Vision.Engine.Core
         /// <param name="onCondition">On condition expression</param>
         /// <param name="whereCondition">Where condition expression</param>
         /// <param name="projection">Projection expression</param>
+        /// <param name="callback">Channel for callback operations</param>
         /// <returns>Projection list</returns>
-        private IDictionary<string, object> LoadObject(string sourceFromName, string sourceOnName, string onCondition, string whereCondition, string projection)
+        private void LoadObject(string sourceFromName, string sourceOnName, string onCondition, string whereCondition, string projection, System.ServiceModel.OperationContext callback)
         {
-            if (sourceFromName.Equals(Integra.Vision.Engine.SR.SourceHttpType, StringComparison.InvariantCultureIgnoreCase))
-            {
-                List<EventObject> listOfEvents = new List<EventObject>();
+            ProjectionParser projectionParser = new ProjectionParser(projection);
+            PlanNode projectionNode = projectionParser.Parse();
 
-                if (System.Messaging.MessageQueue.Exists(@".\Private$\HttpSource"))
+            ExpressionParser onConditionParser = new ExpressionParser(onCondition);
+            PlanNode onConditionNode = onConditionParser.Parse();
+
+            ExpressionParser whereConditionParser = new ExpressionParser(whereCondition);
+            PlanNode whereConditionNode = whereConditionParser.Parse();
+
+            ExpressionConstructor constructor = new ExpressionConstructor();
+            Func<EventObject, EventObject, List<Tuple<string, object>>> select = constructor.CompileJoinSelect(projectionNode);
+            Func<EventObject, EventObject, bool> on = constructor.CompileJoinWhere(onConditionNode);
+            Func<EventObject, EventObject, bool> where = constructor.CompileJoinWhere(whereConditionNode);
+
+            ActionBlock<Tuple<EventObject, EventObject>[]> serializarYEnviar = new ActionBlock<Tuple<EventObject, EventObject>[]>(
+               x =>
+               {
+                   SingleElementOrderablePartitioner<Tuple<EventObject, EventObject>> myOP2 = new SingleElementOrderablePartitioner<Tuple<EventObject, EventObject>>(x);
+                   bool mismatch = false;
+                   Parallel.ForEach(
+                       myOP2,
+                       (item, state, index) =>
+                       {
+                           if (int.Parse(item.Item1.Message[1][1].Value.ToString()) != index + 1)
+                           {
+                               mismatch = true;
+                           }
+
+                           if (++this.contador % 1000 == 0)
+                           {
+                               Console.ForegroundColor = ConsoleColor.Blue;
+                               Console.WriteLine("Salen: {0}", contador);
+                               Console.ResetColor();
+                           }
+
+                           byte[] result;
+                           System.Runtime.Serialization.Formatters.Binary.BinaryFormatter bf = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                           using (MemoryStream ms = new MemoryStream())
+                           {
+                               bf.Serialize(ms, select(item.Item1, item.Item2).ToArray());
+                               result = ms.ToArray();
+                           }
+
+                           callback.GetCallbackChannel<ICommandResultCallback>().GetProjection(new CallbackResult(result));
+                           Interlocked.Increment(ref counter);
+                       });
+
+                   if (mismatch)
+                   {
+                       Console.ForegroundColor = ConsoleColor.Red;
+                       Console.WriteLine("OrderablePartitioner Test: index mismatch detected");
+                       Console.ResetColor();
+                   }
+
+                   // Console.ResetColor();
+                   // Console.WriteLine("OrderablePartitioner test: counter = {0}, should be 500", counter);
+               },
+            new ExecutionDataflowBlockOptions() { BoundedCapacity = ExecutionDataflowBlockOptions.Unbounded });
+
+            JoinBlock<EventObject, EventObject> joinBlock = new JoinBlock<EventObject, EventObject>(new GroupingDataflowBlockOptions() { BoundedCapacity = GroupingDataflowBlockOptions.Unbounded });
+            Sources.GetSource(sourceFromName).LinkTo<EventObject>(joinBlock.Target1);
+            Sources.GetSource(sourceOnName).LinkTo<EventObject>(joinBlock.Target2);
+
+            BatchBlock<Tuple<EventObject, EventObject>> batchedJoinBlock = new BatchBlock<Tuple<EventObject, EventObject>>(500, new GroupingDataflowBlockOptions() { BoundedCapacity = GroupingDataflowBlockOptions.Unbounded });
+
+            joinBlock.LinkTo(
+                batchedJoinBlock, 
+                x => 
                 {
-                    using (System.Messaging.MessageQueue colaHttp = new System.Messaging.MessageQueue(@".\Private$\HttpSource"))
+                    if (on(x.Item1, x.Item2))
                     {
-                        foreach (System.Messaging.Message message in colaHttp.GetAllMessages())
+                        if(where(x.Item1, x.Item2))
                         {
-                            message.Formatter = new System.Messaging.BinaryMessageFormatter();
-                            byte[] body = (byte[])message.Body;
-                            using (MemoryStream ms = new MemoryStream(body))
-                            {
-                                BinaryFormatter formatter = new BinaryFormatter();
-                                ms.Seek(0, SeekOrigin.Begin);
-                                EventObject eve = (EventObject)formatter.Deserialize(ms);
-                                listOfEvents.Add(eve);
-                            }
+                            return true;
                         }
                     }
-                }
 
-                ProjectionParser projectionParser = new ProjectionParser(projection);
-                PlanNode projectionNode = projectionParser.Parse();
+                    return false;
+                });
 
-                ExpressionParser onConditionParser = new ExpressionParser(onCondition);
-                PlanNode onConditionNode = onConditionParser.Parse();
-
-                ExpressionParser whereConditionParser = new ExpressionParser(whereCondition);
-                PlanNode whereConditionNode = whereConditionParser.Parse();
-
-                ExpressionConstructor constructor = new ExpressionConstructor();
-                Func<EventObject, EventObject, IDictionary<string, object>> select = constructor.CompileJoinSelect(projectionNode);
-                Func<EventObject, EventObject, bool> on = constructor.CompileJoinWhere(onConditionNode);
-                Func<EventObject, EventObject, bool> where = constructor.CompileJoinWhere(whereConditionNode);
-
-                return null;
-            }
-            else
-            {
-                return null;
-            }
+            batchedJoinBlock.LinkTo(serializarYEnviar);
         }
 
         /// <summary>
@@ -167,44 +207,68 @@ namespace Integra.Vision.Engine.Core
         /// <param name="sourceName">Source name</param>
         /// <param name="whereCondition">Where condition expression</param>
         /// <param name="projection">Projection expression</param>
-        /// <returns>Projection list</returns>
-        private IDictionary<string, object> LoadObject(string sourceName, string whereCondition, string projection)
+        /// <param name="callback">Channel for callback operations</param>
+        private void LoadObject(string sourceName, string whereCondition, string projection, System.ServiceModel.OperationContext callback)
         {
-            if (sourceName.Equals(Integra.Vision.Engine.SR.SourceHttpType, StringComparison.InvariantCultureIgnoreCase))
-            {
-                List<EventObject> listOfEvents = new List<EventObject>();
-                using (System.Messaging.MessageQueue colaHttp = new System.Messaging.MessageQueue(@".\Private$\HttpSource"))
-                {
-                    foreach (System.Messaging.Message message in colaHttp.GetAllMessages())
-                    {
-                        message.Formatter = new System.Messaging.BinaryMessageFormatter();
-                        byte[] body = (byte[])message.Body;
-                        using (MemoryStream ms = new MemoryStream(body))
-                        {
-                            BinaryFormatter formatter = new BinaryFormatter();
-                            ms.Seek(0, SeekOrigin.Begin);
-                            EventObject eve = (EventObject)formatter.Deserialize(ms);
-                            listOfEvents.Add(eve);
-                        }
-                    }
-                }
+            ProjectionParser projectionParser = new ProjectionParser(projection);
+            PlanNode projectionNode = projectionParser.Parse();
 
-                ProjectionParser projectionParser = new ProjectionParser(projection);
-                PlanNode projectionNode = projectionParser.Parse();
+            ExpressionParser whereConditionParser = new ExpressionParser(whereCondition);
+            PlanNode whereConditionNode = whereConditionParser.Parse();
 
-                ExpressionParser whereConditionParser = new ExpressionParser(whereCondition);
-                PlanNode whereConditionNode = whereConditionParser.Parse();
+            ExpressionConstructor constructor = new ExpressionConstructor();
+            Func<EventObject, List<Tuple<string, object>>> select = constructor.CompileSelect(projectionNode);
+            Func<EventObject, bool> where = constructor.CompileWhere(whereConditionNode);
 
-                ExpressionConstructor constructor = new ExpressionConstructor();
-                Func<EventObject, IDictionary<string, object>> select = constructor.CompileSelect(projectionNode);
-                Func<EventObject, bool> where = constructor.CompileWhere(whereConditionNode);
+            ActionBlock<EventObject[]> serializarYEnviar = new ActionBlock<EventObject[]>(
+               x =>
+               {
+                   SingleElementOrderablePartitioner<EventObject> myOP2 = new SingleElementOrderablePartitioner<EventObject>(x);
+                   bool mismatch = false;
+                   Parallel.ForEach(
+                       myOP2,
+                       (item, state, index) =>
+                       {
+                           if (int.Parse(item.Message[1][1].Value.ToString()) != index + 1)
+                           {
+                               mismatch = true;
+                           }
 
-                return listOfEvents.Where(where).Select(select).FirstOrDefault();
-            }
-            else
-            {
-                return null;
-            }
+                           if (++this.contador % 1000 == 0)
+                           {
+                               Console.ForegroundColor = ConsoleColor.Blue;
+                               Console.WriteLine("Salen: {0}", contador);
+                               Console.ResetColor();
+                           }
+
+                           byte[] result;
+                           System.Runtime.Serialization.Formatters.Binary.BinaryFormatter bf = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                           using (MemoryStream ms = new MemoryStream())
+                           {
+                               bf.Serialize(ms, select(item).ToArray());
+                               result = ms.ToArray();
+                           }
+
+                           callback.GetCallbackChannel<ICommandResultCallback>().GetProjection(new CallbackResult(result));
+                           Interlocked.Increment(ref counter);
+                       });
+
+                   if (mismatch)
+                   {
+                       Console.ForegroundColor = ConsoleColor.Red;
+                       Console.WriteLine("OrderablePartitioner Test: index mismatch detected");
+                       Console.ResetColor();
+                   }
+
+                   // Console.ResetColor();
+                   // Console.WriteLine("OrderablePartitioner test: counter = {0}, should be 500", counter);
+               },
+               new ExecutionDataflowBlockOptions() { BoundedCapacity = ExecutionDataflowBlockOptions.Unbounded });
+
+            BatchBlock<EventObject> batchBlock = new BatchBlock<EventObject>(500, new GroupingDataflowBlockOptions() { BoundedCapacity = GroupingDataflowBlockOptions.Unbounded });
+
+            Sources.GetSource(sourceName).LinkTo<EventObject>(batchBlock, t => where(t));
+            batchBlock.LinkTo(serializarYEnviar);
         }
 
         /// <summary>
@@ -231,6 +295,15 @@ namespace Integra.Vision.Engine.Core
             }
 
             return script;
+        }
+
+        /// <summary>
+        /// Timer callback
+        /// </summary>
+        /// <param name="state">State of the timer</param>
+        public static void timerCallback(object state)
+        {
+            Console.WriteLine(Interlocked.Exchange(ref counter, 0));
         }
     }
 }

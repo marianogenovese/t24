@@ -130,10 +130,10 @@ namespace Integra.Vision.Engine.Core
 
                     // ACTIONS
                     case PlanNodeTypeEnum.Publish:
-                        command = new PublishCommand(node, operationContext.Request.Event);
+                        command = new PublishCommand(node, operationContext.Request.Event, operationContext.Callback);
                         break;
                     case PlanNodeTypeEnum.Receive:
-                        command = new ReceiveCommand(node);
+                        command = new ReceiveCommand(node, operationContext.Callback);
                         break;
                 }
 

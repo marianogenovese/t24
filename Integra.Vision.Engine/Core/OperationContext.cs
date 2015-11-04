@@ -35,6 +35,11 @@ namespace Integra.Vision.Engine.Core
         /// Gets context data.
         /// </summary>
         public abstract Dictionary<string, object> Data { get; }
+
+        /// <summary>
+        /// Gets the current channel for callback operations
+        /// </summary>
+        public abstract System.ServiceModel.OperationContext Callback { get; }
         
         /// <summary>
         /// Wait for the completion of the operation.

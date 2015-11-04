@@ -8,6 +8,7 @@ namespace Integra.Vision.Engine.Core
     using System;
     using System.ServiceModel;
     using System.ServiceModel.Description;
+    using System.ServiceModel.Dispatcher;
     
     /// <summary>
     /// Provides a self configured service host used as listener for request commands.
@@ -56,12 +57,26 @@ namespace Integra.Vision.Engine.Core
         {
             // base.ApplyConfiguration();
         }
+
+        /// <summary>
+        /// Configure service throttle.
+        /// </summary>
+        protected override void OnOpened()
+        {
+            base.OnOpened();
+
+            // ChannelDispatcher dispatcher = new ChannelDispatcher(this.ChannelDispatchers[0].Listener);
+            // dispatcher.ServiceThrottle.MaxConcurrentCalls = int.MaxValue;
+            // dispatcher.ServiceThrottle.MaxConcurrentInstances = int.MaxValue;
+            // dispatcher.ServiceThrottle.MaxConcurrentSessions = int.MaxValue;
+        }
         
         /// <summary>
         /// Initialize the listener.
         /// </summary>
         protected override void InitializeRuntime()
         {
+            this.ConfigureServiceThrottling();
             this.ConfigureEndpoint();
             this.ConfigureCertificate();
             this.ConfigureCredentialsBehavior();
@@ -71,6 +86,25 @@ namespace Integra.Vision.Engine.Core
             this.ConfigureOperationBehaviors();
             this.ConfigureTypeResolver();
             base.InitializeRuntime();
+        }
+
+        /// <summary>
+        /// Doc goes here
+        /// </summary>
+        private void ConfigureServiceThrottling()
+        {
+            ServiceThrottlingBehavior behavior = this.Description.Behaviors.Find<ServiceThrottlingBehavior>();
+            if (behavior == null)
+            {
+                behavior = new ServiceThrottlingBehavior();
+                this.Description.Behaviors.Add(behavior);
+            }
+            
+            behavior = this.Description.Behaviors.Find<ServiceThrottlingBehavior>();
+            
+            behavior.MaxConcurrentCalls = 1000;
+            behavior.MaxConcurrentSessions = 1000;
+            behavior.MaxConcurrentInstances = 1000;
         }
 
         /// <summary>

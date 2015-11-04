@@ -33,7 +33,7 @@ namespace Integra.Vision.Engine.Core
                 }
                 else
                 {
-                    return false;
+                    return true;
                 }
             }
         }

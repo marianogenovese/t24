@@ -63,10 +63,10 @@ namespace Integra.Vision.Engine.Core
                 }
 
                 ExpressionConstructor constructor = new ExpressionConstructor();
-                Func<EventObject, IDictionary<string, object>> select = constructor.CompileSelect(command.Select);
+                Func<EventObject, List<Tuple<string, object>>> select = constructor.CompileSelect(command.Select);
                 Func<EventObject, bool> where = constructor.CompileWhere(command.Where);
 
-                IDictionary<string, object> dic = listOfEvents.Where(where).Select(select).FirstOrDefault();
+                List<Tuple<string, object>> dic = listOfEvents.Where(where).Select(select).FirstOrDefault();
 
                 if (dic == null)
                 {
@@ -75,7 +75,7 @@ namespace Integra.Vision.Engine.Core
 
                 foreach (var tuple in dic)
                 {
-                    yield return new { Llave = tuple.Key, Valor = tuple.Value };
+                    yield return new { Llave = tuple.Item1, Valor = tuple.Item2 };
                 }
             }
             else

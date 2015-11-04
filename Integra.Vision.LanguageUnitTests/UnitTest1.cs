@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Integra.Messaging;
-using Integra.Vision.Language;
 
 namespace Integra.Vision.LanguageUnitTests
 {

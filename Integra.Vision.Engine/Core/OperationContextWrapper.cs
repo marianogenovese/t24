@@ -9,6 +9,7 @@ namespace Integra.Vision.Engine.Core
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
     using System.Security.Principal;
+    using System.ServiceModel;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -42,6 +43,11 @@ namespace Integra.Vision.Engine.Core
         private TaskCompletionSource<bool> completionSignal = new TaskCompletionSource<bool>();
 
         /// <summary>
+        /// Used for store the current channel for callback operations.
+        /// </summary>
+        private System.ServiceModel.OperationContext callback;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="OperationContextWrapper"/> class.
         /// </summary>
         /// <param name="user">The security information for identify the user in the operation.</param>
@@ -50,6 +56,20 @@ namespace Integra.Vision.Engine.Core
         {
             this.user = user;
             this.request = request;
+            this.response = new OperationResponse();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OperationContextWrapper"/> class.
+        /// </summary>
+        /// <param name="user">The security information for identify the user in the operation.</param>
+        /// <param name="request">Contains the request information of the operation.</param>
+        /// <param name="callback">The channel for callback operations.</param>
+        public OperationContextWrapper(IPrincipal user, OperationRequest request, System.ServiceModel.OperationContext callback)
+        {
+            this.user = user;
+            this.request = request;
+            this.callback = callback;
             this.response = new OperationResponse();
         }
 
@@ -94,6 +114,17 @@ namespace Integra.Vision.Engine.Core
             get
             {
                 return this.data;
+            }
+        }
+
+        /// <summary>
+        /// Gets the current channel
+        /// </summary>
+        public override System.ServiceModel.OperationContext Callback
+        {
+            get
+            {
+                return this.callback;
             }
         }
 

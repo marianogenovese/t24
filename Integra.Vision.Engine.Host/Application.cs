@@ -23,6 +23,9 @@ namespace Integra.Vision.Engine.Host
         /// <returns>Returns an exit code</returns>
         internal static int Main(string[] args)
         {
+            ThreadPool.SetMaxThreads(500, 500);
+            ThreadPool.SetMinThreads(500, 500);
+
             // Cambio de lenguaje de cultura del thread actual
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;

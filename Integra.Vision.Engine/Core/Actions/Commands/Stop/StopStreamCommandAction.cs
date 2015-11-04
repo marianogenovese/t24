@@ -50,9 +50,6 @@ namespace Integra.Vision.Engine.Core
 
             // save changes
             vc.SaveChanges();
-
-            // close connection
-            vc.Dispose();
         }
     }
 }

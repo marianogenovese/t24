@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Engine.Core
 {
+    using System;
     using System.ServiceModel.Channels;
     using System.ServiceModel.Security.Tokens;
     
@@ -183,7 +184,7 @@ namespace Integra.Vision.Engine.Core
                 innerBindingElement.MessageProtectionOrder = System.ServiceModel.Security.MessageProtectionOrder.SignBeforeEncryptAndEncryptSignature;
                 innerBindingElement.RequireSignatureConfirmation = false;
                 innerBindingElement.ProtectionTokenParameters = this.CreateProtectionTokenParameters();
-
+                
                 // return SecurityBindingElement.CreateSecureConversationBindingElement(SecurityBindingElement.CreateUserNameOverTransportBindingElement());
                 return innerBindingElement;
             }

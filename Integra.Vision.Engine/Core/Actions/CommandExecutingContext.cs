@@ -90,6 +90,12 @@ namespace Integra.Vision.Engine.Core
         }
 
         /// <inheritdoc />
+        public override System.ServiceModel.OperationContext Callback
+        {
+            get { return this.innerContext.Callback; }
+        }
+
+        /// <inheritdoc />
         public override Task WaitForCompletion()
         {
             return this.innerContext.WaitForCompletion();

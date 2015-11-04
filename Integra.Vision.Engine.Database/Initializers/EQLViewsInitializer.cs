@@ -45,6 +45,151 @@ namespace Integra.Vision.Engine.Database.Initializers
             Repositories.Repository<Database.Models.User> userRepo = new Repositories.Repository<Models.User>(context);
             userRepo.Create(defaultUser);
 
+            // ConnectRole
+            Models.Role connectRole = new Models.Role()
+            {
+                Id = new System.Guid(),
+                Name = "ConnectRole",
+                CreationDate = System.DateTime.Now,
+                IsServerRole = true,
+                IsSystemObject = true,
+                State = (int)UserDefinedObjectStateEnum.Started,
+                Type = ObjectTypeEnum.Role.ToString()
+            };
+
+            // SystemAdminRole
+            Models.Role systemAdminRole = new Models.Role()
+            {
+                Id = new System.Guid(),
+                Name = "SystemAdminRole",
+                CreationDate = System.DateTime.Now,
+                IsServerRole = true,
+                IsSystemObject = true,
+                State = (int)UserDefinedObjectStateEnum.Started,
+                Type = ObjectTypeEnum.Role.ToString()
+            };
+
+            // AdapterAdminRole 
+            Models.Role adapterAdminRole = new Models.Role()
+            {
+                Id = new System.Guid(),
+                Name = "AdapterAdminRole",
+                CreationDate = System.DateTime.Now,
+                IsServerRole = true,
+                IsSystemObject = true,
+                State = (int)UserDefinedObjectStateEnum.Started,
+                Type = ObjectTypeEnum.Role.ToString()
+            };
+
+            // SourceAdminRole 
+            Models.Role sourceAdminRole = new Models.Role()
+            {
+                Id = new System.Guid(),
+                Name = "SourceAdminRole",
+                CreationDate = System.DateTime.Now,
+                IsServerRole = true,
+                IsSystemObject = true,
+                State = (int)UserDefinedObjectStateEnum.Started,
+                Type = ObjectTypeEnum.Role.ToString()
+            };
+
+            // StreamAdminRole 
+            Models.Role streamAdminRole = new Models.Role()
+            {
+                Id = new System.Guid(),
+                Name = "StreamAdminRole",
+                CreationDate = System.DateTime.Now,
+                IsServerRole = true,
+                IsSystemObject = true,
+                State = (int)UserDefinedObjectStateEnum.Started,
+                Type = ObjectTypeEnum.Role.ToString()
+            };
+
+            // TriggerAdminRole 
+            Models.Role triggerAdminRole = new Models.Role()
+            {
+                Id = new System.Guid(),
+                Name = "TriggerAdminRole",
+                CreationDate = System.DateTime.Now,
+                IsServerRole = true,
+                IsSystemObject = true,
+                State = (int)UserDefinedObjectStateEnum.Started,
+                Type = ObjectTypeEnum.Role.ToString()
+            };
+
+            // SystemReaderRole
+            Models.Role systemReaderRole = new Models.Role()
+            {
+                Id = new System.Guid(),
+                Name = "SystemReaderRole",
+                CreationDate = System.DateTime.Now,
+                IsServerRole = true,
+                IsSystemObject = true,
+                State = (int)UserDefinedObjectStateEnum.Started,
+                Type = ObjectTypeEnum.Role.ToString()
+            };
+
+            // AdapterReaderRole 
+            Models.Role adapterReaderRole = new Models.Role()
+            {
+                Id = new System.Guid(),
+                Name = "AdapterReaderRole",
+                CreationDate = System.DateTime.Now,
+                IsServerRole = true,
+                IsSystemObject = true,
+                State = (int)UserDefinedObjectStateEnum.Started,
+                Type = ObjectTypeEnum.Role.ToString()
+            };
+
+            // SourceReaderRole 
+            Models.Role sourceReaderRole = new Models.Role()
+            {
+                Id = new System.Guid(),
+                Name = "SourceReaderRole",
+                CreationDate = System.DateTime.Now,
+                IsServerRole = true,
+                IsSystemObject = true,
+                State = (int)UserDefinedObjectStateEnum.Started,
+                Type = ObjectTypeEnum.Role.ToString()
+            };
+
+            // StreamReaderRole 
+            Models.Role streamReaderRole = new Models.Role()
+            {
+                Id = new System.Guid(),
+                Name = "StreamReaderRole",
+                CreationDate = System.DateTime.Now,
+                IsServerRole = true,
+                IsSystemObject = true,
+                State = (int)UserDefinedObjectStateEnum.Started,
+                Type = ObjectTypeEnum.Role.ToString()
+            };
+
+            // TriggerReaderRole
+            Models.Role triggerReaderRole = new Models.Role()
+            {
+                Id = new System.Guid(),
+                Name = "TriggerReaderRole",
+                CreationDate = System.DateTime.Now,
+                IsServerRole = true,
+                IsSystemObject = true,
+                State = (int)UserDefinedObjectStateEnum.Started,
+                Type = ObjectTypeEnum.Role.ToString()
+            };
+
+            Repositories.Repository<Models.Role> repoRole = new Repositories.Repository<Models.Role>(context);
+            repoRole.Create(connectRole);
+            repoRole.Create(systemAdminRole);
+            repoRole.Create(adapterAdminRole);
+            repoRole.Create(sourceAdminRole);
+            repoRole.Create(streamAdminRole);
+            repoRole.Create(triggerAdminRole);
+            repoRole.Create(systemReaderRole);
+            repoRole.Create(adapterReaderRole);
+            repoRole.Create(sourceReaderRole);
+            repoRole.Create(streamReaderRole);
+            repoRole.Create(triggerReaderRole);
+
             base.Seed(context);
         }
     }

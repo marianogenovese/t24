@@ -17,5 +17,12 @@ namespace Integra.Vision.Engine.Core
         /// </summary>
         /// <param name="context">The context created for request.</param>
         void Schedule(OperationContext context);
+
+        /// <summary>
+        /// Allow to schedule a execution command request.
+        /// </summary>
+        /// <param name="sourceName">Name of the source.</param>
+        /// <param name="eventObject">Event to publish.</param>
+        void Schedule(string sourceName, Event.EventObject eventObject);
     }
 }
