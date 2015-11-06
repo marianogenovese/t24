@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Language.ASTNodes.UserQuery
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Integra.Vision.Language.ASTNodes.Base;
@@ -121,8 +122,20 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
                 selectForBuffer.Children.Add(scopeSelectForBuffer);
                 selectForBuffer.Children.Add(projectionAux);
                 /* ******************************************************************************************************************************************************** */
+                PlanNode buffer = new PlanNode();
+                buffer.NodeType = PlanNodeTypeEnum.ObservableBuffer;
+                buffer.Children = new List<PlanNode>();
 
-                this.result = selectForBuffer;
+                PlanNode bufferSize = new PlanNode();
+                bufferSize.NodeType = PlanNodeTypeEnum.Constant;
+                bufferSize.Properties.Add("Value", 1);
+                bufferSize.Properties.Add("DataType", typeof(int));
+
+                buffer.Children.Add(selectForBuffer);
+                buffer.Children.Add(bufferSize);
+                /* ******************************************************************************************************************************************************** */
+
+                this.result = buffer;
                 this.result.Column = fromAux.Column;
                 this.result.Line = fromAux.Line;
                 this.result.NodeText = string.Format("{0} {1}", fromAux.NodeText, projectionAux.NodeText);
@@ -151,8 +164,20 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
                     selectForBuffer.Children.Add(scopeSelectForBuffer);
                     selectForBuffer.Children.Add(projectionAux);
                     /* ******************************************************************************************************************************************************** */
+                    PlanNode buffer = new PlanNode();
+                    buffer.NodeType = PlanNodeTypeEnum.ObservableBuffer;
+                    buffer.Children = new List<PlanNode>();
 
-                    this.result = selectForBuffer;
+                    PlanNode bufferSize = new PlanNode();
+                    bufferSize.NodeType = PlanNodeTypeEnum.Constant;
+                    bufferSize.Properties.Add("Value", 1);
+                    bufferSize.Properties.Add("DataType", typeof(int));
+
+                    buffer.Children.Add(selectForBuffer);
+                    buffer.Children.Add(bufferSize);
+                    /* ******************************************************************************************************************************************************** */
+
+                    this.result = buffer;
                 }
                 else if (secondArgument.NodeType.Equals(PlanNodeTypeEnum.ObservableBuffer) | secondArgument.NodeType.Equals(PlanNodeTypeEnum.ObservableBufferTimeAndSize))
                 {
@@ -223,8 +248,21 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
                     merge.Children = new List<PlanNode>();
 
                     merge.Children.Add(selectForGroupBy);
+                    /* ******************************************************************************************************************************************************** */
+                    PlanNode buffer = new PlanNode();
+                    buffer.NodeType = PlanNodeTypeEnum.ObservableBuffer;
+                    buffer.Children = new List<PlanNode>();
 
-                    this.result = merge;
+                    PlanNode bufferSize = new PlanNode();
+                    bufferSize.NodeType = PlanNodeTypeEnum.Constant;
+                    bufferSize.Properties.Add("Value", (TimeSpan)applyWindowAux.Children.ElementAt(1).Properties["Value"]);
+                    bufferSize.Properties.Add("DataType", Type.GetType(applyWindowAux.Children.ElementAt(1).Properties["DataType"].ToString()));
+
+                    buffer.Children.Add(merge);
+                    buffer.Children.Add(bufferSize);
+                    /* ******************************************************************************************************************************************************** */
+
+                    this.result = buffer;
                 }
                 else if (thirdArgument.NodeType.Equals(PlanNodeTypeEnum.ObservableBuffer) | thirdArgument.NodeType.Equals(PlanNodeTypeEnum.ObservableBufferTimeAndSize))
                 {
@@ -298,8 +336,21 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
                 merge.Children = new List<PlanNode>();
 
                 merge.Children.Add(selectForGroupBy);
+                /* ******************************************************************************************************************************************************** */
+                PlanNode buffer = new PlanNode();
+                buffer.NodeType = PlanNodeTypeEnum.ObservableBuffer;
+                buffer.Children = new List<PlanNode>();
 
-                this.result = merge;
+                PlanNode bufferSize = new PlanNode();
+                bufferSize.NodeType = PlanNodeTypeEnum.Constant;
+                bufferSize.Properties.Add("Value", (TimeSpan)applyWindowAux.Children.ElementAt(1).Properties["Value"]);
+                bufferSize.Properties.Add("DataType", Type.GetType(applyWindowAux.Children.ElementAt(1).Properties["DataType"].ToString()));
+
+                buffer.Children.Add(merge);
+                buffer.Children.Add(bufferSize);
+                /* ******************************************************************************************************************************************************** */
+                
+                this.result = buffer;
                 this.result.Column = fromAux.Column;
                 this.result.Line = fromAux.Line;
                 this.result.NodeText = string.Format("{0} {1} {2} {3} {4}", fromAux.NodeText, whereAux.NodeText, applyWindowAux.NodeText, groupByAux.NodeText, projectionAux.NodeText);

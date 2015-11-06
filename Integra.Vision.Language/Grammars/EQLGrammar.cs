@@ -411,9 +411,9 @@ namespace Integra.Vision.Language.Grammars
             nt_ON.Rule = terminalOn + nt_LOGIC_EXPRESSION;
             /* **************************** */
             /* APPLY WINDOW */
-            nt_APPLY_WINDOW.Rule = terminalApply + terminalWindow + terminalOf + terminalDateTimeValue
-                                    | terminalApply + terminalWindow + terminalOf + terminalNumero
-                                    | terminalApply + terminalWindow + terminalOf + terminalParentesisIz + terminalDateTimeValue + terminalComa + terminalNumero + terminalParentesisDer;
+            nt_APPLY_WINDOW.Rule = terminalApply + terminalWindow + terminalOf + terminalDateTimeValue;
+                                    /*| terminalApply + terminalWindow + terminalOf + terminalNumero
+                                    | terminalApply + terminalWindow + terminalOf + terminalParentesisIz + terminalDateTimeValue + terminalComa + terminalNumero + terminalParentesisDer;*/
             /* **************************** */
 
             /* GROUP BY */

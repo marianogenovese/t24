@@ -10,7 +10,7 @@ namespace Integra.Space.LanguageUnitTests.Constants
     public class StringNodeTests
     {
         [TestMethod]
-        public void TestMethod1()
+        public void StringConstant()
         {
             ValuesParser parser = new ValuesParser("\"hello world! :D\"");
             PlanNode plan = parser.Parse();

@@ -45,6 +45,11 @@ namespace Integra.Vision.Language.Runtime
         private Expression groupExpression;
 
         /// <summary>
+        /// Buffer scheduler for consecutive non-overlapping buffers
+        /// </summary>
+        private Expression bufferScheduler;
+
+        /// <summary>
         /// Object prefix
         /// </summary>
         private string objectPrefix;
@@ -516,14 +521,40 @@ namespace Integra.Vision.Language.Runtime
         {
             try
             {
+                if (this.bufferScheduler == null)
+                {
+                    this.bufferScheduler = Expression.Constant(new System.Reactive.Concurrency.NewThreadScheduler());
+                }
+
                 ParameterExpression result = Expression.Variable(typeof(IObservable<IList<I>>), "resultGroupByObservable");
                 ParameterExpression paramException = Expression.Variable(typeof(Exception));
-
+                
                 MethodInfo methodGroupBy = typeof(System.Reactive.Linq.Observable).GetMethods().Where(m =>
                 {
-                    return m.Name == "Buffer" && m.GetParameters().Length == 2 && m.GetParameters()[1].ParameterType.Equals(bufferTimeOrSize.Type);
+                    if (bufferTimeOrSize.Type.Equals(typeof(TimeSpan)))
+                    {
+                        return m.Name == "Buffer" && m.GetParameters().Length == 3 && m.GetParameters()[1].ParameterType.Equals(bufferTimeOrSize.Type) && m.GetParameters()[2].ParameterType.Equals(typeof(System.Reactive.Concurrency.IScheduler));
+                    }
+                    else if (bufferTimeOrSize.Type.Equals(typeof(int)))
+                    {
+                        return m.Name == "Buffer" && m.GetParameters().Length == 2 && m.GetParameters()[1].ParameterType.Equals(bufferTimeOrSize.Type);
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 })
                 .Single().MakeGenericMethod(typeof(I));
+
+                Expression assign = Expression.Throw(Expression.New(typeof(Exception).GetConstructor(new Type[] { typeof(string), typeof(Exception) }), Expression.Constant("Error en la ejecución, buffer no válido", typeof(string)), paramException));
+                if (bufferTimeOrSize.Type.Equals(typeof(TimeSpan)))
+                {
+                    assign = Expression.Assign(result, Expression.Call(methodGroupBy, incomingObservable, bufferTimeOrSize, this.bufferScheduler));
+                }
+                else if (bufferTimeOrSize.Type.Equals(typeof(int)))
+                {
+                    assign = Expression.Assign(result, Expression.Call(methodGroupBy, incomingObservable, bufferTimeOrSize));
+                }
 
                 Expression tryCatchExpr =
                     Expression.Block(
@@ -531,7 +562,7 @@ namespace Integra.Vision.Language.Runtime
                             Expression.TryCatch(
                                 Expression.Block(
                                     Expression.IfThen(Expression.Constant(this.printLog), Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Inicio de la expresion de comparacion '<=' entre los siguientes valores: "))),
-                                    Expression.Assign(result, Expression.Call(methodGroupBy, incomingObservable, bufferTimeOrSize)),
+                                    assign,
                                     Expression.IfThen(Expression.Constant(this.printLog), Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Fin de la condicion '<='"))),
                                     Expression.Empty()
                                     ),
