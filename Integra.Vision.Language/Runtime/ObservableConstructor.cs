@@ -230,9 +230,19 @@ namespace Integra.Vision.Language.Runtime
                     break;
                 case PlanNodeTypeEnum.ObservableBuffer:
                     Func<Expression, Expression, Expression> bufferMethod = this.CreateBuffer<int>;
-                    expResult = bufferMethod.Method.GetGenericMethodDefinition()
+                    if (leftNode.Type.Name.Equals("IGroupedObservable`2"))
+                    {
+                        expResult = bufferMethod.Method.GetGenericMethodDefinition()
                                             .MakeGenericMethod(new[] { leftNode.Type.GetGenericArguments()[1] })
                                             .Invoke(this, new object[] { leftNode, rightNode }) as Expression;
+                    }
+                    else
+                    {
+                        expResult = bufferMethod.Method.GetGenericMethodDefinition()
+                                            .MakeGenericMethod(new[] { leftNode.Type.GetGenericArguments()[0] })
+                                            .Invoke(this, new object[] { leftNode, rightNode }) as Expression;
+                    }
+
                     break;
                 case PlanNodeTypeEnum.ObservableBufferTimeAndSize:
                     Func<Expression, Expression, Expression> bufferTimeAndSizeMethod = this.CreateBufferTimeAndSize<int>;
