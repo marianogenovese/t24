@@ -40,15 +40,15 @@ namespace Integra.Vision.Language.ASTNodes.Constants
             DateTime d;
             TimeSpan t;
 
-            if (DateTime.TryParse(treeNode.Token.Value.ToString(), out d))
-            {
-                this.result.Properties.Add("Value", d);
-                this.result.Properties.Add("DataType", typeof(DateTime).ToString());
-            }
-            else if (TimeSpan.TryParse(treeNode.Token.Value.ToString(), out t))
+            if (TimeSpan.TryParse(treeNode.Token.Value.ToString(), out t))
             {
                 this.result.Properties.Add("Value", t);
                 this.result.Properties.Add("DataType", typeof(TimeSpan).ToString());
+            }
+            else if (DateTime.TryParse(treeNode.Token.Value.ToString(), out d))
+            {
+                this.result.Properties.Add("Value", d);
+                this.result.Properties.Add("DataType", typeof(DateTime).ToString());
             }
         }
 

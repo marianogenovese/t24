@@ -156,7 +156,7 @@ namespace Integra.Space.LanguageUnitTests.Queries
                 string.Format("from {0} apply window of {2} select {3} as Resultado",
                                                                                             "SpaceObservable1",
                                                                                             "@event.Message.#0.MessageType == \"0100\"",
-                                                                                            "'00:00:00:01'", // hay un comportamiento inesperado cuando el segundo parametro es 2 y se envian dos EventObject                                                                                        
+                                                                                            "'00:00:01'", // hay un comportamiento inesperado cuando el segundo parametro es 2 y se envian dos EventObject                                                                                        
                                                                                             "@event.Message.#0.MessageType")
                                                                                             );
             List<PlanNode> plan = parser.Parse();

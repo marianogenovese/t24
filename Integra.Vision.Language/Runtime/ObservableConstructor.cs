@@ -521,6 +521,8 @@ namespace Integra.Vision.Language.Runtime
         {
             try
             {
+                ConstructionValidator.Validate(PlanNodeTypeEnum.ObservableBuffer, null, incomingObservable, bufferTimeOrSize);
+
                 if (this.bufferScheduler == null)
                 {
                     this.bufferScheduler = Expression.Constant(new System.Reactive.Concurrency.NewThreadScheduler());
@@ -528,7 +530,7 @@ namespace Integra.Vision.Language.Runtime
 
                 ParameterExpression result = Expression.Variable(typeof(IObservable<IList<I>>), "resultGroupByObservable");
                 ParameterExpression paramException = Expression.Variable(typeof(Exception));
-                
+
                 MethodInfo methodGroupBy = typeof(System.Reactive.Linq.Observable).GetMethods().Where(m =>
                 {
                     if (bufferTimeOrSize.Type.Equals(typeof(TimeSpan)))
@@ -2127,19 +2129,23 @@ namespace Integra.Vision.Language.Runtime
 
             ParameterExpression param = Expression.Variable(tipo, "variable");
             ParameterExpression paramException = Expression.Variable(typeof(Exception));
-
-            if (leftNode.Type.GetProperty(propiedad) != null)
+            try
             {
+                // se evalua las propiedades que terminan con 's' y sin 's' ya que pueden venir dos tipos de valores timespan y datetime, 
+                // por ejemplo la funcion hour('<>'), si el valor es de tipo datetime tengo que obtener la propiedad Hour,
+                // pero si el valor de tipo timespman tengo que obtener la propiedad Hours.
+                PropertyInfo p = leftNode.Type.GetProperties().Where(x => x.Name.Equals(propiedad) || x.Name.Equals(propiedad + "s")).Single();
+
                 Expression tryCatchExpr =
                     Expression.Block(
                         new[] { param },
                         Expression.IfThenElse(
-                            Expression.Equal(Expression.Constant(leftNode.Type.GetProperty(propiedad)), Expression.Constant(null)),
+                            Expression.Equal(Expression.Constant(p), Expression.Constant(null)),
                             Expression.Assign(param, Expression.Default(tipo)),
                             Expression.TryCatch(
                                 Expression.Block(
                                     Expression.IfThen(Expression.Constant(this.printLog), Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Se obtendrá la siguiente propiedad: " + propiedad))),
-                                    Expression.Assign(param, Expression.Call(leftNode, leftNode.Type.GetProperty(propiedad).GetMethod)),
+                                    Expression.Assign(param, Expression.Call(leftNode, p.GetMethod)),
                                     Expression.IfThen(Expression.Constant(this.printLog), Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Se obtuvo la siguiente propiedad: " + propiedad))),
                                     Expression.Empty()
                                 ),
@@ -2156,9 +2162,9 @@ namespace Integra.Vision.Language.Runtime
 
                 return tryCatchExpr;
             }
-            else
+            catch (Exception e)
             {
-                throw new CompilationException("Error al compilar la funcion '" + propiedad + "', no es posible obtener el valor solicitado. Error en la linea: " + actualNode.Line + " columna: " + actualNode.Column + " con " + actualNode.NodeText);
+                throw new CompilationException("Error al compilar la funcion '" + propiedad + "' para el valor especificado, por lo tanto no es posible obtener el valor solicitado. Error en la linea: " + actualNode.Line + " columna: " + actualNode.Column + " con " + actualNode.NodeText, e);
             }
         }
 
