@@ -7,9 +7,10 @@ namespace Integra.Vision.Language.Runtime
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Reflection;
     using System.Reflection.Emit;
+    using Event;
 
     /// <summary>
     /// Language type builder class
@@ -41,6 +42,36 @@ namespace Integra.Vision.Language.Runtime
             {
                 CreateProperty(tb, field.FieldName, field.FieldType);
             }
+            
+            Type objectType = tb.CreateType();
+            return objectType;
+        }
+
+        /// <summary>
+        /// Creates a new type based in the list of fields.
+        /// </summary>
+        /// <param name="listOfFields">List of fields.</param>
+        /// <param name="parentType">Event result type for the projection.</param>
+        /// <returns>The created type.</returns>
+        public static Type CompileResultType(List<dynamic> listOfFields, Type parentType)
+        {
+            TypeBuilder tb = GetTypeBuilder();
+            tb.SetParent(parentType);
+            ConstructorBuilder constructor = tb.DefineConstructor(MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName, CallingConventions.Standard, parentType.GetProperties().Select(x => x.PropertyType).ToArray());
+
+            var baseConstructor = parentType.GetConstructor(parentType.GetProperties().Select(x => x.PropertyType).ToArray());
+
+            ILGenerator ctorIL = constructor.GetILGenerator();
+            ctorIL.Emit(OpCodes.Ldarg_0);                // push "this"
+            ctorIL.Emit(OpCodes.Ldarg_1);                // push the 1. parameter
+            ctorIL.Emit(OpCodes.Call, baseConstructor);
+            ctorIL.Emit(OpCodes.Ret);
+
+            // The list contains a dynamic object with fields FieldName of type string and FieldType of type Type
+            foreach (var field in listOfFields)
+            {
+                CreateProperty(tb, field.FieldName, field.FieldType);
+            }
 
             Type objectType = tb.CreateType();
             return objectType;
@@ -59,6 +90,7 @@ namespace Integra.Vision.Language.Runtime
 
             // The Type Attributes.Serializable is new
             TypeBuilder tb = moduleBuilder.DefineType(typeSignature, TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.AutoClass | TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit | TypeAttributes.AutoLayout | TypeAttributes.Serializable, null);
+            
             return tb;
         }
 

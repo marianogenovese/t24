@@ -549,6 +549,16 @@ namespace Integra.Vision.Language
         /// Observable merge type
         /// </summary>
         ObservableMerge = 513,
+
+        /// <summary>
+        /// Observable buffer time and size
+        /// </summary>
+        ObservableBufferTimeAndSize = 514,
+
+        /// <summary>
+        /// Projection of constants type
+        /// </summary>
+        ProjectionOfConstants = 515,
                 
         /// <summary>
         /// Enumerable count type

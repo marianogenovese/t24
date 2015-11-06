@@ -154,6 +154,10 @@ namespace Integra.Vision.Language.Runtime
                     {
                         rightExp = this.CreateProjectionExpression(plan.Children.ElementAt<PlanNode>(1));
                     }
+                    else if (plan.Children.ElementAt<PlanNode>(1).NodeType.Equals(PlanNodeTypeEnum.ProjectionOfConstants))
+                    {
+                        rightExp = this.CreateProjectionOfConstantsExpression(plan.Children.ElementAt<PlanNode>(1));
+                    }
                     else
                     {
                         rightExp = this.GenerateExpressionTree(plan.Children.ElementAt<PlanNode>(1));
@@ -229,6 +233,22 @@ namespace Integra.Vision.Language.Runtime
                     expResult = bufferMethod.Method.GetGenericMethodDefinition()
                                             .MakeGenericMethod(new[] { leftNode.Type.GetGenericArguments()[1] })
                                             .Invoke(this, new object[] { leftNode, rightNode }) as Expression;
+                    break;
+                case PlanNodeTypeEnum.ObservableBufferTimeAndSize:
+                    Func<Expression, Expression, Expression> bufferTimeAndSizeMethod = this.CreateBufferTimeAndSize<int>;
+                    if (leftNode.Type.Name.Equals("IGroupedObservable`2"))
+                    {
+                        expResult = bufferTimeAndSizeMethod.Method.GetGenericMethodDefinition()
+                                                                    .MakeGenericMethod(new[] { leftNode.Type.GetGenericArguments()[1] })
+                                                                    .Invoke(this, new object[] { leftNode, rightNode }) as Expression;
+                    }
+                    else
+                    {
+                        expResult = bufferTimeAndSizeMethod.Method.GetGenericMethodDefinition()
+                                            .MakeGenericMethod(new[] { leftNode.Type.GetGenericArguments()[0] })
+                                            .Invoke(this, new object[] { leftNode, rightNode }) as Expression;
+                    }
+
                     break;
                 case PlanNodeTypeEnum.ObservableFrom:
                     expResult = this.CreateFrom(actualNode, (ConstantExpression)leftNode);
@@ -480,9 +500,9 @@ namespace Integra.Vision.Language.Runtime
         /// </summary>
         /// <typeparam name="I">Input type.</typeparam>
         /// <param name="incomingObservable">Incoming observable expression.</param>
-        /// <param name="timespanInMilliseconds">Time expression for the buffer.</param>
+        /// <param name="bufferTimeOrSize">Time or size expression for the buffer.</param>
         /// <returns>Observable buffer expression.</returns>
-        private Expression CreateBuffer<I>(Expression incomingObservable, Expression timespanInMilliseconds)
+        private Expression CreateBuffer<I>(Expression incomingObservable, Expression bufferTimeOrSize)
         {
             try
             {
@@ -491,7 +511,7 @@ namespace Integra.Vision.Language.Runtime
 
                 MethodInfo methodGroupBy = typeof(System.Reactive.Linq.Observable).GetMethods().Where(m =>
                 {
-                    return m.Name == "Buffer" && m.GetParameters().Length == 2 && m.GetParameters().Length == 2 && m.GetParameters()[1].ParameterType.Equals(typeof(System.TimeSpan));
+                    return m.Name == "Buffer" && m.GetParameters().Length == 2 && m.GetParameters()[1].ParameterType.Equals(bufferTimeOrSize.Type);
                 })
                 .Single().MakeGenericMethod(typeof(I));
 
@@ -501,7 +521,59 @@ namespace Integra.Vision.Language.Runtime
                             Expression.TryCatch(
                                 Expression.Block(
                                     Expression.IfThen(Expression.Constant(this.printLog), Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Inicio de la expresion de comparacion '<=' entre los siguientes valores: "))),
-                                    Expression.Assign(result, Expression.Call(methodGroupBy, incomingObservable, timespanInMilliseconds)),
+                                    Expression.Assign(result, Expression.Call(methodGroupBy, incomingObservable, bufferTimeOrSize)),
+                                    Expression.IfThen(Expression.Constant(this.printLog), Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Fin de la condicion '<='"))),
+                                    Expression.Empty()
+                                    ),
+                                Expression.Catch(
+                                    paramException,
+                                     Expression.Block(
+                                        Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Error")),
+                                        Expression.Throw(Expression.New(typeof(Exception).GetConstructor(new Type[] { typeof(string), typeof(Exception) }), Expression.Constant("Error en la ejecución", typeof(string)), paramException))
+                                    )
+                                )
+                            ),
+                        result
+                        );
+
+                return tryCatchExpr;
+            }
+            catch (Exception e)
+            {
+                throw new CompilationException("Error al compilar, no fue posible compilar la expresion", e);
+            }
+        }
+
+        /// <summary>
+        /// Creates a new Observable.Buffer expression.
+        /// </summary>
+        /// <typeparam name="I">Input type.</typeparam>
+        /// <param name="incomingObservable">Incoming observable expression.</param>
+        /// <param name="bufferTimeAndSize">Time or size expression for the buffer.</param>
+        /// <returns>Observable buffer expression.</returns>
+        private Expression CreateBufferTimeAndSize<I>(Expression incomingObservable, Expression bufferTimeAndSize)
+        {
+            try
+            {
+                ParameterExpression result = Expression.Variable(typeof(IObservable<IList<I>>), "resultGroupByObservable");
+                ParameterExpression paramException = Expression.Variable(typeof(Exception));
+
+                MethodInfo methodGroupBy = typeof(System.Reactive.Linq.Observable).GetMethods().Where(m =>
+                {
+                    return m.Name == "Buffer" && m.GetParameters().Length == 3 && m.GetParameters()[1].ParameterType.Equals(bufferTimeAndSize.Type.GetProperty("TimeSpanValue").PropertyType) && m.GetParameters()[2].ParameterType.Equals(bufferTimeAndSize.Type.GetProperty("IntegerValue").PropertyType);
+                })
+                .Single().MakeGenericMethod(typeof(I));
+
+                MethodInfo get1 = bufferTimeAndSize.Type.GetProperty("TimeSpanValue").GetMethod;
+                MethodInfo get2 = bufferTimeAndSize.Type.GetProperty("IntegerValue").GetMethod;
+
+                Expression tryCatchExpr =
+                    Expression.Block(
+                        new[] { result },
+                            Expression.TryCatch(
+                                Expression.Block(
+                                    Expression.IfThen(Expression.Constant(this.printLog), Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Inicio de la expresion de comparacion '<=' entre los siguientes valores: "))),
+                                    Expression.Assign(result, Expression.Call(methodGroupBy, incomingObservable, Expression.Call(bufferTimeAndSize, get1), Expression.Call(bufferTimeAndSize, get2))),
                                     Expression.IfThen(Expression.Constant(this.printLog), Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Fin de la condicion '<='"))),
                                     Expression.Empty()
                                     ),
@@ -653,7 +725,85 @@ namespace Integra.Vision.Language.Runtime
             }
 
             dynamic newField = new System.Dynamic.ExpandoObject();
-            
+
+            foreach (KeyValuePair<string, Tuple<ConstantExpression, Expression>> c in keyValueList)
+            {
+                newField = new System.Dynamic.ExpandoObject();
+                newField.FieldName = c.Value.Item1.Value;
+                newField.FieldType = c.Value.Item2.Type;
+                listOfFields.Add(newField);
+            }
+
+            Type myType = default(Type);
+            if (((PlanNodeTypeEnum)plans.Properties["ProjectionType"]).Equals(PlanNodeTypeEnum.ObservableSelect))
+            {
+                myType = LanguageTypeBuilder.CompileResultType(listOfFields, typeof(EventResult));
+            }
+            else
+            {
+                myType = LanguageTypeBuilder.CompileResultType(listOfFields);
+            }
+
+            ParameterExpression y = Expression.Variable(myType);
+
+            if (((PlanNodeTypeEnum)plans.Properties["ProjectionType"]).Equals(PlanNodeTypeEnum.ObservableSelect))
+            {
+                expressionList.Add(
+                    Expression.Assign(
+                        y,
+                        Expression.New(
+                            myType.GetConstructor(typeof(EventResult).GetProperties().Select(x => x.PropertyType).ToArray()),
+                            Expression.Constant(DateTime.Now)
+                        )
+                    )
+                );
+            }
+            else
+            {
+                expressionList.Add(Expression.Assign(y, Expression.New(myType)));
+            }
+
+            foreach (PropertyInfo p in myType.GetProperties())
+            {
+                if (keyValueList.ContainsKey(p.Name))
+                {
+                    expressionList.Add(Expression.Call(y, p.GetSetMethod(), keyValueList[p.Name].Item2));
+                }
+            }
+
+            expressionList.Add(y);
+            Expression expProjectionObject = Expression.Block(
+                                                        new[] { y },
+                                                        expressionList
+                                                );
+
+            ParameterExpression inParam = this.scopeParam.Pop();
+            var delegateType = typeof(Func<,>).MakeGenericType(inParam.Type, myType);
+            Expression lambda2 = Expression.Lambda(delegateType, expProjectionObject, new ParameterExpression[] { inParam });
+
+            return lambda2;
+        }
+
+        /// <summary>
+        /// Generate the select block expression.
+        /// </summary>
+        /// <param name="plans">Plan that contains the projection plans.</param>
+        /// <returns>Select block expression.</returns>
+        private Expression CreateProjectionOfConstantsExpression(PlanNode plans)
+        {
+            List<Expression> expressionList = new List<Expression>();
+            Dictionary<string, Tuple<ConstantExpression, Expression>> keyValueList = new Dictionary<string, Tuple<ConstantExpression, Expression>>();
+            List<dynamic> listOfFields = new List<dynamic>();
+
+            foreach (var plan in plans.Children)
+            {
+                ConstantExpression key = (ConstantExpression)this.GenerateExpressionTree(plan.Children[0]);
+                Expression value = this.GenerateExpressionTree(plan.Children[1]);
+                keyValueList.Add(key.Value.ToString(), new Tuple<ConstantExpression, Expression>(key, value));
+            }
+
+            dynamic newField = new System.Dynamic.ExpandoObject();
+
             foreach (KeyValuePair<string, Tuple<ConstantExpression, Expression>> c in keyValueList)
             {
                 newField = new System.Dynamic.ExpandoObject();
@@ -680,11 +830,7 @@ namespace Integra.Vision.Language.Runtime
                                                         expressionList
                                                 );
 
-            ParameterExpression inParam = this.scopeParam.Pop();
-            var delegateType = typeof(Func<,>).MakeGenericType(inParam.Type, myType);
-            Expression lambda2 = Expression.Lambda(delegateType, expProjectionObject, new ParameterExpression[] { inParam });
-
-            return lambda2;
+            return expProjectionObject;
         }
 
         /// <summary>

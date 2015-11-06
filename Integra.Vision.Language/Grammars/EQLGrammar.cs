@@ -159,6 +159,8 @@ namespace Integra.Vision.Language.Grammars
             this.MarkReservedWords(this.KeyTerms.Keys.ToArray());
 
             /* SIMBOLOS */
+            KeyTerm terminalParentesisIz = ToTerm("(", "parentesisIzEQLGrammar");
+            KeyTerm terminalParentesisDer = ToTerm(")", "parentesisDerEQLGrammar");
             KeyTerm terminalComa = ToTerm(",", "coma");
             KeyTerm terminalIgual = ToTerm("=", "igual");
 
@@ -323,7 +325,9 @@ namespace Integra.Vision.Language.Grammars
             /* **************************** */
             /* USER QUERY */
             nt_USER_QUERY.Rule = nt_FROM + nt_SELECT
+                                    | nt_FROM + nt_APPLY_WINDOW + nt_SELECT
                                     | nt_FROM + nt_WHERE + nt_SELECT
+                                    | nt_FROM + nt_WHERE + nt_APPLY_WINDOW + nt_SELECT
                                     | nt_FROM + nt_APPLY_WINDOW + nt_GROUP_BY + nt_SELECT
                                     | nt_FROM + nt_WHERE + nt_APPLY_WINDOW + nt_GROUP_BY + nt_SELECT;
             /* **************************** */
@@ -407,8 +411,11 @@ namespace Integra.Vision.Language.Grammars
             nt_ON.Rule = terminalOn + nt_LOGIC_EXPRESSION;
             /* **************************** */
             /* APPLY WINDOW */
-            nt_APPLY_WINDOW.Rule = terminalApply + terminalWindow + terminalOf + terminalDateTimeValue;
+            nt_APPLY_WINDOW.Rule = terminalApply + terminalWindow + terminalOf + terminalDateTimeValue
+                                    | terminalApply + terminalWindow + terminalOf + terminalNumero
+                                    | terminalApply + terminalWindow + terminalOf + terminalParentesisIz + terminalDateTimeValue + terminalComa + terminalNumero + terminalParentesisDer;
             /* **************************** */
+
             /* GROUP BY */
             /*nt_GROUP_BY.Rule = terminalGroup + terminalBy + this.valueGrammar.NonConstantValues;*/
             /* **************************** */

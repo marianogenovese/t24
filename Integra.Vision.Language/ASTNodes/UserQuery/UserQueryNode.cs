@@ -106,7 +106,7 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
             {
                 PlanNode fromAux = (PlanNode)this.from.Evaluate(thread);
                 PlanNode projectionAux = (PlanNode)this.select.Evaluate(thread);
-                
+
                 /* ******************************************************************************************************************************************************** */
                 PlanNode scopeSelectForBuffer = new PlanNode();
                 scopeSelectForBuffer.NodeType = PlanNodeTypeEnum.NewScope;
@@ -130,77 +130,129 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
             else if (childrenCount == 3)
             {
                 PlanNode fromAux = (PlanNode)this.from.Evaluate(thread);
-                PlanNode whereAux = (PlanNode)this.where.Evaluate(thread);
+                PlanNode secondArgument = (PlanNode)this.where.Evaluate(thread);
                 PlanNode projectionAux = (PlanNode)this.select.Evaluate(thread);
-                
-                /* ******************************************************************************************************************************************************** */
-                whereAux.Children.ElementAt(0).Children.Add(fromAux);
-                /* ******************************************************************************************************************************************************** */
-                PlanNode scopeSelectForBuffer = new PlanNode();
-                scopeSelectForBuffer.NodeType = PlanNodeTypeEnum.NewScope;
-                scopeSelectForBuffer.Children = new List<PlanNode>();
 
-                scopeSelectForBuffer.Children.Add(whereAux);
+                if (secondArgument.NodeType.Equals(PlanNodeTypeEnum.ObservableWhere))
+                {
+                    /* ******************************************************************************************************************************************************** */
+                    secondArgument.Children.ElementAt(0).Children.Add(fromAux);
+                    /* ******************************************************************************************************************************************************** */
+                    PlanNode scopeSelectForBuffer = new PlanNode();
+                    scopeSelectForBuffer.NodeType = PlanNodeTypeEnum.NewScope;
+                    scopeSelectForBuffer.Children = new List<PlanNode>();
 
-                PlanNode selectForBuffer = new PlanNode();
-                selectForBuffer.NodeType = PlanNodeTypeEnum.ObservableSelectForBuffer;
-                selectForBuffer.Children = new List<PlanNode>();
+                    scopeSelectForBuffer.Children.Add(secondArgument);
 
-                selectForBuffer.Children.Add(scopeSelectForBuffer);
-                selectForBuffer.Children.Add(projectionAux);
-                /* ******************************************************************************************************************************************************** */
+                    PlanNode selectForBuffer = new PlanNode();
+                    selectForBuffer.NodeType = PlanNodeTypeEnum.ObservableSelectForBuffer;
+                    selectForBuffer.Children = new List<PlanNode>();
 
-                this.result = selectForBuffer;
+                    selectForBuffer.Children.Add(scopeSelectForBuffer);
+                    selectForBuffer.Children.Add(projectionAux);
+                    /* ******************************************************************************************************************************************************** */
+
+                    this.result = selectForBuffer;
+                }
+                else if (secondArgument.NodeType.Equals(PlanNodeTypeEnum.ObservableBuffer) | secondArgument.NodeType.Equals(PlanNodeTypeEnum.ObservableBufferTimeAndSize))
+                {
+                    /* ******************************************************************************************************************************************************** */
+                    PlanNode scopeSelectForBuffer = new PlanNode();
+                    scopeSelectForBuffer.NodeType = PlanNodeTypeEnum.NewScope;
+                    scopeSelectForBuffer.Children = new List<PlanNode>();
+
+                    scopeSelectForBuffer.Children.Add(fromAux);
+
+                    PlanNode selectForBuffer = new PlanNode();
+                    selectForBuffer.NodeType = PlanNodeTypeEnum.ObservableSelectForBuffer;
+                    selectForBuffer.Children = new List<PlanNode>();
+
+                    selectForBuffer.Children.Add(scopeSelectForBuffer);
+                    selectForBuffer.Children.Add(projectionAux);
+                    /* ******************************************************************************************************************************************************** */
+
+                    secondArgument.Children[0] = selectForBuffer;
+
+                    this.result = secondArgument;
+                }
+
                 this.result.Column = fromAux.Column;
                 this.result.Line = fromAux.Line;
-                this.result.NodeText = string.Format("{0} {1} {2}", fromAux.NodeText, whereAux.NodeText, projectionAux.NodeText);
+                this.result.NodeText = string.Format("{0} {1} {2}", fromAux.NodeText, secondArgument.NodeText, projectionAux.NodeText);
             }
             else if (childrenCount == 4)
             {
                 PlanNode fromAux = (PlanNode)this.from.Evaluate(thread);
                 PlanNode applyWindowAux = (PlanNode)this.applyWindow.Evaluate(thread);
-                PlanNode groupByAux = (PlanNode)this.groupBy.Evaluate(thread);
+                PlanNode thirdArgument = (PlanNode)this.groupBy.Evaluate(thread);
                 PlanNode projectionAux = (PlanNode)this.select.Evaluate(thread);
-                
-                /* ******************************************************************************************************************************************************** */
-                groupByAux.Children.ElementAt(0).Children.Add(fromAux);
-                /* ******************************************************************************************************************************************************** */
-                PlanNode scopeSelectForBuffer = new PlanNode();
-                scopeSelectForBuffer.NodeType = PlanNodeTypeEnum.NewScope;
-                scopeSelectForBuffer.Children = new List<PlanNode>();
 
-                scopeSelectForBuffer.Children.Add(applyWindowAux);
+                if (thirdArgument.NodeType.Equals(PlanNodeTypeEnum.ObservableGroupBy))
+                {
+                    /* ******************************************************************************************************************************************************** */
+                    thirdArgument.Children.ElementAt(0).Children.Add(fromAux);
+                    /* ******************************************************************************************************************************************************** */
+                    PlanNode scopeSelectForBuffer = new PlanNode();
+                    scopeSelectForBuffer.NodeType = PlanNodeTypeEnum.NewScope;
+                    scopeSelectForBuffer.Children = new List<PlanNode>();
 
-                PlanNode selectForBuffer = new PlanNode();
-                selectForBuffer.NodeType = PlanNodeTypeEnum.ObservableSelectForBuffer;
-                selectForBuffer.Children = new List<PlanNode>();
+                    scopeSelectForBuffer.Children.Add(applyWindowAux);
 
-                selectForBuffer.Children.Add(scopeSelectForBuffer);
-                selectForBuffer.Children.Add(projectionAux);
-                /* ******************************************************************************************************************************************************** */
-                PlanNode scopeSelectForGroupBy = this.result;
-                scopeSelectForGroupBy.NodeType = PlanNodeTypeEnum.NewScope;
-                scopeSelectForGroupBy.Children = new List<PlanNode>();
+                    PlanNode selectForBuffer = new PlanNode();
+                    selectForBuffer.NodeType = PlanNodeTypeEnum.ObservableSelectForBuffer;
+                    selectForBuffer.Children = new List<PlanNode>();
 
-                scopeSelectForGroupBy.Children.Add(groupByAux);
+                    selectForBuffer.Children.Add(scopeSelectForBuffer);
+                    selectForBuffer.Children.Add(projectionAux);
+                    /* ******************************************************************************************************************************************************** */
+                    PlanNode scopeSelectForGroupBy = this.result;
+                    scopeSelectForGroupBy.NodeType = PlanNodeTypeEnum.NewScope;
+                    scopeSelectForGroupBy.Children = new List<PlanNode>();
 
-                PlanNode selectForGroupBy = new PlanNode();
-                selectForGroupBy.NodeType = PlanNodeTypeEnum.ObservableSelectForGroupBy;
-                selectForGroupBy.Children = new List<PlanNode>();
+                    scopeSelectForGroupBy.Children.Add(thirdArgument);
 
-                selectForGroupBy.Children.Add(scopeSelectForGroupBy);
-                selectForGroupBy.Children.Add(selectForBuffer);
-                /* ******************************************************************************************************************************************************** */
-                PlanNode merge = new PlanNode();
-                merge.NodeType = PlanNodeTypeEnum.ObservableMerge;
-                merge.Children = new List<PlanNode>();
+                    PlanNode selectForGroupBy = new PlanNode();
+                    selectForGroupBy.NodeType = PlanNodeTypeEnum.ObservableSelectForGroupBy;
+                    selectForGroupBy.Children = new List<PlanNode>();
 
-                merge.Children.Add(selectForGroupBy);
+                    selectForGroupBy.Children.Add(scopeSelectForGroupBy);
+                    selectForGroupBy.Children.Add(selectForBuffer);
+                    /* ******************************************************************************************************************************************************** */
+                    PlanNode merge = new PlanNode();
+                    merge.NodeType = PlanNodeTypeEnum.ObservableMerge;
+                    merge.Children = new List<PlanNode>();
 
-                this.result = merge;
+                    merge.Children.Add(selectForGroupBy);
+
+                    this.result = merge;
+                }
+                else if (thirdArgument.NodeType.Equals(PlanNodeTypeEnum.ObservableBuffer) | thirdArgument.NodeType.Equals(PlanNodeTypeEnum.ObservableBufferTimeAndSize))
+                {
+                    /* ******************************************************************************************************************************************************** */
+                    applyWindowAux.Children.ElementAt(0).Children.Add(fromAux);
+                    /* ******************************************************************************************************************************************************** */
+                    PlanNode scopeSelectForBuffer = new PlanNode();
+                    scopeSelectForBuffer.NodeType = PlanNodeTypeEnum.NewScope;
+                    scopeSelectForBuffer.Children = new List<PlanNode>();
+
+                    scopeSelectForBuffer.Children.Add(applyWindowAux);
+
+                    PlanNode selectForBuffer = new PlanNode();
+                    selectForBuffer.NodeType = PlanNodeTypeEnum.ObservableSelectForBuffer;
+                    selectForBuffer.Children = new List<PlanNode>();
+
+                    selectForBuffer.Children.Add(scopeSelectForBuffer);
+                    selectForBuffer.Children.Add(projectionAux);
+                    /* ******************************************************************************************************************************************************** */
+
+                    thirdArgument.Children[0] = selectForBuffer;
+
+                    this.result = thirdArgument;
+                }
+
                 this.result.Column = fromAux.Column;
                 this.result.Line = fromAux.Line;
-                this.result.NodeText = string.Format("{0} {1} {2} {3}", fromAux.NodeText, applyWindowAux.NodeText, groupByAux.NodeText, projectionAux.NodeText);
+                this.result.NodeText = string.Format("{0} {1} {2} {3}", fromAux.NodeText, applyWindowAux.NodeText, thirdArgument.NodeText, projectionAux.NodeText);
             }
             else if (childrenCount == 5)
             {
@@ -210,11 +262,11 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
                 PlanNode applyWindowAux = (PlanNode)this.applyWindow.Evaluate(thread);
                 PlanNode groupByAux = (PlanNode)this.groupBy.Evaluate(thread);
                 PlanNode projectionAux = (PlanNode)this.select.Evaluate(thread);
-                
+
                 /* ******************************************************************************************************************************************************** */
                 whereAux.Children.ElementAt(0).Children.Add(fromAux);
                 groupByAux.Children.ElementAt(0).Children.Add(whereAux);
-                /* ******************************************************************************************************************************************************** */                
+                /* ******************************************************************************************************************************************************** */
                 PlanNode scopeSelectForBuffer = new PlanNode();
                 scopeSelectForBuffer.NodeType = PlanNodeTypeEnum.NewScope;
                 scopeSelectForBuffer.Children = new List<PlanNode>();

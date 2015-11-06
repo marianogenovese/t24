@@ -14,6 +14,7 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Event
     using Irony.Interpreter;
     using Irony.Interpreter.Ast;
     using Irony.Parsing;
+    using Messaging;
 
     /// <summary>
     /// EventPropertiesNode class
@@ -94,7 +95,7 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Event
             else if (this.property.ToLower() == SR.MessageProperty)
             {
                 this.result.Properties.Add(SR.PrpoertyProperty, EventPropertiesEnum.Message.ToString());
-                this.result.Properties.Add(SR.DataTypeProperty, typeof(EventMessage));
+                this.result.Properties.Add(SR.DataTypeProperty, typeof(Message));
                 this.result.NodeText = auxEvent.NodeText + "." + EventPropertiesEnum.Message.ToString();
                 this.result.NodeType = PlanNodeTypeEnum.ObjectMessage;
             }

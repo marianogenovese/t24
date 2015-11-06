@@ -72,6 +72,7 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
             planProjection.Column = ChildrenNodes[0].Token.Location.Column;
             planProjection.Line = ChildrenNodes[0].Token.Location.Line;
             planProjection.NodeType = PlanNodeTypeEnum.Projection;
+            planProjection.Properties.Add("ProjectionType", PlanNodeTypeEnum.ObservableGroupBy);
             planProjection.Children = new List<PlanNode>();
 
             Dictionary<PlanNode, PlanNode> projection = new Dictionary<PlanNode, PlanNode>();

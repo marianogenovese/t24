@@ -48,6 +48,7 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[0].Token.Location.Line;
             this.result.NodeType = PlanNodeTypeEnum.Projection;
+            this.result.Properties.Add("ProjectionType", PlanNodeTypeEnum.ObservableSelect);
         }
 
         /// <summary>

@@ -54,13 +54,9 @@
     <Compile Include="EventAdapter.cs" />
     <Compile Include="EventAgent.cs" />
     <Compile Include="EventObject.cs" />
-    <Compile Include="EventMessage.cs" />
     <Compile Include="EventPropertiesEnum.cs" />
-    <Compile Include="MessageElement.cs" />
-    <Compile Include="MessageElementCollection.cs" />
-    <Compile Include="MessageElementNode.cs" />
-    <Compile Include="MessageSection.cs" />
-    <Compile Include="MessageSubsection.cs" />
+    <Compile Include="EventResult.cs" />
+    <Compile Include="EventTypesEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -33,10 +33,15 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
         private string reservedWordOf;
 
         /// <summary>
-        /// window size
+        /// first window size
         /// </summary>
-        private AstNodeBase windowSize;
-        
+        private AstNodeBase windowSize1;
+
+        /// <summary>
+        /// second window size
+        /// </summary>
+        private AstNodeBase windowSize2;
+
         /// <summary>
         /// result plan
         /// </summary>
@@ -50,15 +55,28 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
         public override void Init(AstContext context, ParseTreeNode treeNode)
         {
             base.Init(context, treeNode);
-            this.applyWord = (string)ChildrenNodes[0].Token.Value;
-            this.windowWord = (string)ChildrenNodes[1].Token.Value;
-            this.reservedWordOf = (string)ChildrenNodes[2].Token.Value;
-            this.windowSize = AddChild(NodeUseType.Parameter, "windowSize", ChildrenNodes[3]) as AstNodeBase;
+
+            int childrenCount = ChildrenNodes.Count;
+
+            if (childrenCount == 4)
+            {
+                this.applyWord = (string)ChildrenNodes[0].Token.Value;
+                this.windowWord = (string)ChildrenNodes[1].Token.Value;
+                this.reservedWordOf = (string)ChildrenNodes[2].Token.Value;
+                this.windowSize1 = AddChild(NodeUseType.Parameter, "windowSize1", ChildrenNodes[3]) as AstNodeBase;
+            }
+            else if (childrenCount == 8)
+            {
+                this.applyWord = (string)ChildrenNodes[0].Token.Value;
+                this.windowWord = (string)ChildrenNodes[1].Token.Value;
+                this.reservedWordOf = (string)ChildrenNodes[2].Token.Value;
+                this.windowSize1 = AddChild(NodeUseType.Parameter, "windowSize1", ChildrenNodes[4]) as AstNodeBase;
+                this.windowSize2 = AddChild(NodeUseType.Parameter, "windowSize2", ChildrenNodes[6]) as AstNodeBase;
+            }
 
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[0].Token.Location.Line;
-            this.result.NodeType = PlanNodeTypeEnum.ObservableBuffer;
         }
 
         /// <summary>
@@ -70,17 +88,67 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
         protected override object DoEvaluate(ScriptThread thread)
         {
             this.BeginEvaluate(thread);
-            PlanNode windowSizeAux = (PlanNode)this.windowSize.Evaluate(thread);
-            this.EndEvaluate(thread);
 
             PlanNode fromLambdaForBuffer = new PlanNode();
             fromLambdaForBuffer.NodeType = PlanNodeTypeEnum.ObservableFromForLambda;
 
-            this.result.NodeText = this.applyWord + " " + this.windowWord + " " + this.reservedWordOf + " " + windowSizeAux.NodeText;
-
             this.result.Children = new List<PlanNode>();
-            this.result.Children.Add(fromLambdaForBuffer);
-            this.result.Children.Add(windowSizeAux);
+
+            int childrenCount = ChildrenNodes.Count;
+            if (childrenCount == 4)
+            {
+                PlanNode windowSizeAux = (PlanNode)this.windowSize1.Evaluate(thread);
+
+                this.result.NodeType = PlanNodeTypeEnum.ObservableBuffer;
+                this.result.NodeText = this.applyWord + " " + this.windowWord + " " + this.reservedWordOf + " " + windowSizeAux.NodeText;
+                this.result.Children.Add(fromLambdaForBuffer);
+                this.result.Children.Add(windowSizeAux);
+            }
+            else if (childrenCount == 8)
+            {
+                PlanNode windowSizeAux1 = (PlanNode)this.windowSize1.Evaluate(thread);
+                PlanNode windowSizeAux2 = (PlanNode)this.windowSize2.Evaluate(thread);
+
+                this.result.NodeType = PlanNodeTypeEnum.ObservableBufferTimeAndSize;
+                this.result.NodeText = this.applyWord + " " + this.windowWord + " " + this.reservedWordOf + " (" + windowSizeAux1.NodeText + "," + windowSizeAux2.NodeText + ")";
+
+                this.result.Children.Add(fromLambdaForBuffer);
+
+                PlanNode planProjection = new PlanNode();
+                planProjection.NodeType = PlanNodeTypeEnum.ProjectionOfConstants;
+                planProjection.Children = new List<PlanNode>();
+
+                PlanNode planTuple1 = new PlanNode();
+                planTuple1.NodeType = PlanNodeTypeEnum.TupleProjection;
+                planTuple1.Children = new List<PlanNode>();
+
+                PlanNode alias1 = new PlanNode();
+                alias1.NodeType = PlanNodeTypeEnum.Constant;
+                alias1.Properties.Add("Value", "TimeSpanValue");
+                alias1.Properties.Add("DataType", typeof(object).ToString());
+
+                planTuple1.Children.Add(alias1);
+                planTuple1.Children.Add(windowSizeAux1);
+
+                PlanNode planTuple2 = new PlanNode();
+                planTuple2.NodeType = PlanNodeTypeEnum.TupleProjection;
+                planTuple2.Children = new List<PlanNode>();
+
+                PlanNode alias2 = new PlanNode();
+                alias2.NodeType = PlanNodeTypeEnum.Constant;
+                alias2.Properties.Add("Value", "IntegerValue");
+                alias2.Properties.Add("DataType", typeof(object).ToString());
+
+                planTuple2.Children.Add(alias2);
+                planTuple2.Children.Add(windowSizeAux2);
+
+                planProjection.Children.Add(planTuple1);
+                planProjection.Children.Add(planTuple2);
+
+                this.result.Children.Add(planProjection);
+            }
+
+            this.EndEvaluate(thread);
 
             return this.result;
         }
