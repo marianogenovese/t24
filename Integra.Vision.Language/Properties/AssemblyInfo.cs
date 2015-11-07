@@ -48,3 +48,4 @@ using System.Runtime.InteropServices;
 [assembly: InternalsVisibleTo("StormTest")]
 [assembly: InternalsVisibleTo("Integra.Space.Services")]
 [assembly: InternalsVisibleTo("ET_Test")]
+[assembly: InternalsVisibleTo("ConsoleApplication1")]
