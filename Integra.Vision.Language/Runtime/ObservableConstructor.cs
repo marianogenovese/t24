@@ -790,13 +790,13 @@ namespace Integra.Vision.Language.Runtime
             ParameterExpression y = Expression.Variable(myType);
 
             if (((PlanNodeTypeEnum)plans.Properties["ProjectionType"]).Equals(PlanNodeTypeEnum.ObservableSelect))
-            {
+            {                
                 expressionList.Add(
                     Expression.Assign(
                         y,
                         Expression.New(
                             myType.GetConstructor(typeof(EventResult).GetProperties().Select(x => x.PropertyType).ToArray()),
-                            Expression.Constant(DateTime.Now)
+                            Expression.Property(null, typeof(DateTime).GetProperty("Now"))
                         )
                     )
                 );

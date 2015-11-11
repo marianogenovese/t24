@@ -484,6 +484,52 @@ namespace Integra.Space.LanguageUnitTests.Queries
         }
 
         [TestMethod]
+        public void ConsultaGroupByUnaLlaveYSumSinWhere2()
+        {
+            EQLPublicParser parser = new EQLPublicParser(
+                string.Format("from {0} apply window of {1} group by {2} select {3} as Llave",
+                                                                                            "SpaceObservable1",
+                                                                                            "'00:00:10'",
+                                                                                            "@event.Message.#0.#0 as grupo1",
+                                                                                            "key.grupo1",
+                                                                                            "sum((decimal)@event.Message.#1.TransactionAmount)")
+                                                                                            );
+            List<PlanNode> plan = parser.Parse();
+
+            ObservableConstructor te = new ObservableConstructor();
+            Func<IQbservable<EventObject>, IObservable<IEnumerable<object>>> result = te.Compile<IQbservable<EventObject>, IObservable<IEnumerable<object>>>(plan.First());
+
+            TestScheduler scheduler = new TestScheduler();
+
+            ITestableObservable<EventObject> input = scheduler.CreateHotObservable(
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest)),
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest)),
+                new Recorded<Notification<EventObject>>(200, Notification.CreateOnCompleted<EventObject>())
+                );
+
+            ITestableObserver<object> results = scheduler.Start(
+                () => result(input.AsQbservable())
+                .Select(x =>
+                    (object)(new
+                    {
+                        Llave = x.ElementAt(0).GetType().GetProperty("Llave").GetValue(x.ElementAt(0)).ToString()
+                    })
+                ),
+                created: 10,
+                subscribed: 50,
+                disposed: 400);
+
+            ReactiveAssert.AreElementsEqual(results.Messages, new Recorded<Notification<object>>[] {
+                    new Recorded<Notification<object>>(200, Notification.CreateOnNext((object)(new { Llave = "0100" }))),
+                    new Recorded<Notification<object>>(200, Notification.CreateOnCompleted<object>())
+                });
+
+            ReactiveAssert.AreElementsEqual(input.Subscriptions, new Subscription[] {
+                    new Subscription(50, 200)
+                });
+        }
+
+        [TestMethod]
         public void ConsultaGroupByDosLlavesYCountSinWhere()
         {
             EQLPublicParser parser = new EQLPublicParser(

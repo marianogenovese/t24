@@ -165,6 +165,21 @@ namespace Integra.Space.LanguageUnitTests.Constants
         [TestMethod]
         public void SecondFunction2()
         {
+            ValuesParser parser = new ValuesParser("second('10:11:12 am')");
+            PlanNode plan = parser.Parse();
+
+            ObservableConstructor te = new ObservableConstructor();
+            Func<int> result = te.Compile<int>(plan);
+
+            Assert.AreEqual<int>(12, result(), "El plan obtenido difiere del plan esperado.");
+        }
+
+        /// <summary>
+        /// Obtiene el segundo de la cadena especificada
+        /// </summary>
+        [TestMethod]
+        public void SecondFunction3()
+        {
             ValuesParser parser = new ValuesParser("second('1.02:10:30')");
             PlanNode plan = parser.Parse();
 
@@ -194,6 +209,21 @@ namespace Integra.Space.LanguageUnitTests.Constants
         /// </summary>
         [TestMethod]
         public void MillisecondFunction2()
+        {
+            ValuesParser parser = new ValuesParser("millisecond('10:11:12.1 am')");
+            PlanNode plan = parser.Parse();
+
+            ObservableConstructor te = new ObservableConstructor();
+            Func<int> result = te.Compile<int>(plan);
+
+            Assert.AreEqual<int>(100, result(), "El plan obtenido difiere del plan esperado.");
+        }
+
+        /// <summary>
+        /// Obtiene el segundo de la cadena especificada
+        /// </summary>
+        [TestMethod]
+        public void MillisecondFunction3()
         {
             ValuesParser parser = new ValuesParser("millisecond('1.02:10:30.6')");
             PlanNode plan = parser.Parse();
