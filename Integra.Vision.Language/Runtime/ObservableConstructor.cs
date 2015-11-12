@@ -194,6 +194,9 @@ namespace Integra.Vision.Language.Runtime
                 case PlanNodeTypeEnum.Constant:
                     expResult = this.GenerateConstant(actualNode);
                     break;
+                case PlanNodeTypeEnum.Identifier:
+                    expResult = this.GenerateIdentifier(actualNode);
+                    break;
                 case PlanNodeTypeEnum.Projection:
                     expResult = this.CreateProjectionExpression(actualNode);
                     break;
@@ -1030,6 +1033,39 @@ namespace Integra.Vision.Language.Runtime
         /// <param name="plan">plan node to convert</param>
         /// <returns>expression tree of actual plan</returns>
         private ConstantExpression GenerateConstant(PlanNode plan)
+        {
+            if (!plan.Properties.ContainsKey("Value"))
+            {
+                return Expression.Constant(null);
+            }
+
+            if (!plan.Properties.ContainsKey("DataType"))
+            {
+                return Expression.Constant(null);
+            }
+
+            try
+            {
+                if (plan.Properties["Value"] == null)
+                {
+                    return Expression.Constant(null);
+                }
+
+                Type tipo = Type.GetType(plan.Properties["DataType"].ToString());
+                return Expression.Constant(plan.Properties["Value"], tipo);
+            }
+            catch (Exception e)
+            {
+                return Expression.Constant(null);
+            }
+        }
+
+        /// <summary>
+        /// Create a expression tree
+        /// </summary>
+        /// <param name="plan">plan node to convert</param>
+        /// <returns>expression tree of actual plan</returns>
+        private ConstantExpression GenerateIdentifier(PlanNode plan)
         {
             if (!plan.Properties.ContainsKey("Value"))
             {

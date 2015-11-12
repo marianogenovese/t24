@@ -21,6 +21,11 @@ namespace Integra.Vision.Language
         DateTimeFunction = 11,
 
         /// <summary>
+        /// Identifier type
+        /// </summary>
+        Identifier = 12,
+
+        /// <summary>
         /// Cast type
         /// </summary>
         Cast = 21,

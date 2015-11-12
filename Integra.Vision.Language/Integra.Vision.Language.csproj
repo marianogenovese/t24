@@ -183,6 +183,7 @@
     <Compile Include="Runtime\LanguageTypeBuilder.cs">
       <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
     </Compile>
+    <Compile Include="Runtime\NodesFinder.cs" />
     <Compile Include="Runtime\ObservableConstructor.cs" />
   </ItemGroup>
   <ItemGroup>

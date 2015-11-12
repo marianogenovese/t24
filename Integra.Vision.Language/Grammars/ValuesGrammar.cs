@@ -227,7 +227,7 @@ namespace Integra.Vision.Language.Grammars
             terminalType.Add("TimeSpan", typeof(TimeSpan));
             terminalType.AstConfig.NodeType = null;
             terminalType.AstConfig.DefaultNodeCreator = () => new TypeNode();
-            
+
             /* COMENTARIOS */
             CommentTerminal comentarioLinea = new CommentTerminal("comentario_linea", "//", "\n", "\r\n");
             CommentTerminal comentarioBloque = new CommentTerminal("comentario_bloque", "/*", "*/");
@@ -334,7 +334,8 @@ namespace Integra.Vision.Language.Grammars
             this.projectionValue.Rule = terminalCount + terminalParentesisIz + this.parentesisDer
                                         | terminalSum + terminalParentesisIz + this.values + this.parentesisDer
                                         | nt_GROUP_KEY_VALUE
-                                        | this.values;
+                                        | this.values
+                                        | terminalId;
             /* **************************** */
             /* GROUP KEY */
             nt_GROUP_KEY.Rule = nt_GROUP_KEY + terminalPunto + terminalId
@@ -361,7 +362,7 @@ namespace Integra.Vision.Language.Grammars
                                         | nt_DATE_FUNCTIONS
                                         | nt_ARITHMETIC_EXPRESSION
                                         | nt_UNARY_ARITHMETIC_EXPRESSION;
-            
+
             this.otherValues.Rule = terminalBool
                                 | terminalNull
                                 | terminalCadena;

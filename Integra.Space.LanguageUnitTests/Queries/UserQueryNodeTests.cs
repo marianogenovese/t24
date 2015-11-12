@@ -248,7 +248,7 @@ namespace Integra.Space.LanguageUnitTests.Queries
                                                                                             "@event.Message.#0.MessageType == \"0100\"",
                                                                                             "'00:00:00:01'",
                                                                                             "@event.Message.#0.MessageType as grupo1",
-                                                                                            "key.grupo1",
+                                                                                            "grupo1",
                                                                                             "sum((decimal)@event.Message.#1.TransactionAmount)")
                                                                                             );
             List<PlanNode> plan = parser.Parse();
@@ -297,7 +297,7 @@ namespace Integra.Space.LanguageUnitTests.Queries
                                                                                             "'00:00:00:01'",
                                                                                             "@event.Message.#0.MessageType as grupo1, @event.Message.#1.PrimaryAccountNumber as grupo2",
                                                                                             "key.grupo1",
-                                                                                            "key.grupo2",
+                                                                                            "grupo2",
                                                                                             "count()")
                                                                                             );
             List<PlanNode> plan = parser.Parse();
@@ -347,7 +347,7 @@ namespace Integra.Space.LanguageUnitTests.Queries
                                                                                             "'00:00:00:01'",
                                                                                             "@event.Message.#0.MessageType as grupo1, @event.Message.#1.PrimaryAccountNumber as grupo2",
                                                                                             "key.grupo1",
-                                                                                            "key.grupo2",
+                                                                                            "grupo2",
                                                                                             "sum((decimal)@event.Message.#1.TransactionAmount)")
                                                                                             );
             List<PlanNode> plan = parser.Parse();

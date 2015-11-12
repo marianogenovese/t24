@@ -13,6 +13,7 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
     using Irony.Interpreter;
     using Irony.Interpreter.Ast;
     using Irony.Parsing;
+    using Runtime;
 
     /// <summary>
     /// User query node.
@@ -208,7 +209,7 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
                     buffer.Children.Add(selectForBuffer);
                     buffer.Children.Add(bufferSize);
                     /* ******************************************************************************************************************************************************** */
-                    
+
                     this.result = buffer;
                 }
 
@@ -293,6 +294,27 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
 
                     selectForBuffer.Children.Add(scopeSelectForBuffer);
                     selectForBuffer.Children.Add(projectionAux);
+
+                    NodesFinder nf = new NodesFinder();
+                    List<PlanNode> lpn = nf.FindNode(projectionAux, PlanNodeTypeEnum.TupleProjection);
+                    foreach (PlanNode tuple in lpn)
+                    {
+                        PlanNode tupleValue = tuple.Children[1];
+                        if (tupleValue.NodeType.Equals(PlanNodeTypeEnum.Identifier))
+                        {
+                            PlanNode groupKey = new PlanNode();
+                            groupKey.NodeType = PlanNodeTypeEnum.GroupKey;
+                            groupKey.Column = tupleValue.Column;
+                            groupKey.Line = tupleValue.Line;
+                            groupKey.NodeText = tupleValue.NodeText;
+                            groupKey.Properties.Add("Value", "Key");
+
+                            tupleValue.NodeType = PlanNodeTypeEnum.GroupKeyProperty;
+                            tupleValue.Children = new List<PlanNode>();
+                            tupleValue.Children.Add(groupKey);
+                        }
+                    }
+
                     /* ******************************************************************************************************************************************************** */
                     PlanNode buffer = new PlanNode();
                     buffer.NodeType = PlanNodeTypeEnum.ObservableBuffer;
@@ -306,7 +328,7 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
                     buffer.Children.Add(selectForBuffer);
                     buffer.Children.Add(bufferSize);
                     /* ******************************************************************************************************************************************************** */
-                    
+
                     this.result = buffer;
                 }
 
@@ -339,6 +361,27 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
 
                 selectForBuffer.Children.Add(scopeSelectForBuffer);
                 selectForBuffer.Children.Add(projectionAux);
+
+                NodesFinder nf = new NodesFinder();
+                List<PlanNode> lpn = nf.FindNode(projectionAux, PlanNodeTypeEnum.TupleProjection);
+                foreach (PlanNode tuple in lpn)
+                {
+                    PlanNode tupleValue = tuple.Children[1];
+                    if (tupleValue.NodeType.Equals(PlanNodeTypeEnum.Identifier))
+                    {
+                        PlanNode groupKey = new PlanNode();
+                        groupKey.NodeType = PlanNodeTypeEnum.GroupKey;
+                        groupKey.Column = tupleValue.Column;
+                        groupKey.Line = tupleValue.Line;
+                        groupKey.NodeText = tupleValue.NodeText;
+                        groupKey.Properties.Add("Value", "Key");
+
+                        tupleValue.NodeType = PlanNodeTypeEnum.GroupKeyProperty;
+                        tupleValue.Children = new List<PlanNode>();
+                        tupleValue.Children.Add(groupKey);
+                    }
+                }
+
                 /* ******************************************************************************************************************************************************** */
                 PlanNode scopeSelectForGroupBy = this.result;
                 scopeSelectForGroupBy.NodeType = PlanNodeTypeEnum.NewScope;
@@ -371,7 +414,7 @@ namespace Integra.Vision.Language.ASTNodes.UserQuery
                 buffer.Children.Add(merge);
                 buffer.Children.Add(bufferSize);
                 /* ******************************************************************************************************************************************************** */
-                
+
                 this.result = buffer;
                 this.result.Column = fromAux.Column;
                 this.result.Line = fromAux.Line;
