@@ -157,7 +157,7 @@ namespace Integra.Space.LanguageUnitTests.Queries
                                                                                             "SpaceObservable1",
                                                                                             "@event.Message.#0.MessageType == \"0100\"",
                                                                                             "'00:00:01'", // hay un comportamiento inesperado cuando el segundo parametro es 2 y se envian dos EventObject                                                                                        
-                                                                                            "@event.Message.#0.MessageType")
+                                                                                            "count()")
                                                                                             );
             List<PlanNode> plan = parser.Parse();
 
@@ -177,8 +177,7 @@ namespace Integra.Space.LanguageUnitTests.Queries
                 .Select(x =>
                     (object)(new
                     {
-                        Resultado1 = x.First().GetType().GetProperty("Resultado").GetValue(x.First()).ToString(),
-                        Resultado2 = x.ElementAt(1).GetType().GetProperty("Resultado").GetValue(x.ElementAt(1)).ToString()
+                        Resultado = int.Parse(x.First().GetType().GetProperty("Resultado").GetValue(x.First()).ToString())
                     })
                 ),
                 created: 10,
@@ -186,7 +185,7 @@ namespace Integra.Space.LanguageUnitTests.Queries
                 disposed: 400);
 
             ReactiveAssert.AreElementsEqual(results.Messages, new Recorded<Notification<object>>[] {
-                    new Recorded<Notification<object>>(200, Notification.CreateOnNext((object)(new { Resultado1 = "0100", Resultado2 = "0100" }))),
+                    new Recorded<Notification<object>>(200, Notification.CreateOnNext((object)(new { Resultado = 2 }))),
                     new Recorded<Notification<object>>(200, Notification.CreateOnCompleted<object>())
                 });
 
@@ -203,7 +202,7 @@ namespace Integra.Space.LanguageUnitTests.Queries
                                                                                             "SpaceObservable1",
                                                                                             "@event.Message.#0.MessageType == \"0100\"",
                                                                                             "'00:00:00:01'", // hay un comportamiento inesperado cuando el segundo parametro es 2 y se envian dos EventObject                                                                                        
-                                                                                            "@event.Message.#0.MessageType")
+                                                                                            "count()")
                                                                                             );
             List<PlanNode> plan = parser.Parse();
 
@@ -223,8 +222,7 @@ namespace Integra.Space.LanguageUnitTests.Queries
                 .Select(x =>
                     (object)(new
                     {
-                        Resultado1 = x.First().GetType().GetProperty("Resultado").GetValue(x.First()).ToString(),
-                        Resultado2 = x.ElementAt(1).GetType().GetProperty("Resultado").GetValue(x.ElementAt(1)).ToString()
+                        Resultado = int.Parse(x.First().GetType().GetProperty("Resultado").GetValue(x.First()).ToString())
                     })
                 ),
                 created: 10,
@@ -232,7 +230,7 @@ namespace Integra.Space.LanguageUnitTests.Queries
                 disposed: 400);
 
             ReactiveAssert.AreElementsEqual(results.Messages, new Recorded<Notification<object>>[] {
-                    new Recorded<Notification<object>>(200, Notification.CreateOnNext((object)(new { Resultado1 = "0100", Resultado2 = "0100" }))),
+                    new Recorded<Notification<object>>(200, Notification.CreateOnNext((object)(new { Resultado = 2 }))),
                     new Recorded<Notification<object>>(200, Notification.CreateOnCompleted<object>())
                 });
 
