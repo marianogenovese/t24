@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="ProjectionValue.cs" company="Ingetra.Vision.Language">
+// <copyright file="ProjectionFunctionNode.cs" company="Ingetra.Vision.Language">
 //     Copyright (c) Ingetra.Vision.Language. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -14,9 +14,9 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
     using Irony.Parsing;
 
     /// <summary>
-    /// Projection value node.
+    /// Projection function node.
     /// </summary>
-    internal class ProjectionValue : AstNodeBase
+    internal class ProjectionFunctionNode : AstNodeBase
     {
         /// <summary>
         /// function name
@@ -44,11 +44,7 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
 
             this.result = new PlanNode();
             int childrenCount = ChildrenNodes.Count;
-            if (childrenCount == 1)
-            {
-                this.value = AddChild(NodeUseType.Keyword, SR.SelectRole, ChildrenNodes[0]) as AstNodeBase;
-            }
-            else if (childrenCount == 3)
+            if (childrenCount == 3)
             {
                 this.functionName = (string)ChildrenNodes[0].Token.Value;
 
@@ -76,13 +72,10 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
             this.BeginEvaluate(thread);
 
             int childrenCount = ChildrenNodes.Count;
-            if (childrenCount == 1)
-            {
-                this.result = (PlanNode)this.value.Evaluate(thread);
-            }
-            else if (childrenCount == 3)
+            if (childrenCount == 3)
             {
                 this.result.NodeType = PlanNodeTypeEnum.EnumerableCount;
+                this.result.Properties.Add("FunctionName", this.functionName);
                 this.result.NodeText = string.Format("{0}()", this.functionName);
                 this.result.Children = new List<PlanNode>();
             }
@@ -91,6 +84,7 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
                 PlanNode valueAux = (PlanNode)this.value.Evaluate(thread);
 
                 this.result.NodeType = PlanNodeTypeEnum.EnumerableSum;
+                this.result.Properties.Add("FunctionName", this.functionName);
                 this.result.NodeText = string.Format("{0}({1})", this.functionName, valueAux.NodeText);
                 this.result.Children = new List<PlanNode>();
 

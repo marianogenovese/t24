@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="GroupKey.cs" company="Integra.Vision.Language">
+// <copyright file="GroupKeyNode.cs" company="Integra.Vision.Language">
 //     Copyright (c) Integra.Vision.Language. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -15,7 +15,7 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
     /// <summary>
     /// Group key class
     /// </summary>
-    internal class GroupKey : AstNodeBase
+    internal class GroupKeyNode : AstNodeBase
     {
         /// <summary>
         /// reserved word key

@@ -6,6 +6,7 @@
 namespace Integra.Vision.Language.Runtime
 {
     using System;
+    using System.Configuration;
     using System.Linq.Expressions;
     using Exceptions;
 
@@ -28,6 +29,11 @@ namespace Integra.Vision.Language.Runtime
                 case PlanNodeTypeEnum.ObservableBuffer:
                     CreateBufferValidator(actualNode, left, right);
                     break;
+                case PlanNodeTypeEnum.ObservableBufferTimeAndSize:
+                    CreateBufferTimeAndSizeValidator(actualNode, left, right);
+                    break;
+                default:
+                    throw new CompilationException(string.Format("No es posible validar el nodo {0}.", nodeType.ToString()));
             }
         }
 
@@ -42,6 +48,38 @@ namespace Integra.Vision.Language.Runtime
             if (bufferTimeOrSize.Type.Equals(typeof(DateTime)))
             {
                 throw new CompilationException("Error al compilar, el tamaño de la ventana debe ser un espacio de tiempo ('TimeSpan') y no una fecha.");
+            }
+
+            if (bufferTimeOrSize.Type.Equals(typeof(TimeSpan)))
+            {
+                if (TimeSpan.Parse(((ConstantExpression)bufferTimeOrSize).Value.ToString()) < TimeSpan.FromSeconds(1) || TimeSpan.Parse(((ConstantExpression)bufferTimeOrSize).Value.ToString()) > TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["MaxWindowTimeInSeconds"].ToString())))
+                {
+                    throw new CompilationException("Error al compilar, el tamaño de la ventana debe ser mayor o igual a 1 y menor o igual a " + ConfigurationManager.AppSettings["MaxWindowTimeInSeconds"].ToString() + ".");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Validates the context of the CreateBuffer method in ObservableConstructor class.
+        /// </summary>
+        /// <param name="actualNode">Actual execution plan node.</param>
+        /// <param name="incomingObservable">Incoming observable expression.</param>
+        /// <param name="bufferTimeAndSize">Time or size expression for the buffer.</param>
+        private static void CreateBufferTimeAndSizeValidator(PlanNode actualNode, Expression incomingObservable, Expression bufferTimeAndSize)
+        {
+            if (bufferTimeAndSize.Type.GetProperty("TimeSpanValue").PropertyType.Equals(typeof(DateTime)))
+            {
+                throw new CompilationException("Error al compilar, el tamaño de la ventana debe ser un espacio de tiempo ('TimeSpan') y no una fecha.");
+            }
+
+            if (((dynamic)Expression.Lambda(bufferTimeAndSize).Compile().DynamicInvoke()).TimeSpanValue < TimeSpan.FromSeconds(1) || ((dynamic)Expression.Lambda(bufferTimeAndSize).Compile().DynamicInvoke()).TimeSpanValue > TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["MaxWindowTimeInSeconds"].ToString())))
+            {
+                throw new CompilationException("Error al compilar, el tamaño de la ventana debe ser mayor o igual a 1 y menor o igual a " + ConfigurationManager.AppSettings["MaxWindowTimeInSeconds"].ToString() + ".");
+            }
+
+            if (((dynamic)Expression.Lambda(bufferTimeAndSize).Compile().DynamicInvoke()).IntegerValue < 1 || ((dynamic)Expression.Lambda(bufferTimeAndSize).Compile().DynamicInvoke()).IntegerValue > int.Parse(ConfigurationManager.AppSettings["MaxWindowSize"].ToString()))
+            {
+                throw new CompilationException("Error al compilar, el tamaño de la ventana debe ser mayor o igual a 1 y menor o igual a " + ConfigurationManager.AppSettings["MaxWindowTimeInSeconds"].ToString() + ".");
             }
         }
     }

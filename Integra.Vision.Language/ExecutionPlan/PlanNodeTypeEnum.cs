@@ -3,8 +3,11 @@
 //     Copyright (c) Integra.Vision.Common. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
+
 namespace Integra.Vision.Language
 {
+    using System;
+
     /// <summary>
     /// PlanType enumerable
     /// </summary>
@@ -209,12 +212,7 @@ namespace Integra.Vision.Language
         /// With type
         /// </summary>
         With = 115,
-
-        /// <summary>
-        /// ApplyWindow type
-        /// </summary>
-        ApplyWindow = 116,
-
+        
         /// <summary>
         /// ValueWithAlias type
         /// </summary>
@@ -561,7 +559,7 @@ namespace Integra.Vision.Language
         ObservableBufferTimeAndSize = 514,
 
         /// <summary>
-        /// Projection of constants type
+        /// Projection of constants type, projection for group by, this does not create a lambda expression
         /// </summary>
         ProjectionOfConstants = 515,
                 
@@ -571,9 +569,24 @@ namespace Integra.Vision.Language
         EnumerableCount = 613,
 
         /// <summary>
-        /// Sum observable type
+        /// Enumerable sum type
         /// </summary>
         EnumerableSum = 614,
+
+        /// <summary>
+        /// Enumerable select for enumerable type
+        /// </summary>
+        EnumerableSelectForEnumerable = 615,
+
+        /// <summary>
+        /// Enumerable select for group by type
+        /// </summary>
+        EnumerableSelectForGroupBy = 616,
+
+        /// <summary>
+        /// Enumerable select for group by
+        /// </summary>
+        EnumerableGroupBy = 617,
 
         /// <summary>
         /// New Scope type

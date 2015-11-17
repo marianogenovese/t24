@@ -1,11 +1,10 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="GroupKeyValue.cs" company="Integra.Vision.Language">
-//     Copyright (c) Integra.Vision.Language. All rights reserved.
+// <copyright file="ProjectionValueNode.cs" company="Ingetra.Vision.Language">
+//     Copyright (c) Ingetra.Vision.Language. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
 namespace Integra.Vision.Language.ASTNodes.QuerySections
 {
-    using System.Collections.Generic;
     using Integra.Vision.Language.ASTNodes.Base;
     using Irony.Ast;
     using Irony.Interpreter;
@@ -13,19 +12,19 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
     using Irony.Parsing;
 
     /// <summary>
-    /// Group key value class
+    /// Projection value node.
     /// </summary>
-    internal class GroupKeyValue : AstNodeBase
+    internal class ProjectionValueNode : AstNodeBase
     {
         /// <summary>
-        /// Result plan node
+        /// value node
         /// </summary>
-        private PlanNode result;
+        private AstNodeBase value;
 
         /// <summary>
-        /// object node
+        /// result execution plan
         /// </summary>
-        private AstNodeBase groupKey;
+        private PlanNode result;
 
         /// <summary>
         /// First method called
@@ -36,7 +35,8 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
         {
             base.Init(context, treeNode);
 
-            this.groupKey = AddChild(NodeUseType.Keyword, SR.ObjectRole, ChildrenNodes[0]) as AstNodeBase;
+            this.result = new PlanNode();
+            this.value = AddChild(NodeUseType.Keyword, SR.SelectRole, ChildrenNodes[0]) as AstNodeBase;
         }
 
         /// <summary>
@@ -48,23 +48,8 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
         protected override object DoEvaluate(ScriptThread thread)
         {
             this.BeginEvaluate(thread);
-            PlanNode groupKeyAux = (PlanNode)this.groupKey.Evaluate(thread);
+            this.result = (PlanNode)this.value.Evaluate(thread);
             this.EndEvaluate(thread);
-
-            if (groupKeyAux.NodeType.Equals(PlanNodeTypeEnum.GroupKey))
-            {
-                this.result = groupKeyAux;
-            }
-            else
-            {
-                this.result = new PlanNode();
-                this.result.NodeType = PlanNodeTypeEnum.GroupKeyValue;
-                this.result.Column = groupKeyAux.Column;
-                this.result.Line = groupKeyAux.Line;
-                this.result.NodeText = groupKeyAux.NodeText;
-                this.result.Children = new List<PlanNode>();
-                this.result.Children.Add(groupKeyAux);
-            }
 
             return this.result;
         }

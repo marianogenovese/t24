@@ -147,10 +147,10 @@ namespace Integra.Space.LanguageUnitTests.Queries
             ReactiveAssert.AreElementsEqual(input.Subscriptions, new Subscription[] {
                     new Subscription(50, 200)
                 });
-        }        
+        }
 
         [TestMethod]
-        public void ConsultaSoloApplyWindowDosEventos1()
+        public void ConsultaSoloApplyWindowDosEventos1_0()
         {
             EQLPublicParser parser = new EQLPublicParser(
                 string.Format("from {0} apply window of {2} select {3} as Resultado",
@@ -186,6 +186,101 @@ namespace Integra.Space.LanguageUnitTests.Queries
 
             ReactiveAssert.AreElementsEqual(results.Messages, new Recorded<Notification<object>>[] {
                     new Recorded<Notification<object>>(200, Notification.CreateOnNext((object)(new { Resultado = 2 }))),
+                    new Recorded<Notification<object>>(200, Notification.CreateOnCompleted<object>())
+                });
+
+            ReactiveAssert.AreElementsEqual(input.Subscriptions, new Subscription[] {
+                    new Subscription(50, 200)
+                });
+        }
+
+        [TestMethod]
+        public void ConsultaSoloApplyWindowDosEventos1_1()
+        {
+            EQLPublicParser parser = new EQLPublicParser(
+                string.Format("from {0} apply window of {2} select {3} as Resultado",
+                                                                                            "SpaceObservable1",
+                                                                                            "@event.Message.#0.MessageType == \"0100\"",
+                                                                                            "'00:00:01'", // hay un comportamiento inesperado cuando el segundo parametro es 2 y se envian dos EventObject                                                                                        
+                                                                                            "@event.Message.#0.MessageType")
+                                                                                            );
+            List<PlanNode> plan = parser.Parse();
+
+            ObservableConstructor te = new ObservableConstructor();
+            Func<IQbservable<EventObject>, IObservable<IEnumerable<object>>> result = te.Compile<IQbservable<EventObject>, IObservable<IEnumerable<object>>>(plan.First());
+
+            TestScheduler scheduler = new TestScheduler();
+
+            ITestableObservable<EventObject> input = scheduler.CreateHotObservable(
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest)),
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest)),
+                new Recorded<Notification<EventObject>>(200, Notification.CreateOnCompleted<EventObject>())
+                );
+
+            ITestableObserver<object> results = scheduler.Start(
+                () => result(input.AsQbservable())
+                .Select(x =>
+                    (object)(new
+                    {
+                        Resultado1 = x.First().GetType().GetProperty("Resultado").GetValue(x.First()).ToString(),
+                        Resultado2 = x.ElementAt(1).GetType().GetProperty("Resultado").GetValue(x.ElementAt(1)).ToString()
+                    })
+                ),
+                created: 10,
+                subscribed: 50,
+                disposed: 400);
+
+            ReactiveAssert.AreElementsEqual(results.Messages, new Recorded<Notification<object>>[] {
+                    new Recorded<Notification<object>>(200, Notification.CreateOnNext((object)(new { Resultado1 = "0100", Resultado2 = "0100" }))),
+                    new Recorded<Notification<object>>(200, Notification.CreateOnCompleted<object>())
+                });
+
+            ReactiveAssert.AreElementsEqual(input.Subscriptions, new Subscription[] {
+                    new Subscription(50, 200)
+                });
+        }
+
+        [TestMethod]
+        public void ConsultaSoloApplyWindowDosEventos1_2()
+        {
+            EQLPublicParser parser = new EQLPublicParser(
+                string.Format("from {0} apply window of {2} select {3} as Resultado1, {4} as Resultado2",
+                                                                                            "SpaceObservable1",
+                                                                                            "@event.Message.#0.MessageType == \"0100\"",
+                                                                                            "'00:00:01'", // hay un comportamiento inesperado cuando el segundo parametro es 2 y se envian dos EventObject                                                                                        
+                                                                                            "@event.Message.#0.MessageType",
+                                                                                            "count()")
+                                                                                            );
+            List<PlanNode> plan = parser.Parse();
+
+            ObservableConstructor te = new ObservableConstructor();
+            Func<IQbservable<EventObject>, IObservable<IEnumerable<object>>> result = te.Compile<IQbservable<EventObject>, IObservable<IEnumerable<object>>>(plan.First());
+
+            TestScheduler scheduler = new TestScheduler();
+
+            ITestableObservable<EventObject> input = scheduler.CreateHotObservable(
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest)),
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest)),
+                new Recorded<Notification<EventObject>>(200, Notification.CreateOnCompleted<EventObject>())
+                );
+
+            ITestableObserver<object> results = scheduler.Start(
+                () => result(input.AsQbservable())
+                .Select(x =>
+                    (object)(new
+                    {
+                        Resultado1 = x.ElementAt(0).GetType().GetProperty("Resultado1").GetValue(x.ElementAt(0)).ToString(),
+                        Resultado2 = int.Parse(x.ElementAt(0).GetType().GetProperty("Resultado2").GetValue(x.ElementAt(0)).ToString()),
+                        Resultado3 = x.ElementAt(1).GetType().GetProperty("Resultado1").GetValue(x.ElementAt(1)).ToString(),
+                        Resultado4 = int.Parse(x.ElementAt(1).GetType().GetProperty("Resultado2").GetValue(x.ElementAt(1)).ToString())
+                    })
+                ),
+                created: 10,
+                subscribed: 50,
+                disposed: 400);
+
+            ReactiveAssert.AreElementsEqual(results.Messages, new Recorded<Notification<object>>[] {
+                    new Recorded<Notification<object>>(200, Notification.CreateOnNext((object)(new { Resultado1 = "0100", Resultado2 = 2, Resultado3 = "0100", Resultado4 = 2 }))),
                     new Recorded<Notification<object>>(200, Notification.CreateOnCompleted<object>())
                 });
 
@@ -231,6 +326,100 @@ namespace Integra.Space.LanguageUnitTests.Queries
 
             ReactiveAssert.AreElementsEqual(results.Messages, new Recorded<Notification<object>>[] {
                     new Recorded<Notification<object>>(200, Notification.CreateOnNext((object)(new { Resultado = 2 }))),
+                    new Recorded<Notification<object>>(200, Notification.CreateOnCompleted<object>())
+                });
+
+            ReactiveAssert.AreElementsEqual(input.Subscriptions, new Subscription[] {
+                    new Subscription(50, 200)
+                });
+        }
+        [TestMethod]
+        public void ConsultaSoloApplyWindowDosEventos2_1()
+        {
+            EQLPublicParser parser = new EQLPublicParser(
+                string.Format("from {0} where {1} apply window of {2} select {3} as Resultado",
+                                                                                            "SpaceObservable1",
+                                                                                            "@event.Message.#0.MessageType == \"0100\"",
+                                                                                            "'00:00:01'", // hay un comportamiento inesperado cuando el segundo parametro es 2 y se envian dos EventObject                                                                                        
+                                                                                            "@event.Message.#0.MessageType")
+                                                                                            );
+            List<PlanNode> plan = parser.Parse();
+
+            ObservableConstructor te = new ObservableConstructor();
+            Func<IQbservable<EventObject>, IObservable<IEnumerable<object>>> result = te.Compile<IQbservable<EventObject>, IObservable<IEnumerable<object>>>(plan.First());
+
+            TestScheduler scheduler = new TestScheduler();
+
+            ITestableObservable<EventObject> input = scheduler.CreateHotObservable(
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest)),
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest)),
+                new Recorded<Notification<EventObject>>(200, Notification.CreateOnCompleted<EventObject>())
+                );
+
+            ITestableObserver<object> results = scheduler.Start(
+                () => result(input.AsQbservable())
+                .Select(x =>
+                    (object)(new
+                    {
+                        Resultado1 = x.First().GetType().GetProperty("Resultado").GetValue(x.First()).ToString(),
+                        Resultado2 = x.ElementAt(1).GetType().GetProperty("Resultado").GetValue(x.ElementAt(1)).ToString()
+                    })
+                ),
+                created: 10,
+                subscribed: 50,
+                disposed: 400);
+
+            ReactiveAssert.AreElementsEqual(results.Messages, new Recorded<Notification<object>>[] {
+                    new Recorded<Notification<object>>(200, Notification.CreateOnNext((object)(new { Resultado1 = "0100", Resultado2 = "0100" }))),
+                    new Recorded<Notification<object>>(200, Notification.CreateOnCompleted<object>())
+                });
+
+            ReactiveAssert.AreElementsEqual(input.Subscriptions, new Subscription[] {
+                    new Subscription(50, 200)
+                });
+        }
+
+        [TestMethod]
+        public void ConsultaSoloApplyWindowDosEventos2_2()
+        {
+            EQLPublicParser parser = new EQLPublicParser(
+                string.Format("from {0} where {1} apply window of {2} select {3} as Resultado1, {4} as Resultado2",
+                                                                                            "SpaceObservable1",
+                                                                                            "@event.Message.#0.MessageType == \"0100\"",
+                                                                                            "'00:00:01'", // hay un comportamiento inesperado cuando el segundo parametro es 2 y se envian dos EventObject                                                                                        
+                                                                                            "@event.Message.#0.MessageType",
+                                                                                            "count()")
+                                                                                            );
+            List<PlanNode> plan = parser.Parse();
+
+            ObservableConstructor te = new ObservableConstructor();
+            Func<IQbservable<EventObject>, IObservable<IEnumerable<object>>> result = te.Compile<IQbservable<EventObject>, IObservable<IEnumerable<object>>>(plan.First());
+
+            TestScheduler scheduler = new TestScheduler();
+
+            ITestableObservable<EventObject> input = scheduler.CreateHotObservable(
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest)),
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest)),
+                new Recorded<Notification<EventObject>>(200, Notification.CreateOnCompleted<EventObject>())
+                );
+
+            ITestableObserver<object> results = scheduler.Start(
+                () => result(input.AsQbservable())
+                .Select(x =>
+                    (object)(new
+                    {
+                        Resultado1 = x.ElementAt(0).GetType().GetProperty("Resultado1").GetValue(x.ElementAt(0)).ToString(),
+                        Resultado2 = int.Parse(x.ElementAt(0).GetType().GetProperty("Resultado2").GetValue(x.ElementAt(0)).ToString()),
+                        Resultado3 = x.ElementAt(1).GetType().GetProperty("Resultado1").GetValue(x.ElementAt(1)).ToString(),
+                        Resultado4 = int.Parse(x.ElementAt(1).GetType().GetProperty("Resultado2").GetValue(x.ElementAt(1)).ToString())
+                    })
+                ),
+                created: 10,
+                subscribed: 50,
+                disposed: 400);
+
+            ReactiveAssert.AreElementsEqual(results.Messages, new Recorded<Notification<object>>[] {
+                    new Recorded<Notification<object>>(200, Notification.CreateOnNext((object)(new { Resultado1 = "0100", Resultado2 = 2, Resultado3 = "0100", Resultado4 = 2 }))),
                     new Recorded<Notification<object>>(200, Notification.CreateOnCompleted<object>())
                 });
 
@@ -591,7 +780,7 @@ namespace Integra.Space.LanguageUnitTests.Queries
             List<PlanNode> plan = parser.Parse();
 
             ObservableConstructor te = new ObservableConstructor();
-            Func < IQbservable<EventObject>, IObservable <IEnumerable<object>>> result = te.Compile<IQbservable<EventObject>, IObservable<IEnumerable<object>>>(plan.First());
+            Func<IQbservable<EventObject>, IObservable<IEnumerable<object>>> result = te.Compile<IQbservable<EventObject>, IObservable<IEnumerable<object>>>(plan.First());
 
             TestScheduler scheduler = new TestScheduler();
 
@@ -720,6 +909,37 @@ namespace Integra.Space.LanguageUnitTests.Queries
         }
 
         [TestMethod]
+        public void ConsultaSumSinGroupBySinWhere()
+        {
+            try
+            {
+                // no es posible utilizar key sin un group by
+                EQLPublicParser parser = new EQLPublicParser(
+                    string.Format("from {0} select {1} as Llave",
+                                                                "SpaceObservable1",
+                                                                "sum((decimal)@event.Message.#1.TransactionAmount)")
+                                                                );
+                List<PlanNode> plan = parser.Parse();
+
+                ObservableConstructor te = new ObservableConstructor();
+                Func<IQbservable<EventObject>, IObservable<IEnumerable<object>>> result = te.Compile<IQbservable<EventObject>, IObservable<IEnumerable<object>>>(plan.First());
+
+                Assert.Inconclusive();
+            }
+            catch (CompilationException e)
+            {
+                // prueba exitosa porque es un error poner key sin group by
+            }
+            catch (Exception e)
+            {
+                if (!(e.InnerException is CompilationException))
+                {
+                    Assert.Fail();
+                }
+            }
+        }
+
+        [TestMethod]
         public void ConsultaGroupByUnaLlaveYSumErrorDeCasteoCampoNoNumerico()
         {
             EQLPublicParser parser = new EQLPublicParser(
@@ -734,7 +954,7 @@ namespace Integra.Space.LanguageUnitTests.Queries
             List<PlanNode> plan = parser.Parse();
 
             ObservableConstructor te = new ObservableConstructor();
-            Func<IQbservable<EventObject>, IObservable<object>> result = te.Compile<IQbservable<EventObject>, IObservable<object>>(plan.First());
+            Func<IQbservable<EventObject>, IObservable<IEnumerable<object>>> result = te.Compile<IQbservable<EventObject>, IObservable<IEnumerable<object>>>(plan.First());
 
             TestScheduler scheduler = new TestScheduler();
 
@@ -746,17 +966,21 @@ namespace Integra.Space.LanguageUnitTests.Queries
             ITestableObserver<object> results = scheduler.Start(
                 () => result(input.AsQbservable())
                 .Select(x =>
-                    (object)(new
-                    {
-                        Llave = x.GetType().GetProperty("Llave").GetValue(x).ToString(),
-                        Sumatoria = decimal.Parse(x.GetType().GetProperty("Sumatoria").GetValue(x).ToString())
-                    })
+                {
+                    return x.First();   
+                }
                 ),
                 created: 10,
                 subscribed: 50,
                 disposed: 400);
 
-            ReactiveAssert.AssertEqual<string>(new string[] { (results.Messages.First().Value.Exception).InnerException.InnerException.Message }, "Specified cast is not valid.");
+
+            // ReactiveAssert.AssertEqual<string>(new string[] { (results.Messages.First().Value.Exception).InnerException.InnerException.Message }, "Specified cast is not valid.");
+
+            ReactiveAssert.AreElementsEqual(results.Messages, new Recorded<Notification<object>>[] {
+                    new Recorded<Notification<object>>(200, Notification.CreateOnNext<object>(new Exception("Specified cast is not valid."))),
+                    new Recorded<Notification<object>>(200, Notification.CreateOnCompleted<object>())
+                });
 
             ReactiveAssert.AreElementsEqual(input.Subscriptions, new Subscription[] {
                     new Subscription(50, 200)

@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="SyntaxException.cs" company="Ingetra.Vision.Language">
+// <copyright file="RuntimeException.cs" company="Ingetra.Vision.Language">
 //     Copyright (c) Ingetra.Vision.Language. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -8,32 +8,32 @@ namespace Integra.Vision.Language.Exceptions
     using System;
 
     /// <summary>
-    /// Syntax exception.
+    /// Compilation exception.
     /// </summary>
-    internal sealed class SyntaxException : Exception
+    internal class RuntimeException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SyntaxException"/> class
+        /// Initializes a new instance of the <see cref="RuntimeException"/> class
         /// </summary>
         /// <param name="message">Exception message</param>
-        public SyntaxException(string message) : base(message)
+        public RuntimeException(string message) : base(message)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SyntaxException"/> class
+        /// Initializes a new instance of the <see cref="RuntimeException"/> class
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="innerException">Inner exception</param>
-        public SyntaxException(string message, Exception innerException) : base(message, innerException)
+        public RuntimeException(string message, Exception innerException) : base(message, innerException)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SyntaxException"/> class
+        /// Initializes a new instance of the <see cref="RuntimeException"/> class
         /// </summary>
         /// <param name="innerException">Inner exception</param>
-        public SyntaxException(Exception innerException) : base(string.Empty, innerException)
+        public RuntimeException(Exception innerException) : base(string.Empty, innerException)
         {
         }
     }

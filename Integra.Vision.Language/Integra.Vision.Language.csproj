@@ -60,6 +60,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
       <Private>True</Private>
@@ -129,9 +130,10 @@
     <Compile Include="ASTNodes\QuerySections\GroupByNode.cs" />
     <Compile Include="ASTNodes\QuerySections\JoinNode.cs" />
     <Compile Include="ASTNodes\QuerySections\OnConditionNode.cs" />
-    <Compile Include="ASTNodes\QuerySections\Projections\GroupKey.cs" />
-    <Compile Include="ASTNodes\QuerySections\Projections\GroupKeyValue.cs" />
-    <Compile Include="ASTNodes\QuerySections\Projections\ProjectionValue.cs" />
+    <Compile Include="ASTNodes\QuerySections\Projections\GroupKeyNode.cs" />
+    <Compile Include="ASTNodes\QuerySections\Projections\GroupKeyValueNode.cs" />
+    <Compile Include="ASTNodes\QuerySections\Projections\ProjectionFunctionNode.cs" />
+    <Compile Include="ASTNodes\QuerySections\Projections\ProjectionValueNode.cs" />
     <Compile Include="ASTNodes\QuerySections\Projections\SelectNode.cs" />
     <Compile Include="ASTNodes\QuerySections\WhereNode.cs" />
     <Compile Include="ASTNodes\QuerySections\WithNode.cs" />
@@ -142,6 +144,7 @@
     <Compile Include="Errors\Errors.cs" />
     <Compile Include="Exceptions\CompilationException.cs" />
     <Compile Include="Exceptions\ParseException.cs" />
+    <Compile Include="Exceptions\RuntimeException.cs" />
     <Compile Include="Exceptions\SyntaxException.cs" />
     <Compile Include="Grammars\Common\InterpretedLanguageGrammarExtensions.cs" />
     <Compile Include="Grammars\GroupByGrammar.cs" />
@@ -187,7 +190,9 @@
     <Compile Include="Runtime\ObservableConstructor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Diagrams\ComparativeExpressions.dgml" />
     <None Include="Diagrams\Constants.dgml">
       <SubType>Designer</SubType>

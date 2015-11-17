@@ -298,12 +298,12 @@ namespace Integra.Vision.Language.Grammars
             NonTerminal nt_EVENT = new NonTerminal("EVENT", typeof(EventNode));
             nt_EVENT.AstConfig.NodeType = null;
             nt_EVENT.AstConfig.DefaultNodeCreator = () => new EventNode();
-            NonTerminal nt_GROUP_KEY = new NonTerminal("GROUP_KEY", typeof(GroupKey));
+            NonTerminal nt_GROUP_KEY = new NonTerminal("GROUP_KEY", typeof(GroupKeyNode));
             nt_GROUP_KEY.AstConfig.NodeType = null;
-            nt_GROUP_KEY.AstConfig.DefaultNodeCreator = () => new GroupKey();
-            NonTerminal nt_GROUP_KEY_VALUE = new NonTerminal("GROUP_KEY_VALUE", typeof(GroupKeyValue));
+            nt_GROUP_KEY.AstConfig.DefaultNodeCreator = () => new GroupKeyNode();
+            NonTerminal nt_GROUP_KEY_VALUE = new NonTerminal("GROUP_KEY_VALUE", typeof(GroupKeyValueNode));
             nt_GROUP_KEY_VALUE.AstConfig.NodeType = null;
-            nt_GROUP_KEY_VALUE.AstConfig.DefaultNodeCreator = () => new GroupKeyValue();
+            nt_GROUP_KEY_VALUE.AstConfig.DefaultNodeCreator = () => new GroupKeyValueNode();
             NonTerminal nt_EVENT_PROPERTIES = new NonTerminal("EVENT_VALUES", typeof(EventPropertiesNode));
             nt_EVENT_PROPERTIES.AstConfig.NodeType = null;
             nt_EVENT_PROPERTIES.AstConfig.DefaultNodeCreator = () => new EventPropertiesNode();
@@ -325,14 +325,16 @@ namespace Integra.Vision.Language.Grammars
             NonTerminal nt_ARITHMETIC_EXPRESSION = new NonTerminal("ARITHMETIC_EXPRESSION", typeof(ArithmeticExpressionNode));
             nt_ARITHMETIC_EXPRESSION.AstConfig.NodeType = null;
             nt_ARITHMETIC_EXPRESSION.AstConfig.DefaultNodeCreator = () => new ArithmeticExpressionNode();
+            NonTerminal nt_PROJECTION_FUNCTIONS = new NonTerminal("PROJECTION_FUNCTION", typeof(ProjectionFunctionNode));
+            nt_PROJECTION_FUNCTIONS.AstConfig.NodeType = null;
+            nt_PROJECTION_FUNCTIONS.AstConfig.DefaultNodeCreator = () => new ProjectionFunctionNode();
 
-            this.projectionValue = new NonTerminal("PROJECTION_VALUES", typeof(ProjectionValue));
+            this.projectionValue = new NonTerminal("PROJECTION_VALUES", typeof(ProjectionValueNode));
             this.projectionValue.AstConfig.NodeType = null;
-            this.projectionValue.AstConfig.DefaultNodeCreator = () => new ProjectionValue();
+            this.projectionValue.AstConfig.DefaultNodeCreator = () => new ProjectionValueNode();
 
             /* PROJECTION VALUES */
-            this.projectionValue.Rule = terminalCount + terminalParentesisIz + this.parentesisDer
-                                        | terminalSum + terminalParentesisIz + this.values + this.parentesisDer
+            this.projectionValue.Rule = nt_PROJECTION_FUNCTIONS
                                         | nt_GROUP_KEY_VALUE
                                         | this.values
                                         | terminalId;
@@ -379,6 +381,10 @@ namespace Integra.Vision.Language.Grammars
                                     | terminalMinute + terminalParentesisIz + nt_DATETIME_TIMESPAN_VALUES + this.parentesisDer
                                     | terminalSecond + terminalParentesisIz + nt_DATETIME_TIMESPAN_VALUES + this.parentesisDer
                                     | terminalMillisecond + terminalParentesisIz + nt_DATETIME_TIMESPAN_VALUES + this.parentesisDer;
+            /* **************************** */
+            /* FUNCIONES DE LA PROYECCION */
+            nt_PROJECTION_FUNCTIONS.Rule = terminalCount + terminalParentesisIz + this.parentesisDer
+                                            | terminalSum + terminalParentesisIz + this.values + this.parentesisDer;
             /* **************************** */
             /* EXPRESIONES ARITMETICAS */
             nt_ARITHMETIC_EXPRESSION.Rule = nt_ARITHMETIC_EXPRESSION + terminalMenos + nt_ARITHMETIC_EXPRESSION

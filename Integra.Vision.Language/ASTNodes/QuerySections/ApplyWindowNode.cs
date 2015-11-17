@@ -6,6 +6,7 @@
 namespace Integra.Vision.Language.ASTNodes.QuerySections
 {
     using System.Collections.Generic;
+    using System.Configuration;
     using Integra.Vision.Language.ASTNodes.Base;
     using Irony.Ast;
     using Irony.Interpreter;
@@ -99,10 +100,47 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
             {
                 PlanNode windowSizeAux = (PlanNode)this.windowSize1.Evaluate(thread);
 
-                this.result.NodeType = PlanNodeTypeEnum.ObservableBuffer;
+                this.result.NodeType = PlanNodeTypeEnum.ObservableBufferTimeAndSize;
                 this.result.NodeText = this.applyWord + " " + this.windowWord + " " + this.reservedWordOf + " " + windowSizeAux.NodeText;
                 this.result.Children.Add(fromLambdaForBuffer);
-                this.result.Children.Add(windowSizeAux);
+
+                PlanNode planProjection = new PlanNode();
+                planProjection.NodeType = PlanNodeTypeEnum.ProjectionOfConstants;
+                planProjection.Children = new List<PlanNode>();
+
+                PlanNode planTuple1 = new PlanNode();
+                planTuple1.NodeType = PlanNodeTypeEnum.TupleProjection;
+                planTuple1.Children = new List<PlanNode>();
+
+                PlanNode alias1 = new PlanNode();
+                alias1.NodeType = PlanNodeTypeEnum.Constant;
+                alias1.Properties.Add("Value", "TimeSpanValue");
+                alias1.Properties.Add("DataType", typeof(object).ToString());
+
+                planTuple1.Children.Add(alias1);
+                planTuple1.Children.Add(windowSizeAux);
+
+                PlanNode planTuple2 = new PlanNode();
+                planTuple2.NodeType = PlanNodeTypeEnum.TupleProjection;
+                planTuple2.Children = new List<PlanNode>();
+
+                PlanNode alias2 = new PlanNode();
+                alias2.NodeType = PlanNodeTypeEnum.Constant;
+                alias2.Properties.Add("Value", "IntegerValue");
+                alias2.Properties.Add("DataType", typeof(object).ToString());
+                
+                PlanNode maxWindowSize = new PlanNode();
+                maxWindowSize.NodeType = PlanNodeTypeEnum.Constant;
+                maxWindowSize.Properties.Add("Value", int.Parse(ConfigurationManager.AppSettings["MaxWindowSize"]));
+                maxWindowSize.Properties.Add("DataType", typeof(int));
+
+                planTuple2.Children.Add(alias2);
+                planTuple2.Children.Add(maxWindowSize);
+
+                planProjection.Children.Add(planTuple1);
+                planProjection.Children.Add(planTuple2);
+
+                this.result.Children.Add(planProjection);
             }
             else if (childrenCount == 8)
             {
@@ -111,7 +149,6 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
 
                 this.result.NodeType = PlanNodeTypeEnum.ObservableBufferTimeAndSize;
                 this.result.NodeText = this.applyWord + " " + this.windowWord + " " + this.reservedWordOf + " (" + windowSizeAux1.NodeText + "," + windowSizeAux2.NodeText + ")";
-
                 this.result.Children.Add(fromLambdaForBuffer);
 
                 PlanNode planProjection = new PlanNode();
