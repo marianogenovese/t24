@@ -453,11 +453,11 @@ namespace Integra.Vision.Language.Runtime
         {
             try
             {
-                if (!incomingObservable.Type.Namespace.Contains("System.Collections"))
+                if (!incomingObservable.Type.Namespace.Contains("System.Collections") && !incomingObservable.Type.Name.Equals("IGroupedObservable`2") && !incomingObservable.Type.Name.Equals("IGrouping`2"))
                 {
-                    if (this.scopeParam.Where(x => x.Type.Namespace.Contains("System.Collections")).Count() > 0)
+                    if (this.scopeParam.Where(x => x.Type.Namespace.Contains("System.Collections") || incomingObservable.Type.Name.Equals("IGroupedObservable`2") || incomingObservable.Type.Name.Equals("IGrouping`2")).Count() > 0)
                     {
-                        incomingObservable = this.scopeParam.Where(x => x.Type.Namespace.Contains("System.Collections")).Last();
+                        incomingObservable = this.scopeParam.Where(x => x.Type.Namespace.Contains("System.Collections") || incomingObservable.Type.Name.Equals("IGroupedObservable`2") || incomingObservable.Type.Name.Equals("IGrouping`2")).Last();
                     }
                     else
                     {
@@ -519,11 +519,11 @@ namespace Integra.Vision.Language.Runtime
         {
             try
             {
-                if (!incomingObservable.Type.Namespace.Contains("System.Collections"))
+                if (!incomingObservable.Type.Namespace.Contains("System.Collections") && !incomingObservable.Type.Name.Equals("IGroupedObservable`2") && !incomingObservable.Type.Name.Equals("IGrouping`2"))
                 {
-                    if (this.scopeParam.Where(x => x.Type.Namespace.Contains("System.Collections")).Count() > 0)
+                    if (this.scopeParam.Where(x => x.Type.Namespace.Contains("System.Collections") || incomingObservable.Type.Name.Equals("IGroupedObservable`2") || incomingObservable.Type.Name.Equals("IGrouping`2")).Count() > 0)
                     {
-                        incomingObservable = this.scopeParam.Where(x => x.Type.Namespace.Contains("System.Collections")).Last();
+                        incomingObservable = this.scopeParam.Where(x => x.Type.Namespace.Contains("System.Collections") || incomingObservable.Type.Name.Equals("IGroupedObservable`2") || incomingObservable.Type.Name.Equals("IGrouping`2")).Last();
                     }
                     else
                     {
