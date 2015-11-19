@@ -19,7 +19,7 @@ namespace Integra.Space.LanguageUnitTests.Events
         [TestMethod]
         public void EventPropertyAgentNameValue()
         {
-            eventList.Add(TestObjects.EventObjectTest);
+            eventList.Add(TestObjects.EventObjectTest1);
 
             EQLPublicParser parser = new EQLPublicParser("from SpaceObservable1 select @event.agent.Name as nombre");
             List<PlanNode> plan = parser.Parse();
@@ -30,7 +30,7 @@ namespace Integra.Space.LanguageUnitTests.Events
             TestScheduler scheduler = new TestScheduler();
 
             ITestableObservable<EventObject> input = scheduler.CreateHotObservable(
-                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest)),
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest1)),
                 new Recorded<Notification<EventObject>>(200, Notification.CreateOnCompleted<EventObject>())
                 );
 
@@ -62,7 +62,7 @@ namespace Integra.Space.LanguageUnitTests.Events
             TestScheduler scheduler = new TestScheduler();
 
             ITestableObservable<EventObject> input = scheduler.CreateHotObservable(
-                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest)),
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest1)),
                 new Recorded<Notification<EventObject>>(200, Notification.CreateOnCompleted<EventObject>())
                 );
 
@@ -94,7 +94,7 @@ namespace Integra.Space.LanguageUnitTests.Events
             TestScheduler scheduler = new TestScheduler();
 
             ITestableObservable<EventObject> input = scheduler.CreateHotObservable(
-                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest)),
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest1)),
                 new Recorded<Notification<EventObject>>(200, Notification.CreateOnCompleted<EventObject>())
                 );
 
@@ -117,7 +117,7 @@ namespace Integra.Space.LanguageUnitTests.Events
         [TestMethod]
         public void EventPropertyAgentTimeStampType()
         {
-            eventList.Add(TestObjects.EventObjectTest);
+            eventList.Add(TestObjects.EventObjectTest1);
 
             EQLPublicParser parser = new EQLPublicParser("from SpaceObservable1 select @event.Agent.timestamp as ts");
             List<PlanNode> plan = parser.Parse();
@@ -133,7 +133,7 @@ namespace Integra.Space.LanguageUnitTests.Events
         [TestMethod]
         public void EventPropertyAdapterTimeStampType()
         {
-            eventList.Add(TestObjects.EventObjectTest);
+            eventList.Add(TestObjects.EventObjectTest1);
 
             EQLPublicParser parser = new EQLPublicParser("from SpaceObservable1 select @event.adapter.Timestamp as ts");
             List<PlanNode> plan = parser.Parse();

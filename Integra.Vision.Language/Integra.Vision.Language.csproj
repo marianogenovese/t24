@@ -101,6 +101,7 @@
     <Compile Include="ASTNodes\Commands\Trace\SetTraceNode.cs" />
     <Compile Include="ASTNodes\Constants\BooleanNode.cs" />
     <Compile Include="ASTNodes\Constants\ConstantValueNode.cs" />
+    <Compile Include="ASTNodes\Constants\ConstantValueWithoutAliasNode.cs" />
     <Compile Include="ASTNodes\Constants\ConstantValueWithAliasNode.cs" />
     <Compile Include="ASTNodes\Constants\DateFunctionNode.cs" />
     <Compile Include="ASTNodes\Constants\DateTimeOrTimespanNode.cs" />
@@ -127,6 +128,7 @@
     <Compile Include="ASTNodes\Permissions\SecureObjectsTypeNode.cs" />
     <Compile Include="ASTNodes\QuerySections\ApplyWindowNode.cs" />
     <Compile Include="ASTNodes\QuerySections\FromNode.cs" />
+    <Compile Include="ASTNodes\QuerySections\OrderByNode.cs" />
     <Compile Include="ASTNodes\QuerySections\GroupByNode.cs" />
     <Compile Include="ASTNodes\QuerySections\JoinNode.cs" />
     <Compile Include="ASTNodes\QuerySections\OnConditionNode.cs" />
@@ -188,6 +190,8 @@
     </Compile>
     <Compile Include="Runtime\NodesFinder.cs" />
     <Compile Include="Runtime\ObservableConstructor.cs" />
+    <Compile Include="ExecutionPlan\PlanNodeTypeExtensions.cs" />
+    <Compile Include="Runtime\OrderByKeyComparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

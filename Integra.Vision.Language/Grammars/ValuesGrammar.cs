@@ -162,6 +162,8 @@ namespace Integra.Vision.Language.Grammars
             KeyTerm terminalMillisecond = ToTerm("millisecond", "millisecond");
             KeyTerm terminalCount = ToTerm("count", "count");
             KeyTerm terminalSum = ToTerm("sum", "sum");
+            KeyTerm terminalMin = ToTerm("min", "min");
+            KeyTerm terminalMax = ToTerm("max", "max");
 
             /* EVENTOS */
             KeyTerm terminalEvent = ToTerm("event", "event");
@@ -384,7 +386,9 @@ namespace Integra.Vision.Language.Grammars
             /* **************************** */
             /* FUNCIONES DE LA PROYECCION */
             nt_PROJECTION_FUNCTIONS.Rule = terminalCount + terminalParentesisIz + this.parentesisDer
-                                            | terminalSum + terminalParentesisIz + this.values + this.parentesisDer;
+                                            | terminalSum + terminalParentesisIz + this.values + this.parentesisDer
+                                            | terminalMin + terminalParentesisIz + this.values + this.parentesisDer
+                                            | terminalMax + terminalParentesisIz + this.values + this.parentesisDer;
             /* **************************** */
             /* EXPRESIONES ARITMETICAS */
             nt_ARITHMETIC_EXPRESSION.Rule = nt_ARITHMETIC_EXPRESSION + terminalMenos + nt_ARITHMETIC_EXPRESSION

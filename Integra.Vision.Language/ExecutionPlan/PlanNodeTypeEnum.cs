@@ -219,6 +219,11 @@ namespace Integra.Vision.Language
         ValueWithAlias = 120,
 
         /// <summary>
+        /// ValueWithoutAlias type
+        /// </summary>
+        ValueWithoutAlias = 121,
+
+        /// <summary>
         /// If type
         /// </summary>
         IfHasEvents = 130,
@@ -554,15 +559,15 @@ namespace Integra.Vision.Language
         ObservableMerge = 513,
 
         /// <summary>
-        /// Observable buffer time and size
+        /// Observable buffer time and size type
         /// </summary>
         ObservableBufferTimeAndSize = 514,
 
         /// <summary>
-        /// Projection of constants type, projection for group by, this does not create a lambda expression
+        /// Enumerable take type
         /// </summary>
-        ProjectionOfConstants = 515,
-                
+        ObservableTake = 515,
+                        
         /// <summary>
         /// Enumerable count type
         /// </summary>
@@ -589,8 +594,38 @@ namespace Integra.Vision.Language
         EnumerableGroupBy = 617,
 
         /// <summary>
+        /// Enumerable order by type
+        /// </summary>
+        EnumerableOrderBy = 618,
+
+        /// <summary>
+        /// Enumerable order by descending type
+        /// </summary>
+        EnumerableOrderByDesc = 619,
+
+        /// <summary>
+        /// Enumerable max type
+        /// </summary>
+        EnumerableMax = 620,
+
+        /// <summary>
+        /// Enumerable min type
+        /// </summary>
+        EnumerableMin = 621,
+
+        /// <summary>
+        /// Enumerable take type
+        /// </summary>
+        EnumerableTake = 622,
+
+        /// <summary>
         /// New Scope type
         /// </summary>
-        NewScope = 700
+        NewScope = 700,
+
+        /// <summary>
+        /// Projection of constants type, projection for group by, this does not create a lambda expression
+        /// </summary>
+        ProjectionOfConstants = 701,
     }
 }

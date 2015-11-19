@@ -59,11 +59,16 @@ namespace Integra.Vision.Language.Grammars
             KeyTerm terminalSelect = ToTerm("select", "select");
             KeyTerm terminalComa = ToTerm(",", "coma");
             KeyTerm terminalAs = ToTerm("as", "as");
+            KeyTerm terminalTop = ToTerm("top", "top");
 
             // Marcamos los terminales, definidos hasta el momento, como palabras reservadas
             this.MarkReservedWords(this.KeyTerms.Keys.ToArray());
 
-            // terminals
+            /* CONSTANTES E IDENTIFICADORES */
+            Terminal terminalNumero = TerminalFactory.CreateCSharpNumber("numero");
+            terminalNumero.AstConfig.NodeType = null;
+            terminalNumero.AstConfig.DefaultNodeCreator = () => new NumberNode();
+
             RegexBasedTerminal terminalId = new RegexBasedTerminal("[a-zA-Z]+([a-zA-Z]|[0-9]|[_])*");
             terminalId.AstConfig.NodeType = null;
             terminalId.AstConfig.DefaultNodeCreator = () => new IdentifierNode();
@@ -80,7 +85,8 @@ namespace Integra.Vision.Language.Grammars
             this.projectionList.AstConfig.DefaultNodeCreator = () => new SelectNode();
 
             /* SELECT */
-            this.projectionList.Rule = terminalSelect + nt_LIST_OF_VALUES;
+            this.projectionList.Rule = terminalSelect + nt_LIST_OF_VALUES
+                                        | terminalSelect + terminalTop + terminalNumero + nt_LIST_OF_VALUES;
             /* **************************** */
             /* LISTA DE VALORES */
             nt_LIST_OF_VALUES.Rule = nt_LIST_OF_VALUES + terminalComa + nt_VALUES_WITH_ALIAS

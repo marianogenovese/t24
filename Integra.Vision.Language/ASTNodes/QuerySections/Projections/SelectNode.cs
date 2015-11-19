@@ -24,6 +24,16 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
         private string select;
 
         /// <summary>
+        /// reserved word "top"
+        /// </summary>
+        private string top;
+
+        /// <summary>
+        /// top value, is a number value
+        /// </summary>
+        private AstNodeBase topValue;
+
+        /// <summary>
         /// list of values for the projection
         /// </summary>
         private AstNodeBase listOfValues;
@@ -41,10 +51,27 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
         public override void Init(AstContext context, ParseTreeNode treeNode)
         {
             base.Init(context, treeNode);
-            this.select = (string)ChildrenNodes[0].Token.Value;
-            this.listOfValues = AddChild(NodeUseType.Parameter, "listOfValues", ChildrenNodes[1]) as AstNodeBase;
 
             this.result = new PlanNode();
+            int childrenCount = ChildrenNodes.Count;
+
+            if (childrenCount == 2)
+            {
+                this.select = (string)ChildrenNodes[0].Token.Value;
+                this.listOfValues = AddChild(NodeUseType.Parameter, "listOfValues", ChildrenNodes[1]) as AstNodeBase;
+
+                this.result.NodeText = this.select;
+            }
+            else if (childrenCount == 4)
+            {
+                this.select = (string)ChildrenNodes[0].Token.Value;
+                this.top = (string)ChildrenNodes[1].Token.Value;
+                this.topValue = AddChild(NodeUseType.Parameter, "listOfValues", ChildrenNodes[2]) as AstNodeBase;
+                this.listOfValues = AddChild(NodeUseType.Parameter, "listOfValues", ChildrenNodes[3]) as AstNodeBase;
+
+                this.result.NodeText = string.Format("{0} {1} {2}", this.select, this.top, this.topValue);
+            }
+
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[0].Token.Location.Line;
             this.result.NodeType = PlanNodeTypeEnum.Projection;
@@ -61,6 +88,24 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
         {
             this.BeginEvaluate(thread);
 
+            int childrenCount = ChildrenNodes.Count;
+            if (childrenCount == 4)
+            {
+                PlanNode topValueAux = (PlanNode)this.topValue.Evaluate(thread);
+
+                PlanNode planTop = new PlanNode();
+                planTop.NodeType = PlanNodeTypeEnum.EnumerableTake;
+                planTop.Children = new List<PlanNode>();
+
+                PlanNode newScope = new PlanNode();
+                newScope.NodeType = PlanNodeTypeEnum.NewScope;
+
+                planTop.Children.Add(newScope);
+                planTop.Children.Add(topValueAux);
+
+                this.result.Properties.Add(PlanNodeTypeEnum.EnumerableTake.ToString(), planTop);
+            }
+
             Dictionary<PlanNode, PlanNode> projection = new Dictionary<PlanNode, PlanNode>();
             Binding b1 = thread.Bind("ObjectList", BindingRequestFlags.Write | BindingRequestFlags.ExistingOrNew);
             b1.SetValueRef(thread, projection);
@@ -70,8 +115,6 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
             Binding b2 = thread.Bind("ObjectList", BindingRequestFlags.Read);
 
             this.EndEvaluate(thread);
-
-            this.result.NodeText = this.select;
 
             projection = (Dictionary<PlanNode, PlanNode>)b2.GetValueRef(thread);
             this.result.Children = new List<PlanNode>();
@@ -87,8 +130,8 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
 
                 PlanNode fromLambda = new PlanNode();
                 fromLambda.NodeType = PlanNodeTypeEnum.ObservableFromForLambda;
-                                
-                if (tupla.Value.NodeType.Equals(PlanNodeTypeEnum.EnumerableSum))
+
+                if (tupla.Value.NodeType.Equals(PlanNodeTypeEnum.EnumerableSum) || tupla.Value.NodeType.Equals(PlanNodeTypeEnum.EnumerableMax) || tupla.Value.NodeType.Equals(PlanNodeTypeEnum.EnumerableMin))
                 {
                     // se le agrega el from lambda a las extensiones que reciben dos parametros, donde el último de ellos es una funcion
                     tupla.Value.Children.ElementAt(0).Children = new List<PlanNode>();

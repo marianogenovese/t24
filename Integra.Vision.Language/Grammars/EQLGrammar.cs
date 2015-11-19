@@ -100,6 +100,9 @@ namespace Integra.Vision.Language.Grammars
             KeyTerm terminalWindow = ToTerm("window", "window");
             KeyTerm terminalOf = ToTerm("of", "of");
             KeyTerm terminalGroup = ToTerm("group", "group");
+            KeyTerm terminalOrder = ToTerm("order", "order");
+            KeyTerm terminalAsc = ToTerm("asc", "asc");
+            KeyTerm terminalDesc = ToTerm("desc", "desc");
             KeyTerm terminalBy = ToTerm("by", "by");
             KeyTerm terminalTo = ToTerm("to", "to");
             KeyTerm terminalRole = ToTerm("role", "role");
@@ -228,9 +231,15 @@ namespace Integra.Vision.Language.Grammars
             nt_APPLY_WINDOW.AstConfig.NodeType = null;
             nt_APPLY_WINDOW.AstConfig.DefaultNodeCreator = () => new ApplyWindowNode();
 
-            /*NonTerminal nt_GROUP_BY = new NonTerminal("GROUP_BY", typeof(GroupByNode));
-            nt_GROUP_BY.AstConfig.NodeType = null;
-            nt_GROUP_BY.AstConfig.DefaultNodeCreator = () => new GroupByNode();*/
+            NonTerminal nt_ORDER_BY = new NonTerminal("ORDER_BY", typeof(OrderByNode));
+            nt_ORDER_BY.AstConfig.NodeType = null;
+            nt_ORDER_BY.AstConfig.DefaultNodeCreator = () => new OrderByNode();
+            NonTerminal nt_LIST_OF_VALUES_FOR_ORDER_BY = new NonTerminal("LIST_OF_VALUES", typeof(PlanNodeListNode));
+            nt_LIST_OF_VALUES_FOR_ORDER_BY.AstConfig.NodeType = null;
+            nt_LIST_OF_VALUES_FOR_ORDER_BY.AstConfig.DefaultNodeCreator = () => new PlanNodeListNode();
+            NonTerminal nt_VALUE_FOR_ORDER_BY = new NonTerminal("VALUES_WITH_ALIAS", typeof(ConstantValueWithoutAliasNode));
+            nt_VALUE_FOR_ORDER_BY.AstConfig.NodeType = null;
+            nt_VALUE_FOR_ORDER_BY.AstConfig.DefaultNodeCreator = () => new ConstantValueWithoutAliasNode();
 
             NonTerminal nt_PARAMETER = new NonTerminal("PARAMETER", typeof(ParameterNode));
             nt_PARAMETER.AstConfig.NodeType = null;
@@ -327,9 +336,13 @@ namespace Integra.Vision.Language.Grammars
             nt_USER_QUERY.Rule = nt_FROM + nt_SELECT
                                     | nt_FROM + nt_APPLY_WINDOW + nt_SELECT
                                     | nt_FROM + nt_WHERE + nt_SELECT
+                                    | nt_FROM + nt_APPLY_WINDOW + nt_SELECT + nt_ORDER_BY
                                     | nt_FROM + nt_WHERE + nt_APPLY_WINDOW + nt_SELECT
                                     | nt_FROM + nt_APPLY_WINDOW + nt_GROUP_BY + nt_SELECT
-                                    | nt_FROM + nt_WHERE + nt_APPLY_WINDOW + nt_GROUP_BY + nt_SELECT;
+                                    | nt_FROM + nt_WHERE + nt_APPLY_WINDOW + nt_GROUP_BY + nt_SELECT
+                                    | nt_FROM + nt_WHERE + nt_APPLY_WINDOW + nt_SELECT + nt_ORDER_BY
+                                    | nt_FROM + nt_APPLY_WINDOW + nt_GROUP_BY + nt_SELECT + nt_ORDER_BY
+                                    | nt_FROM + nt_WHERE + nt_APPLY_WINDOW + nt_GROUP_BY + nt_SELECT + nt_ORDER_BY;
             /* **************************** */
             /* PUBLISH */
             nt_PUBLISH.Rule = terminalPublish + terminalEvent + terminalTo + terminalId;
@@ -412,12 +425,16 @@ namespace Integra.Vision.Language.Grammars
             /* **************************** */
             /* APPLY WINDOW */
             nt_APPLY_WINDOW.Rule = terminalApply + terminalWindow + terminalOf + terminalDateTimeValue;
-                                    /*| terminalApply + terminalWindow + terminalOf + terminalNumero
-                                    | terminalApply + terminalWindow + terminalOf + terminalParentesisIz + terminalDateTimeValue + terminalComa + terminalNumero + terminalParentesisDer;*/
             /* **************************** */
+            /* ORDER BY */
+            nt_ORDER_BY.Rule = terminalOrder + terminalBy + nt_LIST_OF_VALUES_FOR_ORDER_BY
+                                | terminalOrder + terminalBy + terminalAsc + nt_LIST_OF_VALUES_FOR_ORDER_BY
+                                | terminalOrder + terminalBy + terminalDesc + nt_LIST_OF_VALUES_FOR_ORDER_BY;
 
-            /* GROUP BY */
-            /*nt_GROUP_BY.Rule = terminalGroup + terminalBy + this.valueGrammar.NonConstantValues;*/
+            nt_LIST_OF_VALUES_FOR_ORDER_BY.Rule = nt_LIST_OF_VALUES_FOR_ORDER_BY + terminalComa + nt_VALUE_FOR_ORDER_BY
+                                                    | nt_VALUE_FOR_ORDER_BY;
+
+            nt_VALUE_FOR_ORDER_BY.Rule = terminalId;            
             /* **************************** */
             /* FROM */
             nt_FROM.Rule = terminalFrom + terminalId;

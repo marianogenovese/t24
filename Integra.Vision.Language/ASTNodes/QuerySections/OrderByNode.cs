@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="GroupByNode.cs" company="Integra.Vision.Language">
+// <copyright file="OrderByNode.cs" company="Integra.Vision.Language">
 //     Copyright (c) Integra.Vision.Language. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -16,17 +16,22 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
     /// <summary>
     /// GroupByNode class
     /// </summary>
-    internal class GroupByNode : AstNodeBase
+    internal class OrderByNode : AstNodeBase
     {
         /// <summary>
         /// reserved word group
         /// </summary>
-        private string groupWord;
+        private string orderWord;
 
         /// <summary>
         /// reserved word by
         /// </summary>
         private string reservedWordBy;
+
+        /// <summary>
+        /// reserved word direction for order by
+        /// </summary>
+        private string reservedWordDirection;
 
         /// <summary>
         /// list of values for the projection
@@ -46,14 +51,25 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
         public override void Init(AstContext context, ParseTreeNode treeNode)
         {
             base.Init(context, treeNode);
-            this.groupWord = (string)ChildrenNodes[0].Token.Value;
-            this.reservedWordBy = (string)ChildrenNodes[1].Token.Value;
-            this.listOfValues = AddChild(NodeUseType.Parameter, "listOfValues", ChildrenNodes[2]) as AstNodeBase;
+
+            int childrenCount = ChildrenNodes.Count;
+            if (childrenCount == 3)
+            {
+                this.orderWord = (string)ChildrenNodes[0].Token.Value;
+                this.reservedWordBy = (string)ChildrenNodes[1].Token.Value;
+                this.listOfValues = AddChild(NodeUseType.Parameter, "listOfValues", ChildrenNodes[2]) as AstNodeBase;
+            }
+            else if (childrenCount == 4)
+            {
+                this.orderWord = (string)ChildrenNodes[0].Token.Value;
+                this.reservedWordBy = (string)ChildrenNodes[1].Token.Value;
+                this.reservedWordDirection = (string)ChildrenNodes[2].Token.Value;
+                this.listOfValues = AddChild(NodeUseType.Parameter, "listOfValues", ChildrenNodes[3]) as AstNodeBase;
+            }
 
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
             this.result.Line = ChildrenNodes[0].Token.Location.Line;
-            this.result.NodeType = PlanNodeTypeEnum.EnumerableGroupBy;
         }
 
         /// <summary>
@@ -70,8 +86,26 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
             planProjection.Column = ChildrenNodes[0].Token.Location.Column;
             planProjection.Line = ChildrenNodes[0].Token.Location.Line;
             planProjection.NodeType = PlanNodeTypeEnum.Projection;
-            planProjection.Properties.Add("ProjectionType", PlanNodeTypeEnum.EnumerableGroupBy);
             planProjection.Children = new List<PlanNode>();
+
+            if (this.reservedWordDirection == null)
+            {
+                this.result.NodeType = PlanNodeTypeEnum.EnumerableOrderBy;
+                planProjection.Properties.Add("ProjectionType", PlanNodeTypeEnum.EnumerableOrderBy);
+            }
+            else
+            {
+                if (this.reservedWordDirection.Equals("asc", System.StringComparison.InvariantCultureIgnoreCase))
+                {
+                    this.result.NodeType = PlanNodeTypeEnum.EnumerableOrderBy;
+                    planProjection.Properties.Add("ProjectionType", PlanNodeTypeEnum.EnumerableOrderBy);
+                }
+                else if (this.reservedWordDirection.Equals("desc", System.StringComparison.InvariantCultureIgnoreCase))
+                {
+                    this.result.NodeType = PlanNodeTypeEnum.EnumerableOrderByDesc;
+                    planProjection.Properties.Add("ProjectionType", PlanNodeTypeEnum.EnumerableOrderByDesc);
+                }
+            }
 
             Dictionary<PlanNode, PlanNode> projection = new Dictionary<PlanNode, PlanNode>();
             Binding b1 = thread.Bind("ObjectList", BindingRequestFlags.Write | BindingRequestFlags.ExistingOrNew);
@@ -81,7 +115,7 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
 
             Binding b2 = thread.Bind("ObjectList", BindingRequestFlags.Read);
 
-            this.result.NodeText = this.groupWord + " " + this.reservedWordBy;
+            this.result.NodeText = this.orderWord + " " + this.reservedWordBy;
 
             projection = (Dictionary<PlanNode, PlanNode>)b2.GetValueRef(thread);
             this.result.Children = new List<PlanNode>();
@@ -93,25 +127,17 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
                 plan.NodeType = PlanNodeTypeEnum.TupleProjection;
                 plan.Children = new List<PlanNode>();
                 plan.Children.Add(tupla.Key);
+
+                // si el tipo de nodo es un identificador, se convierte a tipo Property para poder obtener la propiedad del objeto de la proyeccion
+                /*if (tupla.Value.NodeType.Equals(PlanNodeTypeEnum.Identifier))
+                {
+                    tupla.Value.NodeType = PlanNodeTypeEnum.Property;
+                }*/
+
                 plan.Children.Add(tupla.Value);
 
                 PlanNode fromForLambda = new PlanNode();
                 fromForLambda.NodeType = PlanNodeTypeEnum.ObservableFromForLambda;
-
-                /*List<PlanNode> last = tupla.Value.Children;
-                List<PlanNode> tuplaActual = new List<PlanNode>();
-
-                while (last != null)
-                {
-                    tuplaActual = last;
-                    last = tuplaActual.First().Children;
-
-                    if (tuplaActual.First().Children == null)
-                    {
-                        tuplaActual.First().Children = new List<PlanNode>();
-                        tuplaActual.First().Children.Add(fromLambda);
-                    }
-                }*/
 
                 // se agrega el nodo from for lambda al nodo valor del nodo tupla
                 this.SetFromForLambda(tupla.Value, fromForLambda);

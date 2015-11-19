@@ -26,7 +26,7 @@ namespace Integra.Space.LanguageUnitTests.Operations
             TestScheduler scheduler = new TestScheduler();
 
             ITestableObservable<EventObject> input = scheduler.CreateHotObservable(
-                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest)),
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest1)),
                 new Recorded<Notification<EventObject>>(200, Notification.CreateOnCompleted<EventObject>())
                 );
 
@@ -58,7 +58,7 @@ namespace Integra.Space.LanguageUnitTests.Operations
             TestScheduler scheduler = new TestScheduler();
 
             ITestableObservable<EventObject> input = scheduler.CreateHotObservable(
-                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest)),
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest1)),
                 new Recorded<Notification<EventObject>>(200, Notification.CreateOnCompleted<EventObject>())
                 );
 
@@ -90,7 +90,7 @@ namespace Integra.Space.LanguageUnitTests.Operations
             TestScheduler scheduler = new TestScheduler();
 
             ITestableObservable<EventObject> input = scheduler.CreateHotObservable(
-                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest)),
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest1)),
                 new Recorded<Notification<EventObject>>(200, Notification.CreateOnCompleted<EventObject>())
                 );
 

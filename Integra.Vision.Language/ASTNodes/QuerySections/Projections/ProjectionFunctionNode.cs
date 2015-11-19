@@ -59,6 +59,8 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
                 this.result.Column = ChildrenNodes[0].Token.Location.Column;
                 this.result.Line = ChildrenNodes[0].Token.Location.Line;
             }
+
+            this.SelectResultNodeType();
         }
 
         /// <summary>
@@ -74,8 +76,7 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
             int childrenCount = ChildrenNodes.Count;
             if (childrenCount == 3)
             {
-                this.result.NodeType = PlanNodeTypeEnum.EnumerableCount;
-                this.result.Properties.Add("FunctionName", this.functionName);
+                this.result.Properties.Add("FunctionName", char.ToUpper(this.functionName[0]) + this.functionName.Substring(1));
                 this.result.NodeText = string.Format("{0}()", this.functionName);
                 this.result.Children = new List<PlanNode>();
             }
@@ -83,8 +84,7 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
             {
                 PlanNode valueAux = (PlanNode)this.value.Evaluate(thread);
 
-                this.result.NodeType = PlanNodeTypeEnum.EnumerableSum;
-                this.result.Properties.Add("FunctionName", this.functionName);
+                this.result.Properties.Add("FunctionName", char.ToUpper(this.functionName[0]) + this.functionName.Substring(1));
                 this.result.NodeText = string.Format("{0}({1})", this.functionName, valueAux.NodeText);
                 this.result.Children = new List<PlanNode>();
 
@@ -99,6 +99,28 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
             this.EndEvaluate(thread);
 
             return this.result;
+        }
+
+        /// <summary>
+        /// Select the result node type based on the function name
+        /// </summary>
+        private void SelectResultNodeType()
+        {
+            switch (this.functionName.ToString().ToLower())
+            {
+                case "sum":
+                    this.result.NodeType = PlanNodeTypeEnum.EnumerableSum;
+                    break;
+                case "count":
+                    this.result.NodeType = PlanNodeTypeEnum.EnumerableCount;
+                    break;
+                case "max":
+                    this.result.NodeType = PlanNodeTypeEnum.EnumerableMax;
+                    break;
+                case "min":
+                    this.result.NodeType = PlanNodeTypeEnum.EnumerableMin;
+                    break;
+            }
         }
     }
 }

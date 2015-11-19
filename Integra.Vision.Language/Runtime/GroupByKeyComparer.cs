@@ -6,6 +6,7 @@
 namespace Integra.Vision.Language.Runtime
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
 
     /// <summary>
@@ -14,10 +15,23 @@ namespace Integra.Vision.Language.Runtime
     /// <typeparam name="T">Type to compare</typeparam>
     public class GroupByKeyComparer<T> : IEqualityComparer<T>
     {
+        /// <summary>
+        /// properties of the order by key
+        /// </summary>
+        private PropertyInfo[] properties;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GroupByKeyComparer{T}"/> class
+        /// </summary>
+        public GroupByKeyComparer()
+        {
+            this.properties = typeof(T).GetProperties().ToArray();
+        }
+
         /// <inheritdoc />
         public bool Equals(T x, T y)
         {
-            foreach (PropertyInfo p in x.GetType().GetProperties())
+            foreach (PropertyInfo p in this.properties)
             {
                 var a = p.GetValue(x);
                 var b = y.GetType().GetProperty(p.Name).GetValue(y);
