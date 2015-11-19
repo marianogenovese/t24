@@ -1072,7 +1072,7 @@ namespace Integra.Space.LanguageUnitTests.Queries
         public void ConsultaApplyWindowGroupBySelectUnaLlaveYSumTopOrderByDesc()
         {
             EQLPublicParser parser = new EQLPublicParser(
-                string.Format("from {0} apply window of {2} group by {3} select top 1 {4} as Llave, {5} as Sumatoria order by desc Sumatoria",
+                string.Format("from {0} apply window of {2} group by {3} select top 1 {4} as Llave, {5} as Sumatoria order by desc Sumatoria, Llave",
                                                                                             "SpaceObservable1",
                                                                                             "@event.Message.#0.MessageType == \"0100\"",
                                                                                             "'00:00:00:01'",

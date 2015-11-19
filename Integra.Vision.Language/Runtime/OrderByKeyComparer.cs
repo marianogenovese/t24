@@ -263,6 +263,13 @@ namespace Integra.Vision.Language.Runtime
                         resultIz += resultIzAux;
                         resultDer += this.CalcRightResult(resultComparer, resultIzAux);
                     }
+                    else if (propIz.PropertyType.Equals(typeof(object)))
+                    {
+                        resultComparer = string.Compare(valIz.ToString(), valDer.ToString());
+                        resultIzAux = this.CalcLeftResult(resultComparer, posicion);
+                        resultIz += resultIzAux;
+                        resultDer += this.CalcRightResult(resultComparer, resultIzAux);
+                    }
                     else
                     {
                         throw new ArgumentException("Invalid 'order by' argument.", propIz.Name);
