@@ -1,6 +1,6 @@
-﻿using Integra.Vision.Event;
-using Integra.Vision.Language;
-using Integra.Vision.Language.Runtime;
+﻿using Integra.Space.Event;
+using Integra.Space.Language;
+using Integra.Space.Language.Runtime;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;

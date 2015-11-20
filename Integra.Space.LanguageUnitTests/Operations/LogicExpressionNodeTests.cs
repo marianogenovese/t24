@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Integra.Vision.Language;
+using Integra.Space.Language;
 using System.Reactive.Linq;
 using Microsoft.Reactive.Testing;
 using System.Reactive;
-using Integra.Vision.Event;
-using Integra.Vision.Language.Runtime;
+using Integra.Space.Event;
+using Integra.Space.Language.Runtime;
 using System.Collections.Generic;
 
 namespace Integra.Space.LanguageUnitTests.Operations

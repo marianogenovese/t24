@@ -1,5 +1,5 @@
 ﻿using Integra.Messaging;
-using Integra.Vision.Event;
+using Integra.Space.Event;
 using System;
 using System.Collections.Generic;
 using System.Linq;

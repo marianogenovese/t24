@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Integra.Vision.Language;
+using Integra.Space.Language;
 using System.Reactive.Linq;
-using Integra.Vision.Event;
+using Integra.Space.Event;
 using Microsoft.Reactive.Testing;
 using System.Reactive;
-using Integra.Vision.Language.Runtime;
+using Integra.Space.Language.Runtime;
 using System.Collections.Generic;
 using System.Dynamic;
-using Integra.Vision.Language.Exceptions;
+using Integra.Space.Language.Exceptions;
 
 namespace Integra.Space.LanguageUnitTests.Queries
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Integra.Vision.Language;
-using Integra.Vision.Language.Runtime;
+using Integra.Space.Language;
+using Integra.Space.Language.Runtime;
 
 namespace Integra.Space.LanguageUnitTests.Constants
 {
