@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Integra.Vision.Language.Parsers;
 using Integra.Vision.Language;
 using Integra.Vision.Language.Runtime;
 
@@ -12,7 +11,7 @@ namespace Integra.Space.LanguageUnitTests.Constants
         [TestMethod]
         public void ConstantDateTimeValue()
         {
-            ValuesParser parser = new ValuesParser("'01/01/2014'");
+            ExpressionParser parser = new ExpressionParser("'01/01/2014'");
             PlanNode plan = parser.Parse();
 
             ObservableConstructor te = new ObservableConstructor();
@@ -27,7 +26,7 @@ namespace Integra.Space.LanguageUnitTests.Constants
         [TestMethod]
         public void ConstantTimeSpanValue()
         {
-            ValuesParser parser = new ValuesParser("'00:00:00:01'");
+            ExpressionParser parser = new ExpressionParser("'00:00:00:01'");
             PlanNode plan = parser.Parse();
 
             ObservableConstructor te = new ObservableConstructor();

@@ -44,17 +44,17 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
 
             this.result = new PlanNode();
             int childrenCount = ChildrenNodes.Count;
-            if (childrenCount == 3)
+            if (childrenCount == 1)
             {
                 this.functionName = (string)ChildrenNodes[0].Token.Value;
 
                 this.result.Column = ChildrenNodes[0].Token.Location.Column;
                 this.result.Line = ChildrenNodes[0].Token.Location.Line;
             }
-            else if (childrenCount == 4)
+            else if (childrenCount == 2)
             {
                 this.functionName = (string)ChildrenNodes[0].Token.Value;
-                this.value = AddChild(NodeUseType.Keyword, SR.SelectRole, ChildrenNodes[2]) as AstNodeBase;
+                this.value = AddChild(NodeUseType.Keyword, SR.SelectRole, ChildrenNodes[1]) as AstNodeBase;
 
                 this.result.Column = ChildrenNodes[0].Token.Location.Column;
                 this.result.Line = ChildrenNodes[0].Token.Location.Line;
@@ -74,13 +74,13 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
             this.BeginEvaluate(thread);
 
             int childrenCount = ChildrenNodes.Count;
-            if (childrenCount == 3)
+            if (childrenCount == 1)
             {
                 this.result.Properties.Add("FunctionName", char.ToUpper(this.functionName[0]) + this.functionName.Substring(1));
                 this.result.NodeText = string.Format("{0}()", this.functionName);
                 this.result.Children = new List<PlanNode>();
             }
-            else if (childrenCount == 4)
+            else if (childrenCount == 2)
             {
                 PlanNode valueAux = (PlanNode)this.value.Evaluate(thread);
 

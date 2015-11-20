@@ -308,6 +308,198 @@ namespace Integra.Space.LanguageUnitTests.Operations
         }
 
         [TestMethod]
+        public void CadenasIgualdadLeftFunction1()
+        {
+            EQLPublicParser parser = new EQLPublicParser("from SpaceObservable1 where left(\"ca\", 1) == \"c\" select true as resultado");
+            List<PlanNode> plan = parser.Parse();
+
+            ObservableConstructor te = new ObservableConstructor();
+            Func<IQbservable<EventObject>, IObservable<IEnumerable<object>>> result = te.Compile<IQbservable<EventObject>, IObservable<IEnumerable<object>>>(plan.First());
+
+            TestScheduler scheduler = new TestScheduler();
+
+            ITestableObservable<EventObject> input = scheduler.CreateHotObservable(
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest1)),
+                new Recorded<Notification<EventObject>>(200, Notification.CreateOnCompleted<EventObject>())
+                );
+
+            ITestableObserver<bool> results = scheduler.Start(
+                () => result(input.AsQbservable()).Select(x => bool.Parse(x.First().GetType().GetProperty("resultado").GetValue(x.First()).ToString())),
+                created: 10,
+                subscribed: 50,
+                disposed: 400);
+
+            ReactiveAssert.AreElementsEqual(results.Messages, new Recorded<Notification<bool>>[] {
+                    new Recorded<Notification<bool>>(100, Notification.CreateOnNext(true)),
+                    new Recorded<Notification<bool>>(200, Notification.CreateOnCompleted<bool>())
+                });
+
+            ReactiveAssert.AreElementsEqual(input.Subscriptions, new Subscription[] {
+                    new Subscription(50, 200)
+                });
+        }
+
+        [TestMethod]
+        public void CadenasIgualdadLeftFunction2()
+        {
+            EQLPublicParser parser = new EQLPublicParser("from SpaceObservable1 where left(\"xyzxxx\", 3) == \"xyz\" select true as resultado");
+            List<PlanNode> plan = parser.Parse();
+
+            ObservableConstructor te = new ObservableConstructor();
+            Func<IQbservable<EventObject>, IObservable<IEnumerable<object>>> result = te.Compile<IQbservable<EventObject>, IObservable<IEnumerable<object>>>(plan.First());
+
+            TestScheduler scheduler = new TestScheduler();
+
+            ITestableObservable<EventObject> input = scheduler.CreateHotObservable(
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest1)),
+                new Recorded<Notification<EventObject>>(200, Notification.CreateOnCompleted<EventObject>())
+                );
+
+            ITestableObserver<bool> results = scheduler.Start(
+                () => result(input.AsQbservable()).Select(x => bool.Parse(x.First().GetType().GetProperty("resultado").GetValue(x.First()).ToString())),
+                created: 10,
+                subscribed: 50,
+                disposed: 400);
+
+            ReactiveAssert.AreElementsEqual(results.Messages, new Recorded<Notification<bool>>[] {
+                    new Recorded<Notification<bool>>(100, Notification.CreateOnNext(true)),
+                    new Recorded<Notification<bool>>(200, Notification.CreateOnCompleted<bool>())
+                });
+
+            ReactiveAssert.AreElementsEqual(input.Subscriptions, new Subscription[] {
+                    new Subscription(50, 200)
+                });
+        }
+
+        [TestMethod]
+        public void CadenasIgualdadLeftFunction3()
+        {
+            EQLPublicParser parser = new EQLPublicParser("from SpaceObservable1 where left((string)@event.Message.#1.CardAcceptorNameLocation, 5) == \"Shell\" select true as resultado");
+            List<PlanNode> plan = parser.Parse();
+
+            ObservableConstructor te = new ObservableConstructor();
+            Func<IQbservable<EventObject>, IObservable<IEnumerable<object>>> result = te.Compile<IQbservable<EventObject>, IObservable<IEnumerable<object>>>(plan.First());
+
+            TestScheduler scheduler = new TestScheduler();
+
+            ITestableObservable<EventObject> input = scheduler.CreateHotObservable(
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest1)),
+                new Recorded<Notification<EventObject>>(200, Notification.CreateOnCompleted<EventObject>())
+                );
+
+            ITestableObserver<bool> results = scheduler.Start(
+                () => result(input.AsQbservable()).Select(x => bool.Parse(x.First().GetType().GetProperty("resultado").GetValue(x.First()).ToString())),
+                created: 10,
+                subscribed: 50,
+                disposed: 400);
+
+            ReactiveAssert.AreElementsEqual(results.Messages, new Recorded<Notification<bool>>[] {
+                    new Recorded<Notification<bool>>(100, Notification.CreateOnNext(true)),
+                    new Recorded<Notification<bool>>(200, Notification.CreateOnCompleted<bool>())
+                });
+
+            ReactiveAssert.AreElementsEqual(input.Subscriptions, new Subscription[] {
+                    new Subscription(50, 200)
+                });
+        }
+
+        [TestMethod]
+        public void CadenasIgualdadRightFunction1()
+        {
+            EQLPublicParser parser = new EQLPublicParser("from SpaceObservable1 where right(\"ab\", 1) == \"b\" select true as resultado");
+            List<PlanNode> plan = parser.Parse();
+
+            ObservableConstructor te = new ObservableConstructor();
+            Func<IQbservable<EventObject>, IObservable<IEnumerable<object>>> result = te.Compile<IQbservable<EventObject>, IObservable<IEnumerable<object>>>(plan.First());
+
+            TestScheduler scheduler = new TestScheduler();
+
+            ITestableObservable<EventObject> input = scheduler.CreateHotObservable(
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest1)),
+                new Recorded<Notification<EventObject>>(200, Notification.CreateOnCompleted<EventObject>())
+                );
+
+            ITestableObserver<bool> results = scheduler.Start(
+                () => result(input.AsQbservable()).Select(x => bool.Parse(x.First().GetType().GetProperty("resultado").GetValue(x.First()).ToString())),
+                created: 10,
+                subscribed: 50,
+                disposed: 400);
+
+            ReactiveAssert.AreElementsEqual(results.Messages, new Recorded<Notification<bool>>[] {
+                    new Recorded<Notification<bool>>(100, Notification.CreateOnNext(true)),
+                    new Recorded<Notification<bool>>(200, Notification.CreateOnCompleted<bool>())
+                });
+
+            ReactiveAssert.AreElementsEqual(input.Subscriptions, new Subscription[] {
+                    new Subscription(50, 200)
+                });
+        }
+
+        [TestMethod]
+        public void CadenasIgualdadRightFunction2()
+        {
+            EQLPublicParser parser = new EQLPublicParser("from SpaceObservable1 where right(\"xxxabcd\", 4) == \"abcd\" select true as resultado");
+            List<PlanNode> plan = parser.Parse();
+
+            ObservableConstructor te = new ObservableConstructor();
+            Func<IQbservable<EventObject>, IObservable<IEnumerable<object>>> result = te.Compile<IQbservable<EventObject>, IObservable<IEnumerable<object>>>(plan.First());
+
+            TestScheduler scheduler = new TestScheduler();
+
+            ITestableObservable<EventObject> input = scheduler.CreateHotObservable(
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest1)),
+                new Recorded<Notification<EventObject>>(200, Notification.CreateOnCompleted<EventObject>())
+                );
+
+            ITestableObserver<bool> results = scheduler.Start(
+                () => result(input.AsQbservable()).Select(x => bool.Parse(x.First().GetType().GetProperty("resultado").GetValue(x.First()).ToString())),
+                created: 10,
+                subscribed: 50,
+                disposed: 400);
+
+            ReactiveAssert.AreElementsEqual(results.Messages, new Recorded<Notification<bool>>[] {
+                    new Recorded<Notification<bool>>(100, Notification.CreateOnNext(true)),
+                    new Recorded<Notification<bool>>(200, Notification.CreateOnCompleted<bool>())
+                });
+
+            ReactiveAssert.AreElementsEqual(input.Subscriptions, new Subscription[] {
+                    new Subscription(50, 200)
+                });
+        }
+
+        [TestMethod]
+        public void CadenasIgualdadRightFunction3()
+        {
+            EQLPublicParser parser = new EQLPublicParser("from SpaceObservable1 where right((string)@event.Message.#1.CardAcceptorNameLocation, 2) == \"GT\" select true as resultado");
+            List<PlanNode> plan = parser.Parse();
+
+            ObservableConstructor te = new ObservableConstructor();
+            Func<IQbservable<EventObject>, IObservable<IEnumerable<object>>> result = te.Compile<IQbservable<EventObject>, IObservable<IEnumerable<object>>>(plan.First());
+
+            TestScheduler scheduler = new TestScheduler();
+
+            ITestableObservable<EventObject> input = scheduler.CreateHotObservable(
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest1)),
+                new Recorded<Notification<EventObject>>(200, Notification.CreateOnCompleted<EventObject>())
+                );
+
+            ITestableObserver<bool> results = scheduler.Start(
+                () => result(input.AsQbservable()).Select(x => bool.Parse(x.First().GetType().GetProperty("resultado").GetValue(x.First()).ToString())),
+                created: 10,
+                subscribed: 50,
+                disposed: 400);
+
+            ReactiveAssert.AreElementsEqual(results.Messages, new Recorded<Notification<bool>>[] {
+                    new Recorded<Notification<bool>>(100, Notification.CreateOnNext(true)),
+                    new Recorded<Notification<bool>>(200, Notification.CreateOnCompleted<bool>())
+                });
+
+            ReactiveAssert.AreElementsEqual(input.Subscriptions, new Subscription[] {
+                    new Subscription(50, 200)
+                });
+        }
+
+        [TestMethod]
         public void NulosIgualdad()
         {
             EQLPublicParser parser = new EQLPublicParser("from SpaceObservable1 where null == null select true as resultado");
@@ -662,7 +854,7 @@ namespace Integra.Space.LanguageUnitTests.Operations
         [TestMethod]
         public void NotFalseIgualdad()
         {
-            EQLPublicParser parser = new EQLPublicParser("from SpaceObservable1 where not false == true select true as resultado");
+            EQLPublicParser parser = new EQLPublicParser("from SpaceObservable1 where not (false == true) select true as resultado");
             List<PlanNode> plan = parser.Parse();
 
             ObservableConstructor te = new ObservableConstructor();
@@ -694,7 +886,7 @@ namespace Integra.Space.LanguageUnitTests.Operations
         [TestMethod]
         public void NotTrueIgualdad()
         {
-            EQLPublicParser parser = new EQLPublicParser("from SpaceObservable1 where not true == false select true as resultado");
+            EQLPublicParser parser = new EQLPublicParser("from SpaceObservable1 where not (true == false) select true as resultado");
             List<PlanNode> plan = parser.Parse();
 
             ObservableConstructor te = new ObservableConstructor();
@@ -726,7 +918,7 @@ namespace Integra.Space.LanguageUnitTests.Operations
         [TestMethod]
         public void NotEventosIgualdad()
         {
-            EQLPublicParser parser = new EQLPublicParser("from SpaceObservable1 where not @event.Message.Body.#103.[\"Campo103.1\"] == @event.Message.Body.#103.[\"Campo103.1\"] select true as resultado");
+            EQLPublicParser parser = new EQLPublicParser("from SpaceObservable1 where not(@event.Message.Body.#103.[\"Campo103.1\"] == @event.Message.Body.#103.[\"Campo103.1\"]) select true as resultado");
             List<PlanNode> plan = parser.Parse();
 
             ObservableConstructor te = new ObservableConstructor();
@@ -757,7 +949,7 @@ namespace Integra.Space.LanguageUnitTests.Operations
         [TestMethod]
         public void NotEventosDesigualdad()
         {
-            EQLPublicParser parser = new EQLPublicParser("from SpaceObservable1 where not @event.Message.Body.#103.[\"Campo103.1\"] != @event.Message.Body.#103.[\"Campo103.1\"] select true as resultado");
+            EQLPublicParser parser = new EQLPublicParser("from SpaceObservable1 where not(@event.Message.Body.#103.[\"Campo103.1\"] != @event.Message.Body.#103.[\"Campo103.1\"]) select true as resultado");
             List<PlanNode> plan = parser.Parse();
 
             ObservableConstructor te = new ObservableConstructor();

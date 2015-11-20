@@ -59,10 +59,10 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
                 this.result.Properties.Add("Value", "Key");
                 this.result.Children = new List<PlanNode>();
             }
-            else if (childrenCount == 3)
+            else if (childrenCount == 2)
             {
                 this.predecessor = AddChild(NodeUseType.Parameter, SR.PrpoertyProperty, ChildrenNodes[0]) as AstNodeBase;
-                this.property = (string)ChildrenNodes[2].Token.Value;
+                this.property = (string)ChildrenNodes[1].Token.Value;
                                 
                 this.result.NodeType = PlanNodeTypeEnum.GroupKeyProperty;
                 this.result.Properties.Add("Value", this.property);
@@ -80,7 +80,7 @@ namespace Integra.Vision.Language.ASTNodes.QuerySections
             this.BeginEvaluate(thread);
 
             int childrenCount = ChildrenNodes.Count;
-            if (childrenCount == 3)
+            if (childrenCount == 2)
             {
                 PlanNode auxPredecessor = (PlanNode)this.predecessor.Evaluate(thread);
 

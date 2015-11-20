@@ -197,6 +197,16 @@ namespace Integra.Vision.Language.Runtime
                 case PlanNodeTypeEnum.Identifier:
                     expResult = this.GenerateIdentifier(actualNode);
                     break;
+                case PlanNodeTypeEnum.StringLeftFunction:
+                    Func<PlanNode, Expression, Expression> leftFunctionMethod = this.CreateStringLeftFunction;
+                    expResult = leftFunctionMethod.Method
+                                            .Invoke(this, new object[] { actualNode, leftNode }) as Expression;
+                    break;
+                case PlanNodeTypeEnum.StringRightFunction:
+                    Func<PlanNode, Expression, Expression> rightFunctionMethod = this.CreateStringRightFunction;
+                    expResult = rightFunctionMethod.Method
+                                            .Invoke(this, new object[] { actualNode, leftNode }) as Expression;
+                    break;
                 case PlanNodeTypeEnum.Projection:
                     expResult = this.CreateProjectionExpression(actualNode);
                     break;
@@ -461,6 +471,108 @@ namespace Integra.Vision.Language.Runtime
         }
 
         /// <summary>
+        /// Creates a new Substring expression.
+        /// </summary>
+        /// <param name="actualNode">Actual execution plan node.</param>
+        /// <param name="incomingObservable">Incoming observable expression.</param>
+        /// <returns>Enumerable count expression.</returns>
+        private Expression CreateStringLeftFunction(PlanNode actualNode, Expression incomingObservable)
+        {
+            if (!incomingObservable.Type.Equals(typeof(string)))
+            {
+                throw new CompilationException("Value type of function 'left' must be string.");
+            }
+
+            ParameterExpression param = Expression.Variable(typeof(string), "resultFunctionLeft");
+            ParameterExpression paramException = Expression.Variable(typeof(Exception));
+
+            MethodInfo method = typeof(string).GetMethods().Where(m => m.Name == "Substring" && m.GetParameters().Length == 2).Single();
+            Expression numberExp = this.GenerateExpressionTree((PlanNode)actualNode.Properties["Number"]);
+
+            try
+            {
+                Expression tryCatchExpr =
+                      Expression.Block(
+                          new[] { param },
+                              Expression.TryCatch(
+                                  Expression.Block(
+                                      Expression.IfThen(Expression.Constant(this.printLog), Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Start of the 'count' function"))),
+                                      Expression.Assign(param, Expression.Call(incomingObservable, method, Expression.Constant(0), numberExp)),
+                                      Expression.IfThen(Expression.Constant(this.printLog), Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("End of the 'count' function"))),
+                                      Expression.Empty()
+                                      ),
+                                  Expression.Catch(
+                                      paramException,
+                                       Expression.Block(
+                                          Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Error")),
+                                          Expression.Throw(Expression.New(typeof(RuntimeException).GetConstructor(new Type[] { typeof(string), typeof(Exception) }), Expression.Constant(string.Format("RuntimeException: Line: {0}, Column: {1}, Description: {2}.", actualNode.Line, actualNode.Column, "Error in 'count' function"), typeof(string)), paramException))
+                                      )
+                                  )
+                              ),
+                          param
+                          );
+
+                return tryCatchExpr;
+            }
+            catch (Exception e)
+            {
+                throw new CompilationException("Error al compilar, no fue posible compilar la expresion", e);
+            }
+        }
+
+        /// <summary>
+        /// Creates a new Substring expression.
+        /// </summary>
+        /// <param name="actualNode">Actual execution plan node.</param>
+        /// <param name="incomingObservable">Incoming observable expression.</param>
+        /// <returns>Enumerable count expression.</returns>
+        private Expression CreateStringRightFunction(PlanNode actualNode, Expression incomingObservable)
+        {
+            if (!incomingObservable.Type.Equals(typeof(string)))
+            {
+                throw new CompilationException("Value type of function 'left' must be string.");
+            }
+
+            ParameterExpression param = Expression.Variable(typeof(string), "resultFunctionLeft");
+            ParameterExpression paramException = Expression.Variable(typeof(Exception));
+
+            MethodInfo method = typeof(string).GetMethods().Where(m => m.Name == "Substring" && m.GetParameters().Length == 1).Single();
+
+            Expression numberExp = this.GenerateExpressionTree((PlanNode)actualNode.Properties["Number"]);
+            Expression substringExp = Expression.Subtract(Expression.Property(incomingObservable, "Length"), numberExp);
+
+            try
+            {
+                Expression tryCatchExpr =
+                      Expression.Block(
+                          new[] { param },
+                              Expression.TryCatch(
+                                  Expression.Block(
+                                      Expression.IfThen(Expression.Constant(this.printLog), Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Start of the 'count' function"))),
+                                      Expression.Assign(param, Expression.Call(incomingObservable, method, substringExp)),
+                                      Expression.IfThen(Expression.Constant(this.printLog), Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("End of the 'count' function"))),
+                                      Expression.Empty()
+                                      ),
+                                  Expression.Catch(
+                                      paramException,
+                                       Expression.Block(
+                                          Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Error")),
+                                          Expression.Throw(Expression.New(typeof(RuntimeException).GetConstructor(new Type[] { typeof(string), typeof(Exception) }), Expression.Constant(string.Format("RuntimeException: Line: {0}, Column: {1}, Description: {2}.", actualNode.Line, actualNode.Column, "Error in 'count' function"), typeof(string)), paramException))
+                                      )
+                                  )
+                              ),
+                          param
+                          );
+
+                return tryCatchExpr;
+            }
+            catch (Exception e)
+            {
+                throw new CompilationException("Error al compilar, no fue posible compilar la expresion", e);
+            }
+        }
+
+        /// <summary>
         /// Creates a new Enumerable.Count expression.
         /// </summary>
         /// <typeparam name="I">Input type.</typeparam>
@@ -562,7 +674,7 @@ namespace Integra.Vision.Language.Runtime
                 string functionName = actualNode.Properties["FunctionName"].ToString();
 
                 Type delegateType = typeof(Func<,>).MakeGenericType(incommingTypeForFunction, selector.Type);
-                MethodInfo methodCount = typeof(System.Linq.Enumerable).GetMethods().Where(m => m.Name == functionName && m.GetParameters().Length == 2 && m.GetParameters()[1].ParameterType.ToString().Equals("System.Func`2[TSource," + selector.Type.ToString() + "]")).Single().MakeGenericMethod(incommingTypeForFunction);
+                MethodInfo methodSum = typeof(System.Linq.Enumerable).GetMethods().Where(m => m.Name == functionName && m.GetParameters().Length == 2 && m.GetParameters()[1].ParameterType.ToString().Equals("System.Func`2[TSource," + selector.Type.ToString() + "]")).Single().MakeGenericMethod(incommingTypeForFunction);
 
                 Expression selectorLambda = Expression.Lambda(delegateType, selector, new ParameterExpression[] { this.scopeParam.Pop() });
 
@@ -575,7 +687,7 @@ namespace Integra.Vision.Language.Runtime
                             Expression.TryCatch(
                                 Expression.Block(
                                     Expression.IfThen(Expression.Constant(this.printLog), Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("Start of the 'sum' function"))),
-                                    Expression.Assign(param, Expression.Call(methodCount, incomingObservable, selectorLambda)),
+                                    Expression.Assign(param, Expression.Call(methodSum, incomingObservable, selectorLambda)),
                                     Expression.IfThen(Expression.Constant(this.printLog), Expression.Call(typeof(System.Diagnostics.Debug).GetMethod("WriteLine", new Type[] { typeof(object) }), Expression.Constant("End of the 'sum' function"))),
                                     Expression.Empty()
                                     ),
@@ -695,7 +807,7 @@ namespace Integra.Vision.Language.Runtime
                     return m.Name == "Take" && m.GetParameters().Length == 2 && m.GetParameters()[1].ParameterType.Equals(takeSize.Type);
                 })
                 .Single().MakeGenericMethod(incomingObservable.Type.GetGenericArguments()[0]);
-                
+
                 Expression tryCatchExpr =
                     Expression.Block(
                         new[] { result },

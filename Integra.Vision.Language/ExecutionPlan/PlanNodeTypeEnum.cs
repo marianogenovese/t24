@@ -29,6 +29,16 @@ namespace Integra.Vision.Language
         Identifier = 12,
 
         /// <summary>
+        /// String left function type
+        /// </summary>
+        StringLeftFunction = 13,
+
+        /// <summary>
+        /// String right function type
+        /// </summary>
+        StringRightFunction = 14,
+
+        /// <summary>
         /// Cast type
         /// </summary>
         Cast = 21,

@@ -22,7 +22,7 @@ namespace Integra.Vision.Language.Grammars
         /// <summary>
         /// Expression grammar
         /// </summary>
-        private ValuesGrammar valueGrammar;
+        private ExpressionGrammar valueGrammar;
 
         /// <summary>
         /// Expression grammar
@@ -35,7 +35,7 @@ namespace Integra.Vision.Language.Grammars
         public GroupByGrammar()
             : base(false)
         {
-            this.valueGrammar = new ValuesGrammar();
+            this.valueGrammar = new ExpressionGrammar();
             this.CreateGrammar();
         }
 

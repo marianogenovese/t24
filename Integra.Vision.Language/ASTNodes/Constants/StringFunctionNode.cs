@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="DateFunctionNode.cs" company="Integra.Vision.Language">
+// <copyright file="StringFunctionNode.cs" company="Integra.Vision.Language">
 //     Copyright (c) Integra.Vision.Language. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -16,17 +16,22 @@ namespace Integra.Vision.Language.ASTNodes.Constants
     /// <summary>
     /// DateFunctionNode class
     /// </summary>
-    internal sealed class DateFunctionNode : AstNodeBase
+    internal sealed class StringFunctionNode : AstNodeBase
     {
         /// <summary>
         /// DateTime or Timespan node
         /// </summary>
-        private AstNodeBase date;
+        private AstNodeBase number;
 
         /// <summary>
         /// function to execute
         /// </summary>
         private string function;
+
+        /// <summary>
+        /// value node
+        /// </summary>
+        private AstNode value;
 
         /// <summary>
         /// result plan
@@ -42,7 +47,8 @@ namespace Integra.Vision.Language.ASTNodes.Constants
         {
             base.Init(context, treeNode);
             this.function = (string)ChildrenNodes[0].Token.Value;
-            this.date = AddChild(NodeUseType.Parameter, "DateTimeNode", ChildrenNodes[1]) as AstNodeBase;
+            this.value = AddChild(NodeUseType.Parameter, "ValueNode", ChildrenNodes[1]) as AstNodeBase;
+            this.number = AddChild(NodeUseType.Parameter, "DateTimeNode", ChildrenNodes[2]) as AstNodeBase;
 
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;
@@ -58,37 +64,22 @@ namespace Integra.Vision.Language.ASTNodes.Constants
         protected override object DoEvaluate(ScriptThread thread)
         {
             this.BeginEvaluate(thread);
-            PlanNode auxDate = (PlanNode)this.date.Evaluate(thread);
+            PlanNode valueAux = (PlanNode)this.value.Evaluate(thread);
+            PlanNode numberAux = (PlanNode)this.number.Evaluate(thread);
             this.EndEvaluate(thread);
 
+            this.result.NodeText = string.Format("{0}({1},{2})", this.function, valueAux.NodeText, numberAux.NodeText);
+            this.result.Properties.Add("Number", numberAux);
             this.result.Children = new List<PlanNode>();
-            this.result.Children.Add(auxDate);
-            this.result.NodeText = this.function + "(" + auxDate.NodeText + ")";
-            this.result.Properties.Add("DataType", typeof(int));
-            this.result.NodeType = PlanNodeTypeEnum.DateTimeFunction;
+            this.result.Children.Add(valueAux);
 
             switch (this.function.ToLower())
             {
-                case "year":
-                    this.result.Properties.Add("Property", "Year");
+                case "left":
+                    this.result.NodeType = PlanNodeTypeEnum.StringLeftFunction;
                     break;
-                case "month":
-                    this.result.Properties.Add("Property", "Month");
-                    break;
-                case "day":
-                    this.result.Properties.Add("Property", "Day");
-                    break;
-                case "hour":
-                    this.result.Properties.Add("Property", "Hour");
-                    break;
-                case "minute":
-                    this.result.Properties.Add("Property", "Minute");
-                    break;
-                case "second":
-                    this.result.Properties.Add("Property", "Second");
-                    break;
-                case "millisecond":
-                    this.result.Properties.Add("Property", "Millisecond");
+                case "right":
+                    this.result.NodeType = PlanNodeTypeEnum.StringRightFunction;
                     break;
             }
 

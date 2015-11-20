@@ -41,8 +41,8 @@ namespace Integra.Vision.Language.ASTNodes.Cast
         public override void Init(AstContext context, ParseTreeNode treeNode)
         {
             base.Init(context, treeNode);
-            this.targetType = AddChild(NodeUseType.Parameter, "TargetType", ChildrenNodes[1]) as AstNodeBase;
-            this.value = AddChild(NodeUseType.Parameter, "Value", ChildrenNodes[3]) as AstNodeBase;
+            this.targetType = AddChild(NodeUseType.Parameter, "TargetType", ChildrenNodes[0]) as AstNodeBase;
+            this.value = AddChild(NodeUseType.Parameter, "Value", ChildrenNodes[1]) as AstNodeBase;
 
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[0].Token.Location.Column;

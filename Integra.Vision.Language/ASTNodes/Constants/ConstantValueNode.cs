@@ -6,7 +6,7 @@
 namespace Integra.Vision.Language.ASTNodes.Constants
 {
     using Integra.Vision.Language.ASTNodes.Base;
-    
+
     using Irony.Ast;
     using Irony.Interpreter;
     using Irony.Interpreter.Ast;
@@ -30,7 +30,16 @@ namespace Integra.Vision.Language.ASTNodes.Constants
         public override void Init(AstContext context, ParseTreeNode treeNode)
         {
             base.Init(context, treeNode);
-            this.value = AddChild(NodeUseType.Keyword, "ConstantValue", ChildrenNodes[0]) as AstNodeBase;
+            int childernCount = ChildrenNodes.Count;
+
+            if (childernCount == 1)
+            {
+                this.value = AddChild(NodeUseType.Keyword, "ConstantValue", ChildrenNodes[0]) as AstNodeBase;
+            }
+            else if (childernCount == 3)
+            {
+                this.value = AddChild(NodeUseType.Keyword, "ConstantValue", ChildrenNodes[1]) as AstNodeBase;
+            }
         }
 
         /// <summary>
@@ -44,6 +53,13 @@ namespace Integra.Vision.Language.ASTNodes.Constants
             this.BeginEvaluate(thread);
             PlanNode result = (PlanNode)this.value.Evaluate(thread);
             this.EndEvaluate(thread);
+
+            int childernCount = ChildrenNodes.Count;
+            
+            if (childernCount == 3)
+            {
+                result.NodeText = string.Format("({0})", result.NodeText);
+            }
 
             return result;
         }

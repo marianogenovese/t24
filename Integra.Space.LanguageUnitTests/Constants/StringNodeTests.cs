@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Integra.Vision.Language.Parsers;
 using Integra.Vision.Language;
 using Integra.Vision.Language.Runtime;
 
@@ -12,7 +11,7 @@ namespace Integra.Space.LanguageUnitTests.Constants
         [TestMethod]
         public void StringConstant()
         {
-            ValuesParser parser = new ValuesParser("\"hello world! :D\"");
+            ExpressionParser parser = new ExpressionParser("\"hello world! :D\"");
             PlanNode plan = parser.Parse();
 
             ObservableConstructor te = new ObservableConstructor();

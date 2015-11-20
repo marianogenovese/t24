@@ -46,7 +46,8 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Event
             base.Init(context, treeNode);
 
             this.ev = AddChild(NodeUseType.Parameter, SR.EventRole, ChildrenNodes[0]) as AstNodeBase;
-            this.property = (string)ChildrenNodes[2].Token.Value;
+            this.property = (string)ChildrenNodes[1].Token.Value;
+
             this.result = new PlanNode();
             this.result.Column = ChildrenNodes[1].Token.Location.Column;
             this.result.Line = ChildrenNodes[1].Token.Location.Line;

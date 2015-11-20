@@ -521,7 +521,7 @@ namespace Integra.Space.LanguageUnitTests.Operations
         [TestMethod]
         public void NotTrueOrFalseAndTrue1()
         {
-            EQLPublicParser parser = new EQLPublicParser("from SpaceObservable1 where not true or false and true select true as resultado");
+            EQLPublicParser parser = new EQLPublicParser("from SpaceObservable1 where not (true) or false and true select true as resultado");
             List<PlanNode> plan = parser.Parse();
 
             ObservableConstructor te = new ObservableConstructor();

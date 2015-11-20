@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Integra.Vision.Language.Parsers;
 using Integra.Vision.Language;
 using Integra.Vision.Language.Runtime;
 
@@ -12,7 +11,7 @@ namespace Integra.Space.LanguageUnitTests.Constants
         [TestMethod]
         public void ConstantIntegerValue()
         {
-            ValuesParser parser = new ValuesParser("10");
+            ExpressionParser parser = new ExpressionParser("10");
             PlanNode plan = parser.Parse();
 
             ObservableConstructor te = new ObservableConstructor();

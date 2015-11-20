@@ -103,6 +103,7 @@
     <Compile Include="ASTNodes\Constants\ConstantValueNode.cs" />
     <Compile Include="ASTNodes\Constants\ConstantValueWithoutAliasNode.cs" />
     <Compile Include="ASTNodes\Constants\ConstantValueWithAliasNode.cs" />
+    <Compile Include="ASTNodes\Constants\StringFunctionNode.cs" />
     <Compile Include="ASTNodes\Constants\DateFunctionNode.cs" />
     <Compile Include="ASTNodes\Constants\DateTimeOrTimespanNode.cs" />
     <Compile Include="ASTNodes\Constants\IdentifierNode.cs" />
@@ -153,8 +154,6 @@
     <Compile Include="Grammars\ProjectionGrammar.cs" />
     <Compile Include="Grammars\GroupByLanguageRuntime.cs" />
     <Compile Include="Grammars\ProjectionLanguageRuntime.cs" />
-    <Compile Include="Grammars\ValuesGrammar.cs" />
-    <Compile Include="Grammars\ValuesLanguageRuntime.cs" />
     <Compile Include="Parsers\ExpressionParser.cs" />
     <Compile Include="General\ObjectUtils\JsonObjectUtils.cs" />
     <Compile Include="General\ObjectUtils\XmlObjectUtils.cs" />
@@ -171,7 +170,6 @@
     <Compile Include="ExecutionPlan\PlanNode.cs" />
     <Compile Include="ExecutionPlan\PlanNodeTypeEnum.cs" />
     <Compile Include="Parsers\EQLPrivateParser.cs" />
-    <Compile Include="Parsers\ValuesParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\SR.Designer.cs">
       <AutoGen>True</AutoGen>

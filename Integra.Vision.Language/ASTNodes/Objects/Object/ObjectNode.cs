@@ -50,16 +50,16 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Object
         {
             base.Init(context, treeNode);
             int childrenCount = ChildrenNodes.Count();
-            if (childrenCount == 7)
+            if (childrenCount == 4)
             {
                 this.evento = AddChild(NodeUseType.Parameter, SR.EventRole, ChildrenNodes[0]) as AstNodeBase;
-                this.objeto = AddChild(NodeUseType.Keyword, SR.ObjectRole, ChildrenNodes[4]) as AstNodeBase;
-                this.id = AddChild(NodeUseType.Keyword, SR.IdentifierRole, ChildrenNodes[6]) as AstNodeBase;
+                this.objeto = AddChild(NodeUseType.Keyword, SR.ObjectRole, ChildrenNodes[2]) as AstNodeBase;
+                this.id = AddChild(NodeUseType.Keyword, SR.IdentifierRole, ChildrenNodes[3]) as AstNodeBase;
             }
-            else if (childrenCount == 3)
+            else if (childrenCount == 2)
             {
                 this.objeto = AddChild(NodeUseType.Keyword, SR.ObjectRole, ChildrenNodes[0]) as AstNodeBase;
-                this.id = AddChild(NodeUseType.Keyword, SR.IdentifierRole, ChildrenNodes[2]) as AstNodeBase;
+                this.id = AddChild(NodeUseType.Keyword, SR.IdentifierRole, ChildrenNodes[1]) as AstNodeBase;
             }
         }
 
@@ -73,7 +73,7 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Object
         {
             int childrenCount = ChildrenNodes.Count();
 
-            if (childrenCount == 7)
+            if (childrenCount == 4)
             {
                 this.BeginEvaluate(thread);
                 PlanNode eventObject = (PlanNode)this.evento.Evaluate(thread);
@@ -82,9 +82,9 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Object
                 this.EndEvaluate(thread);
 
                 PlanNode auxMessage = new PlanNode();
-                auxMessage.Column = ChildrenNodes[2].Token.Location.Column;
+                auxMessage.Column = ChildrenNodes[1].Token.Location.Column;
                 auxMessage.Properties.Add(SR.DataTypeProperty, typeof(Message));
-                auxMessage.Line = ChildrenNodes[2].Token.Location.Line;
+                auxMessage.Line = ChildrenNodes[1].Token.Location.Line;
                 auxMessage.NodeText = eventObject.NodeText + ".Message";
                 auxMessage.NodeType = PlanNodeTypeEnum.ObjectMessage;
                 auxMessage.Children = new List<PlanNode>();
@@ -113,7 +113,7 @@ namespace Integra.Vision.Language.ASTNodes.Objects.Object
 
                 this.result = auxField;
             }
-            else if (childrenCount == 3)
+            else if (childrenCount == 2)
             {
                 this.BeginEvaluate(thread);
                 PlanNode idPartOrFieldObject = (PlanNode)this.objeto.Evaluate(thread);

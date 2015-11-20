@@ -7,20 +7,20 @@ namespace Integra.Vision.Language.Grammars
 {
     using System;
     using System.Linq;
-    using Integra.Vision.Language.ASTNodes.Commands.Create;
-    using Integra.Vision.Language.ASTNodes.Commands.Drop;
-    using Integra.Vision.Language.ASTNodes.Commands.General;
-    using Integra.Vision.Language.ASTNodes.Commands.Publish;
-    using Integra.Vision.Language.ASTNodes.Commands.Receive;
-    using Integra.Vision.Language.ASTNodes.Commands.StartStop;
-    using Integra.Vision.Language.ASTNodes.Commands.Trace;
-    using Integra.Vision.Language.ASTNodes.Constants;
-    using Integra.Vision.Language.ASTNodes.Lists;
-    using Integra.Vision.Language.ASTNodes.Permissions;
-    using Integra.Vision.Language.ASTNodes.QuerySections;
-    using Integra.Vision.Language.ASTNodes.Root;
-    using Integra.Vision.Language.ASTNodes.SystemViews;
-    using Integra.Vision.Language.ASTNodes.UserQuery;
+    using ASTNodes.Commands.Create;
+    using ASTNodes.Commands.Drop;
+    using ASTNodes.Commands.General;
+    using ASTNodes.Commands.Publish;
+    using ASTNodes.Commands.Receive;
+    using ASTNodes.Commands.StartStop;
+    using ASTNodes.Commands.Trace;
+    using ASTNodes.Constants;
+    using ASTNodes.Lists;
+    using ASTNodes.Permissions;
+    using ASTNodes.QuerySections;
+    using ASTNodes.Root;
+    using ASTNodes.SystemViews;
+    using ASTNodes.UserQuery;
     using Irony.Interpreter;
     using Irony.Parsing;
 
@@ -44,11 +44,6 @@ namespace Integra.Vision.Language.Grammars
         /// Group by grammar
         /// </summary>
         private GroupByGrammar groupByGrammar;
-
-        /// <summary>
-        /// Expression grammar
-        /// </summary>
-        private ValuesGrammar valueGrammar;
         
         /// <summary>
         /// Initializes a new instance of the <see cref="EQLGrammar"/> class
@@ -59,7 +54,6 @@ namespace Integra.Vision.Language.Grammars
             this.expressionGrammar = new ExpressionGrammar();
             this.projectionGrammar = new ProjectionGrammar();
             this.groupByGrammar = new GroupByGrammar();
-            this.valueGrammar = new ValuesGrammar();
             this.Grammar(false);
         }
 
@@ -72,7 +66,6 @@ namespace Integra.Vision.Language.Grammars
         {
             this.expressionGrammar = new ExpressionGrammar();
             this.projectionGrammar = new ProjectionGrammar();
-            this.valueGrammar = new ValuesGrammar();
             this.Grammar(prueba);
         }
 

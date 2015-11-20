@@ -164,6 +164,8 @@ namespace Integra.Vision.Language.Grammars
             KeyTerm terminalSum = ToTerm("sum", "sum");
             KeyTerm terminalMin = ToTerm("min", "min");
             KeyTerm terminalMax = ToTerm("max", "max");
+            KeyTerm terminalLeft = ToTerm("left", "left");
+            KeyTerm terminalRight = ToTerm("right", "right");
 
             /* EVENTOS */
             KeyTerm terminalEvent = ToTerm("event", "event");
@@ -185,15 +187,11 @@ namespace Integra.Vision.Language.Grammars
             this.parentesisDer = this.ToTerm(")", "parentesisDerValuesGrammar");
             KeyTerm terminalCorcheteIz = ToTerm("[", "corcheteIz");
             KeyTerm terminalCorcheteDer = ToTerm("]", "corcheteDer");
-            KeyTerm terminalLlaveIz = ToTerm("{", "llaveIz");
-            KeyTerm terminalLlaveDer = ToTerm("}", "llaveDer");
             KeyTerm terminalPunto = ToTerm(".", "punto");
-            KeyTerm terminalPorcentaje = ToTerm("%", "porcentaje");
             KeyTerm terminalNumeral = ToTerm("#", "numeral");
             KeyTerm terminalComillaSimple = ToTerm("'", "comillaSimple");
             KeyTerm terminalComa = ToTerm(",", "coma");
             KeyTerm terminalArroba = ToTerm("@", "arroba");
-            KeyTerm terminalIgual = ToTerm("=", "igual");
 
             /* TIPOS PARA CASTEO */
             ConstantTerminal terminalType = new ConstantTerminal("contanteTipo");
@@ -261,7 +259,7 @@ namespace Integra.Vision.Language.Grammars
             terminalId.AstConfig.DefaultNodeCreator = () => new IdentifierNode();
 
             /* PRECEDENCIA Y ASOCIATIVIDAD */
-            /* this.AddBracePair();
+            /*this.AddBracePair();
             this.AddMarkPunctuation();*/
 
             /* NO TERMINALES */
@@ -330,6 +328,9 @@ namespace Integra.Vision.Language.Grammars
             NonTerminal nt_PROJECTION_FUNCTIONS = new NonTerminal("PROJECTION_FUNCTION", typeof(ProjectionFunctionNode));
             nt_PROJECTION_FUNCTIONS.AstConfig.NodeType = null;
             nt_PROJECTION_FUNCTIONS.AstConfig.DefaultNodeCreator = () => new ProjectionFunctionNode();
+            NonTerminal nt_STRING_FUNCTIONS = new NonTerminal("STRING_FUNCTIONS", typeof(StringFunctionNode));
+            nt_STRING_FUNCTIONS.AstConfig.NodeType = null;
+            nt_STRING_FUNCTIONS.AstConfig.DefaultNodeCreator = () => new StringFunctionNode();
 
             this.projectionValue = new NonTerminal("PROJECTION_VALUES", typeof(ProjectionValueNode));
             this.projectionValue.AstConfig.NodeType = null;
@@ -351,11 +352,10 @@ namespace Integra.Vision.Language.Grammars
             this.values.Rule = this.numericValues
                                 | this.nonConstantValues
                                 | this.otherValues
-                                | nt_EXPLICIT_CAST;
+                                | nt_EXPLICIT_CAST
+                                | nt_STRING_FUNCTIONS;
 
-            nt_EXPLICIT_CAST.Rule = terminalParentesisIz + terminalType + this.parentesisDer + this.numericValues
-                                    | terminalParentesisIz + terminalType + this.parentesisDer + this.nonConstantValues
-                                    | terminalParentesisIz + terminalType + this.parentesisDer + this.otherValues;
+            nt_EXPLICIT_CAST.Rule = terminalParentesisIz + terminalType + this.parentesisDer + this.values;
 
             this.nonConstantValues.Rule = nt_EVENT_WITH_SOURCE
                                             | nt_OBJECT_VALUE
@@ -389,6 +389,10 @@ namespace Integra.Vision.Language.Grammars
                                             | terminalSum + terminalParentesisIz + this.values + this.parentesisDer
                                             | terminalMin + terminalParentesisIz + this.values + this.parentesisDer
                                             | terminalMax + terminalParentesisIz + this.values + this.parentesisDer;
+            /* **************************** */
+            /* FUNCIONES DE CADENA DE TEXTO */
+            nt_STRING_FUNCTIONS.Rule = terminalLeft + terminalParentesisIz + this.values + terminalComa + terminalNumero + this.parentesisDer
+                                        | terminalRight + terminalParentesisIz + this.values + terminalComa + terminalNumero + this.parentesisDer;
             /* **************************** */
             /* EXPRESIONES ARITMETICAS */
             nt_ARITHMETIC_EXPRESSION.Rule = nt_ARITHMETIC_EXPRESSION + terminalMenos + nt_ARITHMETIC_EXPRESSION

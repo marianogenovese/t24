@@ -378,6 +378,8 @@ namespace Integra.Space.LanguageUnitTests.Queries
                     new Subscription(50, 200)
                 });
         }
+        
+        /**************************************************************************************************************************************************************/
 
         [TestMethod]
         public void ConsultaSoloApplyWindowDosEventosOrderBy()
@@ -426,7 +428,7 @@ namespace Integra.Space.LanguageUnitTests.Queries
         }
 
         [TestMethod]
-        public void ConsultaSelectDosEventosTop()
+        public void ConsultaSelectDiezEventosTop()
         {
             EQLPublicParser parser = new EQLPublicParser(
                 string.Format("from {0} select top 1 {3} as monto",
@@ -444,6 +446,14 @@ namespace Integra.Space.LanguageUnitTests.Queries
 
             ITestableObservable<EventObject> input = scheduler.CreateHotObservable(
                 new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest1)),
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest2)),
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest2)),
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest2)),
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest2)),
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest2)),
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest2)),
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest2)),
+                new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest2)),
                 new Recorded<Notification<EventObject>>(100, Notification.CreateOnNext(TestObjects.EventObjectTest2)),
                 new Recorded<Notification<EventObject>>(200, Notification.CreateOnCompleted<EventObject>())
                 );
@@ -514,8 +524,7 @@ namespace Integra.Space.LanguageUnitTests.Queries
                     new Subscription(50, 100)
                 });
         }
-
-        /**************************************************************************************************************************************************************/
+        
         [TestMethod]
         public void ConsultaApplyWindowSelectDosEventosTop()
         {
@@ -1921,9 +1930,9 @@ namespace Integra.Space.LanguageUnitTests.Queries
                     new Subscription(50, 200)
                 });
         }
-
-
+        
         /**************************************************************************************************************************************************************/
+
         [TestMethod]
         public void ConsultaSoloApplyWindowDosEventos2_0()
         {
@@ -2574,6 +2583,7 @@ namespace Integra.Space.LanguageUnitTests.Queries
             }
         }
 
+        /*
         [TestMethod]
         public void ConsultaGroupByUnaLlaveYSumErrorDeCasteoCampoNoNumerico()
         {
@@ -2622,6 +2632,7 @@ namespace Integra.Space.LanguageUnitTests.Queries
                     new Subscription(50, 200)
                 });
         }
+        */
 
         [TestMethod]
         public void ConsultaGroupByUnaLlaveYSumCampoNoNumerico()
